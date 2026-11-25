@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PantauK3 - Monitoring SIO Operator & SILO Forklift</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { margin: 0; background-color: #f1f5f9; color: #1e293b; }
+    header { background-color: #0f172a; color: #ffffff; padding: 20px; text-align: center; border-bottom: 4px solid #f59e0b; }
+    header h1 { margin: 0; font-size: 1.6rem; letter-spacing: 0.5px; }
+    header p { margin: 5px 0 0; font-size: 0.9rem; color: #cbd5e1; }
+    .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+    
+    /* Ringkasan Status */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .card-stat { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 5px solid #3b82f6; }
+    .card-stat.warn { border-left-color: #f59e0b; }
+    .card-stat.danger { border-left-color: #ef4444; }
+    .card-stat.safe { border-left-color: #10b981; }
+    .card-stat h3 { margin: 0; font-size: 0.85rem; color: #64748b; }
+    .card-stat .num { font-size: 1.6rem; font-weight: bold; margin-top: 5px; }
+
+    /* Navigasi Tab */
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+    .tab-btn { flex: 1; padding: 12px; border: none; background: #e2e8f0; color: #475569; font-weight: bold; font-size: 1rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+    .tab-btn.active { background: #0f172a; color: #f59e0b; }
+
+    /* Kotak Konten */
+    .panel { display: none; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+    .panel.active { display: block; }
+    
+    /* Form Input */
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
+    .form-grid input, .form-grid select { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; width: 100%; }
+    .btn-add { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem; }
+    .btn-add:hover { background: #059669; }
+
+    /* Pencarian & Tabel */
+    .search-box { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.92rem; }
+    th { background-color: #f8fafc; color: #334155; }
+    
+    /* Label Status */
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: inline-block; }
+    .badge-safe { background: #dcfce7; color: #166534; }
+    .badge-warn { background: #fef3c7; color: #92400e; }
+    .badge-danger { background: #fee2e2; color: #991b1b; }
+    .btn-del { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🛡️ PantauK3</h1>
+  <p>Sistem Monitoring Masa Aktif SIO Operator & SILO Unit Forklift</p>
+</header>
+
+<div class="container">
+  <!-- Ringkasan -->
+  <div class="summary-grid">
+    <div class="card-stat">
+      <h3>Total Operator (SIO)</h3>
+      <div class="num" id="stat-op">0</div>
+    </div>
+    <div class="card-stat">
+      <h3>Total Unit (SILO)</h3>
+      <div class="num" id="stat-unit">0</div>
+    </div>
+    <div class="card-stat warn">
+      <h3>Segera Habis (&lt;30 Hari)</h3>
+      <div class="num" id="stat-warn">0</div>
+    </div>
+    <div class="card-stat danger">
+      <h3>Kedaluwarsa (Expired)</h3>
+      <div class="num" id="stat-exp">0</div>
+    </div>
+  </div>
+
+  <!-- Tombol Tab -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="bukaTab('operator', this)">👷 Data Operator (SIO)</button>
+    <button class="tab-btn" onclick="bukaTab('unit', this)">🚜 Data Unit Forklift (SILO)</button>
+  </div>
+
+  <!-- PANEL 1: OPERATOR FORKLIFT -->
+  <div id="panel-operator" class="panel active">
+    <h3>Tambah Data Operator Baru</h3>
+    <div class="form-grid">
+      <input type="text" id="op-nama" placeholder="Nama Lengkap Operator">
+      <input type="text" id="op-sio" placeholder="Nomor Lisensi SIO">
+      <select id="op-kelas">
+        <option value="Kelas II (< 15 Ton)">Kelas II (&lt; 15 Ton)</option>
+        <option value="Kelas I (> 15 Ton)">Kelas I (&gt; 15 Ton)</option>
+      </select>
+      <input type="date" id="op-tgl" title="Tanggal Berakhir SIO">
+      <button class="btn-add" onclick="tambahOperator()">+ Simpan Operator</button>
+    </div>
+
+    <input type="text" class="search-box" id="cari-op" onkeyup="renderSemua()" placeholder="🔍 Cari nama operator atau nomor SIO...">
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nama Operator</th>
+            <th>No. Lisensi SIO</th>
+            <th>Kelas</th>
+            <th>Berlaku Sampai</th>
+            <th>Status Masa Aktif</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tabel-operator"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PANEL 2: UNIT FORKLIFT (SILO) -->
+  <div id="panel-unit" class="panel">
+    <h3>Tambah Data Unit Forklift Baru</h3>
+    <div class="form-grid">
+      <input type="text" id="unit-kode" placeholder="Kode Unit (misal: FL-01)">
+      <input type="text" id="unit-merk" placeholder="Merek & Kapasitas (misal: Toyota 3 Ton)">
+      <input type="text" id="unit-silo" placeholder="Nomor Pengesahan SILO">
+      <input type="date" id="unit-tgl" title="Tanggal Berakhir SILO">
+      <button class="btn-add" onclick="tambahUnit()">+ Simpan Unit</button>
+    </div>
+
+    <input type="text" class="search-box" id="cari-unit" onkeyup="renderSemua()" placeholder="🔍 Cari kode unit, merek, atau nomor SILO...">
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Kode Unit</th>
+            <th>Merek & Kapasitas</th>
+            <th>No. SILO</th>
+            <th>Berlaku Sampai</th>
+            <th>Status SILO</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tabel-unit"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Data contoh awal jika penyimpanan browser masih kosong
+  let dataOperator = JSON.parse(localStorage.getItem('pantauk3_op')) || [
+    { nama: "Budi Santoso", sio: "SIO-12345/K3/2024", kelas: "Kelas II (< 15 Ton)", tgl: "2027-05-20" },
+    { nama: "Ahmad Fauzi", sio: "SIO-98765/K3/2023", kelas: "Kelas I (> 15 Ton)", tgl: "2026-12-10" }
+  ];
+
+  let dataUnit = JSON.parse(localStorage.getItem('pantauk3_unit')) || [
+    { kode: "FL-01", merk: "Komatsu 3.5 Ton", silo: "SILO-001/PAA/2025", tgl: "2027-08-15" },
+    { kode: "FL-02", merk: "Toyota 5 Ton", silo: "SILO-002/PAA/2024", tgl: "2026-10-01" }
+  ];
+
+  function simpanKeBrowser() {
+    localStorage.setItem('pantauk3_op', JSON.stringify(dataOperator));
+    localStorage.setItem('pantauk3_unit', JSON.stringify(dataUnit));
+  }
+
+  function bukaTab(namaTab, tombol) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + namaTab).classList.add('active');
+    tombol.classList.add('active');
+  }
+
+  function hitungStatus(tanggalStr) {
+    const hariIni = new Date();
+    hariIni.setHours(0, 0, 0, 0);
+    const target = new Date(tanggalStr);
+    const selisihHari = Math.ceil((target - hariIni) / (1000 * 60 * 60 * 24));
+
+    if (selisihHari < 0) {
+      return { teks: `Kedaluwarsa (${Math.abs(selisihHari)} hari lalu)`, kelas: "badge-danger", kategori: "exp" };
+    } else if (selisihHari <= 30) {
+      return { teks: `Segera Habis (${selisihHari} hari lagi)`, kelas: "badge-warn", kategori: "warn" };
+    } else {
+      return { teks: `Aktif (${selisihHari} hari lagi)`, kelas: "badge-safe", kategori: "safe" };
+    }
+  }
+
+  function tambahOperator() {
+    const nama = document.getElementById('op-nama').value.trim();
+    const sio = document.getElementById('op-sio').value.trim();
+    const kelas = document.getElementById('op-kelas').value;
+    const tgl = document.getElementById('op-tgl').value;
+
+    if (!nama || !sio || !tgl) return alert("Mohon lengkapi Nama, Nomor SIO, dan Tanggal Berlaku!");
+    dataOperator.push({ nama, sio, kelas, tgl });
+    simpanKeBrowser();
+    document.getElementById('op-nama').value = '';
+    document.getElementById('op-sio').value = '';
+    document.getElementById('op-tgl').value = '';
+    renderSemua();
+  }
+
+  function tambahUnit() {
+    const kode = document.getElementById('unit-kode').value.trim();
+    const merk = document.getElementById('unit-merk').value.trim();
+    const silo = document.getElementById('unit-silo').value.trim();
+    const tgl = document.getElementById('unit-tgl').value;
+
+    if (!kode || !merk || !silo || !tgl) return alert("Mohon lengkapi Kode Unit, Merek, Nomor SILO, dan Tanggal Berlaku!");
+    dataUnit.push({ kode, merk, silo, tgl });
+    simpanKeBrowser();
+    document.getElementById('unit-kode').value = '';
+    document.getElementById('unit-merk').value = '';
+    document.getElementById('unit-silo').value = '';
+    document.getElementById('unit-tgl').value = '';
+    renderSemua();
+  }
+
+  function hapusOperator(index) {
+    if (confirm("Hapus data operator ini?")) {
+      dataOperator.splice(index, 1);
+      simpanKeBrowser();
+      renderSemua();
+    }
+  }
+
+  function hapusUnit(index) {
+    if (confirm("Hapus data unit forklift ini?")) {
+      dataUnit.splice(index, 1);
+      simpanKeBrowser();
+      renderSemua();
+    }
+  }
+
+  function renderSemua() {
+    const filterOp = document.getElementById('cari-op').value.toLowerCase();
+    const filterUnit = document.getElementById('cari-unit').value.toLowerCase();
+    let countWarn = 0, countExp = 0;
+
+    // Render Operator
+    const tbodyOp = document.getElementById('tabel-operator');
+    tbodyOp.innerHTML = '';
+    dataOperator.forEach((item, i) => {
+      const st = hitungStatus(item.tgl);
+      if (st.kategori === 'warn') countWarn++;
+      if (st.kategori === 'exp') countExp++;
+
+      if (item.nama.toLowerCase().includes(filterOp) || item.sio.toLowerCase().includes(filterOp)) {
+        tbodyOp.innerHTML += `
+          <tr>
+            <td><strong>${item.nama}</strong></td>
+            <td>${item.sio}</td>
+            <td>${item.kelas}</td>
+            <td>${item.tgl}</td>
+            <td><span class="badge ${st.kelas}">${st.teks}</span></td>
+            <td><button class="btn-del" onclick="hapusOperator(${i})">Hapus</button></td>
+          </tr>`;
+      }
+    });
+
+    // Render Unit
+    const tbodyUnit = document.getElementById('tabel-unit');
+    tbodyUnit.innerHTML = '';
+    dataUnit.forEach((item, i) => {
+      const st = hitungStatus(item.tgl);
+      if (st.kategori === 'warn') countWarn++;
+      if (st.kategori === 'exp') countExp++;
+
+      if (item.kode.toLowerCase().includes(filterUnit) || item.merk.toLowerCase().includes(filterUnit) || item.silo.toLowerCase().includes(filterUnit)) {
+        tbodyUnit.innerHTML += `
+          <tr>
+            <td><strong>${item.kode}</strong></td>
+            <td>${item.merk}</td>
+            <td>${item.silo}</td>
+            <td>${item.tgl}</td>
+            <td><span class="badge ${st.kelas}">${st.teks}</span></td>
+            <td><button class="btn-del" onclick="hapusUnit(${i})">Hapus</button></td>
+          </tr>`;
+      }
+    });
+
+    // Update Angka Ringkasan
+    document.getElementById('stat-op').innerText = dataOperator.length;
+    document.getElementById('stat-unit').innerText = dataUnit.length;
+    document.getElementById('stat-warn').innerText = countWarn;
+    document.getElementById('stat-exp').innerText = countExp;
+  }
+
+  renderSemua();
+</script>
+</body>
+</html>
