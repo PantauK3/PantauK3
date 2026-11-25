@@ -3,157 +3,669 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PantauK3 - Monitoring SIO Operator & SILO Forklift</title>
+  <title>Pantau K3 - Dashboard Keselamatan Kerja & Forklift</title>
   <style>
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { margin: 0; background-color: #f1f5f9; color: #1e293b; }
-    header { background-color: #0f172a; color: #ffffff; padding: 20px; text-align: center; border-bottom: 4px solid #f59e0b; }
-    header h1 { margin: 0; font-size: 1.6rem; letter-spacing: 0.5px; }
-    header p { margin: 5px 0 0; font-size: 0.9rem; color: #cbd5e1; }
-    .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
-    
-    /* Ringkasan Status */
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .card-stat { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 5px solid #3b82f6; }
-    .card-stat.warn { border-left-color: #f59e0b; }
-    .card-stat.danger { border-left-color: #ef4444; }
-    .card-stat.safe { border-left-color: #10b981; }
-    .card-stat h3 { margin: 0; font-size: 0.85rem; color: #64748b; }
-    .card-stat .num { font-size: 1.6rem; font-weight: bold; margin-top: 5px; }
+    :root {
+      --navy-dark: #073773;
+      --navy-darker: #052957;
+      --green-main: #16a34a;
+      --green-bright: #22c55e;
+      --blue-accent: #1d4ed8;
+      --yellow-accent: #facc15;
+      --bg-page: #f4f7fb;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-soft: #e2e8f0;
+    }
 
-    /* Navigasi Tab */
-    .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab-btn { flex: 1; padding: 12px; border: none; background: #e2e8f0; color: #475569; font-weight: bold; font-size: 1rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-    .tab-btn.active { background: #0f172a; color: #f59e0b; }
+    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background-color: var(--bg-page); color: var(--text-main); display: flex; min-height: 100vh; }
 
-    /* Kotak Konten */
-    .panel { display: none; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
-    .panel.active { display: block; }
-    
-    /* Form Input */
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
-    .form-grid input, .form-grid select { padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; width: 100%; }
-    .btn-add { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.95rem; }
-    .btn-add:hover { background: #059669; }
+    /* SIDEBAR KIRI */
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy-darker) 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
 
-    /* Pencarian & Tabel */
-    .search-box { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 600px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.92rem; }
-    th { background-color: #f8fafc; color: #334155; }
-    
-    /* Label Status */
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: inline-block; }
+    .brand-box {
+      padding: 20px 18px 16px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .brand-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .brand-row img { height: 46px; width: auto; border-radius: 8px; background: rgba(255,255,255,0.1); padding: 2px; }
+    .brand-title { font-size: 1.25rem; font-weight: 800; letter-spacing: 0.5px; line-height: 1.1; text-align: left; }
+    .brand-title span { color: var(--yellow-accent); display: block; font-size: 1.4rem; }
+    .brand-tagline { font-size: 0.72rem; color: #cbd5e1; margin-top: 6px; letter-spacing: 0.4px; }
+
+    .nav-menu { padding: 14px 12px; display: flex; flex-direction: column; gap: 6px; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px; border-radius: 8px;
+      color: #e2e8f0; text-decoration: none; font-size: 0.92rem; font-weight: 500;
+      cursor: pointer; border: none; background: transparent; width: 100%; text-align: left;
+      transition: 0.2s;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .nav-item.active { background: var(--green-main); color: #fff; font-weight: 600; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.35); }
+    .nav-badge { margin-left: auto; background: #ef4444; color: #fff; font-size: 0.72rem; padding: 2px 7px; border-radius: 12px; font-weight: 700; }
+
+    .sidebar-footer {
+      padding: 16px;
+      text-align: center;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.25) 100%);
+    }
+    .slogan-text {
+      font-style: italic; font-weight: 800; font-size: 1.05rem;
+      color: var(--yellow-accent); text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      margin-bottom: 10px; line-height: 1.3;
+    }
+    .worker-card {
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px; padding: 12px 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* AREA UTAMA KANAN */
+    .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+    /* TOPBAR */
+    .topbar {
+      background: #fff;
+      padding: 14px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border-soft);
+      position: sticky; top: 0; z-index: 20;
+    }
+    .greeting-box { display: flex; align-items: center; gap: 12px; }
+    .sun-icon { font-size: 1.8rem; }
+    .greeting-sub { font-size: 0.82rem; color: var(--text-muted); }
+    .greeting-name { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
+
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .notif-btn {
+      position: relative; background: #f8fafc; border: 1px solid var(--border-soft);
+      width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+    }
+    .notif-dot {
+      position: absolute; top: -3px; right: -3px;
+      background: #ef4444; color: #fff; font-size: 0.7rem; font-weight: 700;
+      min-width: 19px; height: 19px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; padding: 0 4px;
+    }
+    .user-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--navy-dark); color: #fff; font-weight: 700; font-size: 0.88rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .content-wrap { padding: 22px 28px; max-width: 1320px; width: 100%; margin: 0 auto; }
+
+    /* HERO BANNER */
+    .hero-banner {
+      background: linear-gradient(110deg, #dbeafe 0%, #eff6ff 55%, #dcfce7 100%);
+      border-radius: 16px;
+      padding: 26px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: relative; overflow: hidden;
+      border: 1px solid #bfdbfe;
+      margin-bottom: 22px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+    .hero-banner::after {
+      content: ""; position: absolute; right: -40px; bottom: -40px;
+      width: 340px; height: 140px;
+      background: linear-gradient(135deg, #facc15 0%, #16a34a 60%);
+      transform: rotate(-12deg); border-radius: 40px; opacity: 0.9;
+    }
+    .hero-text { position: relative; z-index: 2; max-width: 620px; }
+    .hero-text h1 { margin: 0 0 6px; font-size: 1.75rem; color: #0f172a; font-weight: 800; }
+    .hero-text p { margin: 0 0 16px; font-size: 1.05rem; font-weight: 600; color: #1e293b; }
+    .btn-hero {
+      background: #facc15; color: #0f172a; border: none;
+      padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: 0.2s;
+    }
+    .btn-hero:hover { background: #eab308; transform: translateY(-1px); }
+    .hero-shield { position: relative; z-index: 2; flex-shrink: 0; }
+
+    /* 4 KPI CARDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+    .kpi-card {
+      border-radius: 14px; padding: 18px 20px;
+      display: flex; align-items: center; gap: 16px;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.04);
+      cursor: pointer; transition: 0.2s; border: 1px solid transparent;
+    }
+    .kpi-card:hover { transform: translateY(-2px); }
+    .kpi-green { background: #ecfdf5; border-color: #a7f3d0; }
+    .kpi-yellow { background: #fefce8; border-color: #fde047; }
+    .kpi-blue { background: #eff6ff; border-color: #bfdbfe; }
+    .kpi-purple { background: #f5f3ff; border-color: #ddd6fe; }
+
+    .kpi-icon {
+      width: 50px; height: 50px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; color: #fff; flex-shrink: 0;
+    }
+    .kpi-green .kpi-icon { background: #16a34a; }
+    .kpi-yellow .kpi-icon { background: #f59e0b; }
+    .kpi-blue .kpi-icon { background: #2563eb; }
+    .kpi-purple .kpi-icon { background: #8b5cf6; }
+
+    .kpi-label { font-size: 0.84rem; color: #475569; font-weight: 600; }
+    .kpi-val { font-size: 1.65rem; font-weight: 800; color: #0f172a; line-height: 1.2; margin: 2px 0; }
+    .kpi-sub { font-size: 0.76rem; color: #16a34a; font-weight: 600; }
+    .kpi-yellow .kpi-sub { color: #b45309; }
+
+    /* GRID TENGAH & BAWAH */
+    .dash-grid-mid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 1.15fr;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .dash-grid-bot {
+      display: grid;
+      grid-template-columns: 1.2fr 1.1fr 0.95fr;
+      gap: 18px;
+    }
+
+    .widget-card {
+      background: #fff; border-radius: 14px; padding: 20px;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 2px 8px rgba(15,23,42,0.03);
+    }
+    .widget-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .widget-title { font-size: 1rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; margin: 0; }
+    .link-more { font-size: 0.8rem; color: #2563eb; font-weight: 600; cursor: pointer; background: none; border: none; }
+
+    /* DONUT CHART */
+    .donut-wrap { display: flex; align-items: center; justify-content: space-around; gap: 14px; padding: 8px 0; }
+    .donut-ring {
+      width: 124px; height: 124px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .donut-hole {
+      width: 84px; height: 84px; border-radius: 50%; background: #fff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .donut-pct { font-size: 1.35rem; font-weight: 800; color: #0f172a; line-height: 1; }
+    .donut-lbl { font-size: 0.74rem; color: #16a34a; font-weight: 600; margin-top: 2px; }
+    .legend-list { display: flex; flex-direction: column; gap: 10px; font-size: 0.86rem; }
+    .legend-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+    .status-note {
+      margin-top: 14px; background: #f0fdf4; border: 1px solid #bbf7d0;
+      padding: 9px 12px; border-radius: 8px; font-size: 0.8rem; color: #166534;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* LIST AKTIVITAS & PENGINGAT */
+    .list-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .task-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem;
+    }
+    .task-row:last-child { border-bottom: none; }
+
+    /* KARTU BUDAYA K3 (KANAN BAWAH) */
+    .culture-card {
+      background: linear-gradient(145deg, #15803d 0%, #166534 100%);
+      color: #fff; border-radius: 14px; padding: 20px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .culture-card h3 { margin: 0 0 4px; font-size: 1.15rem; }
+    .culture-card h4 { margin: 0 0 16px; font-size: 1rem; color: #facc15; }
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+    .pillar-box { background: rgba(255,255,255,0.12); padding: 10px 6px; border-radius: 10px; font-size: 0.76rem; font-weight: 600; }
+    .pillar-ico { font-size: 1.3rem; margin-bottom: 4px; display: block; }
+
+    /* HALAMAN TABEL & FORM */
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+
+    .form-bar {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 10px; background: #f8fafc; padding: 16px; border-radius: 10px;
+      border: 1px solid var(--border-soft); margin-bottom: 16px;
+    }
+    .form-bar input, .form-bar select {
+      padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; width: 100%;
+    }
+    .btn-primary {
+      background: var(--green-main); color: #fff; border: none; padding: 10px 16px;
+      border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem;
+    }
+    .btn-primary:hover { background: #15803d; }
+
+    .search-input {
+      width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1;
+      border-radius: 8px; margin-bottom: 14px; font-size: 0.9rem;
+    }
+    .table-box { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 650px; }
+    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.88rem; }
+    th { background: #f8fafc; color: #334155; font-weight: 700; }
+
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.76rem; font-weight: 700; display: inline-block; }
     .badge-safe { background: #dcfce7; color: #166534; }
     .badge-warn { background: #fef3c7; color: #92400e; }
     .badge-danger { background: #fee2e2; color: #991b1b; }
-    .btn-del { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+    .btn-del { background: #ef4444; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.78rem; }
+
+    /* RESPONSIVE HP */
+    .mobile-toggle { display: none; background: var(--navy-dark); color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 1.1rem; cursor: pointer; }
+    @media (max-width: 1024px) {
+      .dash-grid-mid, .dash-grid-bot { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; left: -260px; z-index: 50; transition: 0.25s; }
+      .sidebar.open { left: 0; }
+      .mobile-toggle { display: inline-block; }
+      .hero-shield { display: none; }
+      .content-wrap { padding: 16px; }
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <div style="display: flex; align-items: center; justify-content: center; gap: 12px;">
-    <img src="logo (2).png" alt="Logo PantauK3" style="height: 45px; width: auto; border-radius: 6px;">
-    <h1 style="margin: 0;">PantauK3</h1>
+  <!-- SIDEBAR NAVIGASI -->
+  <aside class="sidebar" id="sidebar">
+    <div>
+      <div class="brand-box">
+        <div class="brand-row">
+          <img src="logo (2).png" alt="Logo PantauK3" onerror="this.style.display='none'">
+          <div class="brand-title">PANTAU<span>K3</span></div>
+        </div>
+        <div class="brand-tagline">Observasi • Peduli • Selamat</div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" onclick="pindahHalaman('beranda', this)">🏠 Beranda</button>
+        <button class="nav-item" onclick="pindahHalaman('operator', this)">👷 Data Operator (SIO)</button>
+        <button class="nav-item" onclick="pindahHalaman('unit', this)">🚜 Data Unit (SILO)</button>
+        <button class="nav-item" onclick="pindahHalaman('pengingat', this)">
+          🔔 Pengingat Masa Aktif
+          <span class="nav-badge" id="side-badge">0</span>
+        </button>
+        <button class="nav-item" onclick="pindahHalaman('edukasi', this)">📖 Edukasi & Panduan K3</button>
+        <button class="nav-item" onclick="pindahHalaman('pengaturan', this)">⚙️ Pengaturan</button>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="slogan-text">Kerja Aman<br>Keluarga Nyaman</div>
+      <div class="worker-card">
+        <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="36" fill="#e0f2fe"/>
+          <path d="M22 68C22 56 30 50 40 50C50 50 58 56 58 68" fill="#16a34a"/>
+          <path d="M31 51L40 62L49 51" fill="#facc15"/>
+          <circle cx="40" cy="34" r="13" fill="#fed7aa"/>
+          <path d="M25 31C25 21 32 16 40 16C48 16 55 21 55 31H25Z" fill="#ffffff"/>
+          <rect x="22" y="29" width="36" height="4" rx="2" fill="#e2e8f0"/>
+          <circle cx="40" cy="23" r="4" fill="#16a34a"/>
+          <path d="M38 23H42M40 21V25" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="36" cy="34" r="1.5" fill="#1e293b"/>
+          <circle cx="44" cy="34" r="1.5" fill="#1e293b"/>
+          <path d="M36 39C38 41 42 41 44 39" stroke="#1e293b" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+        <div style="font-size: 0.75rem; color: #cbd5e1; margin-top: 4px;">Zero Accident Target</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- KONTEN UTAMA -->
+  <div class="main-area">
+    <!-- HEADER ATAS -->
+    <header class="topbar">
+      <div class="greeting-box">
+        <button class="mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <span class="sun-icon">☀️</span>
+        <div>
+          <div class="greeting-sub" id="sapaan-waktu">Selamat Pagi,</div>
+          <div class="greeting-name" id="nama-pengguna-display">Tim K3 & Operasional</div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <button class="notif-btn" title="Lihat Pengingat Masa Aktif" onclick="pindahHalaman('pengingat', document.querySelectorAll('.nav-item')[3])">
+          🔔
+          <span class="notif-dot" id="top-badge">0</span>
+        </button>
+        <div class="user-avatar" id="user-inisial">K3</div>
+      </div>
+    </header>
+
+    <div class="content-wrap">
+
+      <!-- HALAMAN 1: BERANDA (DASHBOARD UTAMA) -->
+      <section id="view-beranda" class="view-section active">
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+          <div class="hero-text">
+            <h1>Pantau K3</h1>
+            <p>Bersama Kita Wujudkan Tempat Kerja yang Aman dan Sehat</p>
+            <button class="btn-hero" onclick="pindahHalaman('edukasi', document.querySelectorAll('.nav-item')[4])">
+              Lihat Panduan →
+            </button>
+          </div>
+          <div class="hero-shield">
+            <svg width="110" height="110" viewBox="0 0 120 120" fill="none">
+              <path d="M60 10L102 28V60C102 87 84 106 60 114C36 106 18 87 18 60V28L60 10Z" fill="#16a34a" stroke="#ffffff" stroke-width="5"/>
+              <circle cx="60" cy="60" r="20" stroke="#ffffff" stroke-width="6"/>
+              <path d="M60 51V69M51 60H69" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 4 Kartu Ringkasan -->
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-green" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">
+            <div class="kpi-icon">✓</div>
+            <div>
+              <div class="kpi-label">SIO & SILO Aktif</div>
+              <div class="kpi-val" id="kpi-aktif">0</div>
+              <div class="kpi-sub">✓ Siap Operasional</div>
+            </div>
+          </div>
+
+          <div class="kpi-card kpi-yellow" onclick="pindahHalaman('pengingat', document.querySelectorAll('.nav-item')[3])">
+            <div class="kpi-icon">⚠</div>
+            <div>
+              <div class="kpi-label">Segera Habis (&lt;30 Hari)</div>
+              <div class="kpi-val" id="kpi-warn">0</div>
+              <div class="kpi-sub">Perlu Jadwal Perpanjangan</div>
+            </div>
+          </div>
+
+          <div class="kpi-card kpi-blue" onclick="pindahHalaman('unit', document.querySelectorAll('.nav-item')[2])">
+            <div class="kpi-icon">🚜</div>
+            <div>
+              <div class="kpi-label">Kepatuhan Lisensi</div>
+              <div class="kpi-val" id="kpi-persen">100%</div>
+              <div class="kpi-sub">↑ Target K3 ≥ 95%</div>
+            </div>
+          </div>
+
+          <div class="kpi-card kpi-purple" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">
+            <div class="kpi-icon">📋</div>
+            <div>
+              <div class="kpi-label">Total Terdaftar</div>
+              <div class="kpi-val" id="kpi-total">0</div>
+              <div class="kpi-sub" id="kpi-rincian">0 Operator • 0 Unit</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Baris Tengah: Ringkasan Data, Status Kepatuhan Donut, Aktivitas Terbaru -->
+        <div class="dash-grid-mid">
+          <!-- Widget 1: Rekap SIO & SILO -->
+          <div class="widget-card">
+            <div class="widget-head">
+              <h3 class="widget-title">📊 Rekapitulasi SIO & SILO</h3>
+              <button class="link-more" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">Kelola →</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:14px; margin-top:10px;">
+              <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
+                <div style="display:flex; justify-content:space-between; font-size:0.86rem; font-weight:700; margin-bottom:6px;">
+                  <span>👷 Operator Forklift (SIO)</span>
+                  <span id="bar-op-txt">0 / 0 Aktif</span>
+                </div>
+                <div style="background:#e2e8f0; height:10px; border-radius:6px; overflow:hidden;">
+                  <div id="bar-op-fill" style="background:#16a34a; height:100%; width:0%; transition:0.3s;"></div>
+                </div>
+              </div>
+
+              <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
+                <div style="display:flex; justify-content:space-between; font-size:0.86rem; font-weight:700; margin-bottom:6px;">
+                  <span>🚜 Unit Forklift (SILO)</span>
+                  <span id="bar-unit-txt">0 / 0 Aktif</span>
+                </div>
+                <div style="background:#e2e8f0; height:10px; border-radius:6px; overflow:hidden;">
+                  <div id="bar-unit-fill" style="background:#2563eb; height:100%; width:0%; transition:0.3s;"></div>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:8px; margin-top:4px;">
+                <button class="btn-primary" style="flex:1; font-size:0.82rem;" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">+ Tambah Operator</button>
+                <button class="btn-primary" style="flex:1; font-size:0.82rem; background:#2563eb;" onclick="pindahHalaman('unit', document.querySelectorAll('.nav-item')[2])">+ Tambah Unit</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Widget 2: Status Kepatuhan Donut -->
+          <div class="widget-card">
+            <div class="widget-head">
+              <h3 class="widget-title">🛡️ Status Kepatuhan K3</h3>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut-ring" id="donut-chart">
+                <div class="donut-hole">
+                  <div class="donut-pct" id="donut-pct">100%</div>
+                  <div class="donut-lbl" id="donut-status-lbl">Aman</div>
+                </div>
+              </div>
+              <div class="legend-list">
+                <div class="legend-row"><span><i class="dot" style="background:#16a34a;"></i>Aman</span><strong id="leg-safe">0</strong></div>
+                <div class="legend-row"><span><i class="dot" style="background:#facc15;"></i>Perlu Perhatian</span><strong id="leg-warn">0</strong></div>
+                <div class="legend-row"><span><i class="dot" style="background:#ef4444;"></i>Kedaluwarsa</span><strong id="leg-exp">0</strong></div>
+              </div>
+            </div>
+            <div class="status-note" id="donut-note">
+              <span>✅</span> <span>Seluruh lisensi SIO & SILO dalam kondisi aman.</span>
+            </div>
+          </div>
+
+          <!-- Widget 3: Aktivitas Terbaru -->
+          <div class="widget-card">
+            <div class="widget-head">
+              <h3 class="widget-title">🕒 Aktivitas Terbaru</h3>
+              <button class="link-more" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">Lihat Semua</button>
+            </div>
+            <div id="aktivitas-list"></div>
+          </div>
+        </div>
+
+        <!-- Baris Bawah: Pengingat & Tugas, Berita & Edukasi K3, Kartu Budaya K3 -->
+        <div class="dash-grid-bot">
+          <div class="widget-card">
+            <div class="widget-head">
+              <h3 class="widget-title">🔔 Pengingat Masa Aktif SIO & SILO</h3>
+              <button class="link-more" onclick="pindahHalaman('pengingat', document.querySelectorAll('.nav-item')[3])">Lihat Semua →</button>
+            </div>
+            <div id="pengingat-mini"></div>
+          </div>
+
+          <div class="widget-card">
+            <div class="widget-head">
+              <h3 class="widget-title">📖 Edukasi & Standar K3</h3>
+              <button class="link-more" onclick="pindahHalaman('edukasi', document.querySelectorAll('.nav-item')[4])">Lihat Semua →</button>
+            </div>
+            <div style="display:flex; gap:14px; align-items:center;">
+              <div style="width:90px; height:90px; background:#fef9c3; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:2.6rem; flex-shrink:0;">
+                ⛑️
+              </div>
+              <div>
+                <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Wajib SIO & SILO Sebelum Operasi</div>
+                <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:10px;">
+                  Pastikan operator memiliki SIO sesuai kelas beban dan unit forklift lulus riksa uji berkala (SILO).
+                </div>
+                <button class="btn-primary" style="background:#2563eb; padding:7px 14px; font-size:0.8rem;" onclick="pindahHalaman('edukasi', document.querySelectorAll('.nav-item')[4])">
+                  Baca Selengkapnya →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="culture-card">
+            <div>
+              <h3>K3 Budaya Kita</h3>
+              <h4>Keselamatan Prioritas Kita</h4>
+            </div>
+            <div class="pillars">
+              <div class="pillar-box"><span class="pillar-ico">🛡️</span>Patuhi Prosedur</div>
+              <div class="pillar-box"><span class="pillar-ico">🤝</span>Peduli Sesama</div>
+              <div class="pillar-box"><span class="pillar-ico">👍</span>Kerja Selamat</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HALAMAN 2: DATA OPERATOR (SIO) -->
+      <section id="view-operator" class="view-section">
+        <div class="widget-card">
+          <div class="widget-head">
+            <h3 class="widget-title">👷 Manajemen Data Operator Forklift (SIO)</h3>
+          </div>
+          <div class="form-bar">
+            <input type="text" id="op-nama" placeholder="Nama Lengkap Operator">
+            <input type="text" id="op-sio" placeholder="Nomor Lisensi SIO">
+            <select id="op-kelas">
+              <option value="Kelas II (< 15 Ton)">Kelas II (&lt; 15 Ton)</option>
+              <option value="Kelas I (> 15 Ton)">Kelas I (&gt; 15 Ton)</option>
+            </select>
+            <input type="date" id="op-tgl" title="Tanggal Berakhir SIO">
+            <button class="btn-primary" onclick="tambahOperator()">+ Simpan Operator</button>
+          </div>
+          <input type="text" class="search-input" id="cari-op" onkeyup="renderSemua()" placeholder="🔍 Cari nama operator atau nomor lisensi SIO...">
+          <div class="table-box">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama Operator</th>
+                  <th>No. Lisensi SIO</th>
+                  <th>Kelas</th>
+                  <th>Berlaku Sampai</th>
+                  <th>Status Masa Aktif</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-operator"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- HALAMAN 3: DATA UNIT FORKLIFT (SILO) -->
+      <section id="view-unit" class="view-section">
+        <div class="widget-card">
+          <div class="widget-head">
+            <h3 class="widget-title">🚜 Manajemen Data Unit Forklift (SILO)</h3>
+          </div>
+          <div class="form-bar">
+            <input type="text" id="unit-kode" placeholder="Kode Unit (misal: FL-01)">
+            <input type="text" id="unit-merk" placeholder="Merek & Kapasitas (misal: Toyota 3 Ton)">
+            <input type="text" id="unit-silo" placeholder="Nomor Pengesahan SILO">
+            <input type="date" id="unit-tgl" title="Tanggal Berakhir SILO">
+            <button class="btn-primary" style="background:#2563eb;" onclick="tambahUnit()">+ Simpan Unit</button>
+          </div>
+          <input type="text" class="search-input" id="cari-unit" onkeyup="renderSemua()" placeholder="🔍 Cari kode unit, merek, atau nomor SILO...">
+          <div class="table-box">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kode Unit</th>
+                  <th>Merek & Kapasitas</th>
+                  <th>No. Pengesahan SILO</th>
+                  <th>Berlaku Sampai</th>
+                  <th>Status SILO</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-unit"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- HALAMAN 4: PENGINGAT MASA AKTIF -->
+      <section id="view-pengingat" class="view-section">
+        <div class="widget-card">
+          <div class="widget-head">
+            <h3 class="widget-title">🔔 Daftar Pengingat Perpanjangan SIO & SILO</h3>
+          </div>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-top:0;">
+            Menampilkan seluruh operator dan unit forklift yang masa berlaku lisensinya sudah habis atau tersisa kurang dari 30 hari.
+          </p>
+          <div id="pengingat-lengkap"></div>
+        </div>
+      </section>
+
+      <!-- HALAMAN 5: EDUKASI & PANDUAN K3 -->
+      <section id="view-edukasi" class="view-section">
+        <div class="widget-card">
+          <h3 class="widget-title" style="margin-bottom:14px;">📖 Panduan Keselamatan Pengoperasian Forklift (Permenaker No. 8 Tahun 2020)</h3>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
+            <div style="background:#f8fafc; padding:16px; border-radius:10px; border-left:4px solid #16a34a;">
+              <strong>1. Kewenangan Operator (SIO)</strong>
+              <p style="font-size:0.86rem; color:#475569; margin:6px 0 0;">
+                Forklift hanya boleh dioperasikan oleh operator yang memiliki Lisensi K3 (SIO) aktif sesuai kelas kapasitas angkutnya (Kelas II untuk &le; 15 ton, Kelas I untuk &gt; 15 ton).
+              </p>
+            </div>
+            <div style="background:#f8fafc; padding:16px; border-radius:10px; border-left:4px solid #2563eb;">
+              <strong>2. Kelayakan Unit (SILO / Suket K3)</strong>
+              <p style="font-size:0.86rem; color:#475569; margin:6px 0 0;">
+                Setiap unit pesawat angkat dan angkut wajib menjalani riksa uji berkala minimal 1 tahun sekali oleh pengawas ketenagakerjaan atau PJK3 resmi.
+              </p>
+            </div>
+            <div style="background:#f8fafc; padding:16px; border-radius:10px; border-left:4px solid #f59e0b;">
+              <strong>3. Pemeriksaan Harian (P2H)</strong>
+              <p style="font-size:0.86rem; color:#475569; margin:6px 0 0;">
+                Sebelum menyalakan unit, periksa kondisi rem, rantai mast, garpu, kebocoran oli hidrolik, lampu rotari, klakson mundur, serta sabuk pengaman.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- HALAMAN 6: PENGATURAN -->
+      <section id="view-pengaturan" class="view-section">
+        <div class="widget-card" style="max-width:560px;">
+          <h3 class="widget-title" style="margin-bottom:14px;">⚙️ Pengaturan Dashboard & Cadangan Data</h3>
+          <label style="font-size:0.86rem; font-weight:600; display:block; margin-bottom:6px;">Nama Petugas / Tim K3 di Header:</label>
+          <div style="display:flex; gap:8px; margin-bottom:20px;">
+            <input type="text" id="input-nama-user" placeholder="Contoh: Budi Santoso - K3" style="flex:1; padding:10px; border:1px solid #cbd5e1; border-radius:8px;">
+            <button class="btn-primary" onclick="simpanNamaUser()">Simpan Nama</button>
+          </div>
+          <hr style="border:none; border-top:1px solid #e2e8f0; margin:16px 0;">
+          <div style="font-size:0.86rem; font-weight:600; margin-bottom:8px;">Cadangkan atau Pulihkan Data:</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-primary" style="background:#2563eb;" onclick="unduhBackup()">⬇️ Unduh Backup (.json)</button>
+            <button class="btn-primary" style="background:#64748b;" onclick="resetContoh()">🔄 Reset ke Data Contoh</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
   </div>
-  <p>Sistem Monitoring Masa Aktif SIO Operator & SILO Unit Forklift</p>
-</header>
-
-<div class="container">
-  <!-- Ringkasan -->
-  <div class="summary-grid">
-    <div class="card-stat">
-      <h3>Total Operator (SIO)</h3>
-      <div class="num" id="stat-op">0</div>
-    </div>
-    <div class="card-stat">
-      <h3>Total Unit (SILO)</h3>
-      <div class="num" id="stat-unit">0</div>
-    </div>
-    <div class="card-stat warn">
-      <h3>Segera Habis (&lt;30 Hari)</h3>
-      <div class="num" id="stat-warn">0</div>
-    </div>
-    <div class="card-stat danger">
-      <h3>Kedaluwarsa (Expired)</h3>
-      <div class="num" id="stat-exp">0</div>
-    </div>
-  </div>
-
-  <!-- Tombol Tab -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="bukaTab('operator', this)">👷 Data Operator (SIO)</button>
-    <button class="tab-btn" onclick="bukaTab('unit', this)">🚜 Data Unit Forklift (SILO)</button>
-  </div>
-
-  <!-- PANEL 1: OPERATOR FORKLIFT -->
-  <div id="panel-operator" class="panel active">
-    <h3>Tambah Data Operator Baru</h3>
-    <div class="form-grid">
-      <input type="text" id="op-nama" placeholder="Nama Lengkap Operator">
-      <input type="text" id="op-sio" placeholder="Nomor Lisensi SIO">
-      <select id="op-kelas">
-        <option value="Kelas II (< 15 Ton)">Kelas II (&lt; 15 Ton)</option>
-        <option value="Kelas I (> 15 Ton)">Kelas I (&gt; 15 Ton)</option>
-      </select>
-      <input type="date" id="op-tgl" title="Tanggal Berakhir SIO">
-      <button class="btn-add" onclick="tambahOperator()">+ Simpan Operator</button>
-    </div>
-
-    <input type="text" class="search-box" id="cari-op" onkeyup="renderSemua()" placeholder="🔍 Cari nama operator atau nomor SIO...">
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Nama Operator</th>
-            <th>No. Lisensi SIO</th>
-            <th>Kelas</th>
-            <th>Berlaku Sampai</th>
-            <th>Status Masa Aktif</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="tabel-operator"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- PANEL 2: UNIT FORKLIFT (SILO) -->
-  <div id="panel-unit" class="panel">
-    <h3>Tambah Data Unit Forklift Baru</h3>
-    <div class="form-grid">
-      <input type="text" id="unit-kode" placeholder="Kode Unit (misal: FL-01)">
-      <input type="text" id="unit-merk" placeholder="Merek & Kapasitas (misal: Toyota 3 Ton)">
-      <input type="text" id="unit-silo" placeholder="Nomor Pengesahan SILO">
-      <input type="date" id="unit-tgl" title="Tanggal Berakhir SILO">
-      <button class="btn-add" onclick="tambahUnit()">+ Simpan Unit</button>
-    </div>
-
-    <input type="text" class="search-box" id="cari-unit" onkeyup="renderSemua()" placeholder="🔍 Cari kode unit, merek, atau nomor SILO...">
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Kode Unit</th>
-            <th>Merek & Kapasitas</th>
-            <th>No. SILO</th>
-            <th>Berlaku Sampai</th>
-            <th>Status SILO</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="tabel-unit"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
 
 <script>
-  // Data contoh awal jika penyimpanan browser masih kosong
   let dataOperator = JSON.parse(localStorage.getItem('pantauk3_op')) || [
     { nama: "Budi Santoso", sio: "SIO-12345/K3/2024", kelas: "Kelas II (< 15 Ton)", tgl: "2027-05-20" },
     { nama: "Ahmad Fauzi", sio: "SIO-98765/K3/2023", kelas: "Kelas I (> 15 Ton)", tgl: "2026-12-10" }
@@ -164,16 +676,50 @@
     { kode: "FL-02", merk: "Toyota 5 Ton", silo: "SILO-002/PAA/2024", tgl: "2026-10-01" }
   ];
 
-  function simpanKeBrowser() {
-    localStorage.setItem('pantauk3_op', JSON.stringify(dataOperator));
-    localStorage.setItem('pantauk3_unit', JSON.stringify(dataUnit));
+  let logAktivitas = JSON.parse(localStorage.getItem('pantauk3_log')) || [
+    { judul: "Sistem PantauK3 siap digunakan", ket: "Monitoring SIO & SILO aktif", ikon: "✓", warna: "#16a34a" }
+  ];
+
+  function aturSapaan() {
+    const jam = new Date().getHours();
+    let sapa = "Selamat Malam,";
+    if (jam >= 4 && jam < 11) sapa = "Selamat Pagi,";
+    else if (jam >= 11 && jam < 15) sapa = "Selamat Siang,";
+    else if (jam >= 15 && jam < 18) sapa = "Selamat Sore,";
+    document.getElementById('sapaan-waktu').innerText = sapa;
+
+    const namaTersimpan = localStorage.getItem('pantauk3_user') || "Tim K3 & Operasional";
+    document.getElementById('nama-pengguna-display').innerText = namaTersimpan;
+    document.getElementById('input-nama-user').value = namaTersimpan;
+    const inisial = namaTersimpan.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    document.getElementById('user-inisial').innerText = inisial || "K3";
   }
 
-  function bukaTab(namaTab, tombol) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('panel-' + namaTab).classList.add('active');
-    tombol.classList.add('active');
+  function simpanNamaUser() {
+    const val = document.getElementById('input-nama-user').value.trim();
+    if (!val) return;
+    localStorage.setItem('pantauk3_user', val);
+    aturSapaan();
+    alert("Nama pengguna berhasil diperbarui!");
+  }
+
+  function simpanSemua() {
+    localStorage.setItem('pantauk3_op', JSON.stringify(dataOperator));
+    localStorage.setItem('pantauk3_unit', JSON.stringify(dataUnit));
+    localStorage.setItem('pantauk3_log', JSON.stringify(logAktivitas.slice(0, 5)));
+  }
+
+  function tambahLog(judul, ket, ikon = "✓", warna = "#16a34a") {
+    const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    logAktivitas.unshift({ judul, ket: `Hari ini, ${waktu} • ${ket}`, ikon, warna });
+  }
+
+  function pindahHalaman(nama, tombol) {
+    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('view-' + nama).classList.add('active');
+    if (tombol) tombol.classList.add('active');
+    document.getElementById('sidebar').classList.remove('open');
   }
 
   function hitungStatus(tanggalStr) {
@@ -183,11 +729,11 @@
     const selisihHari = Math.ceil((target - hariIni) / (1000 * 60 * 60 * 24));
 
     if (selisihHari < 0) {
-      return { teks: `Kedaluwarsa (${Math.abs(selisihHari)} hari lalu)`, kelas: "badge-danger", kategori: "exp" };
+      return { teks: `Kedaluwarsa (${Math.abs(selisihHari)} hari lalu)`, kelas: "badge-danger", kategori: "exp", sisa: selisihHari };
     } else if (selisihHari <= 30) {
-      return { teks: `Segera Habis (${selisihHari} hari lagi)`, kelas: "badge-warn", kategori: "warn" };
+      return { teks: `Segera Habis (${selisihHari} hari lagi)`, kelas: "badge-warn", kategori: "warn", sisa: selisihHari };
     } else {
-      return { teks: `Aktif (${selisihHari} hari lagi)`, kelas: "badge-safe", kategori: "safe" };
+      return { teks: `Aktif (${selisihHari} hari lagi)`, kelas: "badge-safe", kategori: "safe", sisa: selisihHari };
     }
   }
 
@@ -196,10 +742,10 @@
     const sio = document.getElementById('op-sio').value.trim();
     const kelas = document.getElementById('op-kelas').value;
     const tgl = document.getElementById('op-tgl').value;
-
     if (!nama || !sio || !tgl) return alert("Mohon lengkapi Nama, Nomor SIO, dan Tanggal Berlaku!");
     dataOperator.push({ nama, sio, kelas, tgl });
-    simpanKeBrowser();
+    tambahLog(`Operator baru: ${nama}`, `SIO ${sio}`, "👷", "#16a34a");
+    simpanSemua();
     document.getElementById('op-nama').value = '';
     document.getElementById('op-sio').value = '';
     document.getElementById('op-tgl').value = '';
@@ -211,10 +757,10 @@
     const merk = document.getElementById('unit-merk').value.trim();
     const silo = document.getElementById('unit-silo').value.trim();
     const tgl = document.getElementById('unit-tgl').value;
-
     if (!kode || !merk || !silo || !tgl) return alert("Mohon lengkapi Kode Unit, Merek, Nomor SILO, dan Tanggal Berlaku!");
     dataUnit.push({ kode, merk, silo, tgl });
-    simpanKeBrowser();
+    tambahLog(`Unit baru: ${kode} (${merk})`, `SILO ${silo}`, "🚜", "#2563eb");
+    simpanSemua();
     document.getElementById('unit-kode').value = '';
     document.getElementById('unit-merk').value = '';
     document.getElementById('unit-silo').value = '';
@@ -222,34 +768,56 @@
     renderSemua();
   }
 
-  function hapusOperator(index) {
+  function hapusOperator(i) {
     if (confirm("Hapus data operator ini?")) {
-      dataOperator.splice(index, 1);
-      simpanKeBrowser();
+      tambahLog(`Hapus operator: ${dataOperator[i].nama}`, "Data diperbarui", "🗑️", "#ef4444");
+      dataOperator.splice(i, 1);
+      simpanSemua();
       renderSemua();
     }
   }
 
-  function hapusUnit(index) {
+  function hapusUnit(i) {
     if (confirm("Hapus data unit forklift ini?")) {
-      dataUnit.splice(index, 1);
-      simpanKeBrowser();
+      tambahLog(`Hapus unit: ${dataUnit[i].kode}`, "Data diperbarui", "🗑️", "#ef4444");
+      dataUnit.splice(i, 1);
+      simpanSemua();
       renderSemua();
+    }
+  }
+
+  function unduhBackup() {
+    const isi = JSON.stringify({ dataOperator, dataUnit }, null, 2);
+    const blob = new Blob([isi], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "backup-pantauk3.json";
+    a.click();
+  }
+
+  function resetContoh() {
+    if (confirm("Kembalikan ke data contoh awal?")) {
+      localStorage.removeItem('pantauk3_op');
+      localStorage.removeItem('pantauk3_unit');
+      location.reload();
     }
   }
 
   function renderSemua() {
     const filterOp = document.getElementById('cari-op').value.toLowerCase();
     const filterUnit = document.getElementById('cari-unit').value.toLowerCase();
-    let countWarn = 0, countExp = 0;
+    let safeCount = 0, warnCount = 0, expCount = 0;
+    let opAktif = 0, unitAktif = 0;
+    let daftarPengingat = [];
 
-    // Render Operator
+    // Tabel Operator
     const tbodyOp = document.getElementById('tabel-operator');
     tbodyOp.innerHTML = '';
     dataOperator.forEach((item, i) => {
       const st = hitungStatus(item.tgl);
-      if (st.kategori === 'warn') countWarn++;
-      if (st.kategori === 'exp') countExp++;
+      if (st.kategori === 'safe') { safeCount++; opAktif++; }
+      else if (st.kategori === 'warn') { warnCount++; opAktif++; daftarPengingat.push({ tipe: 'SIO Operator', nama: `${item.nama} (${item.sio})`, tgl: item.tgl, st }); }
+      else { expCount++; daftarPengingat.push({ tipe: 'SIO Operator', nama: `${item.nama} (${item.sio})`, tgl: item.tgl, st }); }
 
       if (item.nama.toLowerCase().includes(filterOp) || item.sio.toLowerCase().includes(filterOp)) {
         tbodyOp.innerHTML += `
@@ -264,13 +832,14 @@
       }
     });
 
-    // Render Unit
+    // Tabel Unit
     const tbodyUnit = document.getElementById('tabel-unit');
     tbodyUnit.innerHTML = '';
     dataUnit.forEach((item, i) => {
       const st = hitungStatus(item.tgl);
-      if (st.kategori === 'warn') countWarn++;
-      if (st.kategori === 'exp') countExp++;
+      if (st.kategori === 'safe') { safeCount++; unitAktif++; }
+      else if (st.kategori === 'warn') { warnCount++; unitAktif++; daftarPengingat.push({ tipe: 'SILO Unit', nama: `${item.kode} - ${item.merk} (${item.silo})`, tgl: item.tgl, st }); }
+      else { expCount++; daftarPengingat.push({ tipe: 'SILO Unit', nama: `${item.kode} - ${item.merk} (${item.silo})`, tgl: item.tgl, st }); }
 
       if (item.kode.toLowerCase().includes(filterUnit) || item.merk.toLowerCase().includes(filterUnit) || item.silo.toLowerCase().includes(filterUnit)) {
         tbodyUnit.innerHTML += `
@@ -285,13 +854,78 @@
       }
     });
 
-    // Update Angka Ringkasan
-    document.getElementById('stat-op').innerText = dataOperator.length;
-    document.getElementById('stat-unit').innerText = dataUnit.length;
-    document.getElementById('stat-warn').innerText = countWarn;
-    document.getElementById('stat-exp').innerText = countExp;
+    const totalItem = dataOperator.length + dataUnit.length;
+    const totalValid = safeCount + warnCount;
+    const persenPatuh = totalItem === 0 ? 100 : Math.round((totalValid / totalItem) * 100);
+    const totalAlert = warnCount + expCount;
+
+    // Update KPI & Badges
+    document.getElementById('kpi-aktif').innerText = totalValid;
+    document.getElementById('kpi-warn').innerText = warnCount;
+    document.getElementById('kpi-persen').innerText = persenPatuh + "%";
+    document.getElementById('kpi-total').innerText = totalItem;
+    document.getElementById('kpi-rincian').innerText = `${dataOperator.length} Operator • ${dataUnit.length} Unit`;
+    document.getElementById('side-badge').innerText = totalAlert;
+    document.getElementById('top-badge').innerText = totalAlert;
+
+    // Progress Bar Rekap
+    document.getElementById('bar-op-txt').innerText = `${opAktif} / ${dataOperator.length} Aktif`;
+    document.getElementById('bar-op-fill').style.width = (dataOperator.length ? (opAktif / dataOperator.length) * 100 : 0) + "%";
+    document.getElementById('bar-unit-txt').innerText = `${unitAktif} / ${dataUnit.length} Aktif`;
+    document.getElementById('bar-unit-fill').style.width = (dataUnit.length ? (unitAktif / dataUnit.length) * 100 : 0) + "%";
+
+    // Donut Chart
+    const pSafe = totalItem ? (safeCount / totalItem) * 100 : 100;
+    const pWarn = totalItem ? (warnCount / totalItem) * 100 : 0;
+    document.getElementById('donut-chart').style.background = `conic-gradient(#16a34a 0% ${pSafe}%, #facc15 ${pSafe}% ${pSafe + pWarn}%, #ef4444 ${pSafe + pWarn}% 100%)`;
+    document.getElementById('donut-pct').innerText = persenPatuh + "%";
+    document.getElementById('donut-status-lbl').innerText = expCount > 0 ? "Perlu Tindak Lanjut" : "Aman";
+    document.getElementById('donut-status-lbl').style.color = expCount > 0 ? "#dc2626" : "#16a34a";
+    document.getElementById('leg-safe').innerText = safeCount;
+    document.getElementById('leg-warn').innerText = warnCount;
+    document.getElementById('leg-exp').innerText = expCount;
+    document.getElementById('donut-note').innerHTML = expCount > 0
+      ? `<span>⚠️</span> <span>Terdapat <strong>${expCount} lisensi kedaluwarsa</strong> yang wajib segera diperpanjang.</span>`
+      : `<span>✅</span> <span>Seluruh lisensi SIO & SILO dalam kondisi aktif dan memenuhi syarat.</span>`;
+
+    // Aktivitas Terbaru
+    const aktEl = document.getElementById('aktivitas-list');
+    aktEl.innerHTML = logAktivitas.slice(0, 3).map(l => `
+      <div class="list-item">
+        <span style="background:${l.warna}; color:#fff; width:24px; height:24px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">${l.ikon}</span>
+        <div>
+          <div style="font-weight:600; color:#0f172a;">${l.judul}</div>
+          <div style="font-size:0.76rem; color:#64748b;">${l.ket}</div>
+        </div>
+      </div>`).join('');
+
+    // Pengingat Mini & Lengkap
+    const miniEl = document.getElementById('pengingat-mini');
+    const fullEl = document.getElementById('pengingat-lengkap');
+    if (daftarPengingat.length === 0) {
+      const kosongHtml = `<div style="padding:14px; background:#f0fdf4; border-radius:8px; color:#166534; font-size:0.86rem;">🎉 Tidak ada SIO maupun SILO yang kedaluwarsa atau mendekati habis.</div>`;
+      miniEl.innerHTML = kosongHtml;
+      fullEl.innerHTML = kosongHtml;
+    } else {
+      const renderItem = (p) => {
+        const dotColor = p.st.kategori === 'exp' ? '#ef4444' : '#f59e0b';
+        const label = p.st.kategori === 'exp' ? 'Segera' : `Sisa ${p.st.sisa} hr`;
+        return `
+          <div class="task-row">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="dot" style="background:${dotColor};"></span>
+              <span style="color:${dotColor}; font-weight:700; min-width:68px;">${label}</span>
+              <span><strong>${p.tipe}:</strong> ${p.nama}</span>
+            </div>
+            <span style="color:#64748b; font-size:0.8rem;">${p.tgl}</span>
+          </div>`;
+      };
+      miniEl.innerHTML = daftarPengingat.slice(0, 3).map(renderItem).join('');
+      fullEl.innerHTML = daftarPengingat.map(renderItem).join('');
+    }
   }
 
+  aturSapaan();
   renderSemua();
 </script>
 </body>
