@@ -4,16 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PantauK3 — Enterprise Safety Monitoring System</title>
-  <!-- Pustaka Penghubung Database Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --sidebar-bg: #0b2239;
       --sidebar-hover: rgba(255, 255, 255, 0.08);
       --green-primary: #16a34a;
-      --green-dark: #15803d;
       --bg-main: #f3f6fa;
-      --card-bg: #ffffff;
       --text-dark: #0f172a;
       --text-muted: #64748b;
       --border-light: #e2e8f0;
@@ -38,14 +34,8 @@
       z-index: 40;
     }
 
-    .brand-header {
-      padding: 22px 18px 16px;
-      text-align: center;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .brand-logo-wrap {
-      display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px;
-    }
+    .brand-header { padding: 22px 18px 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .brand-logo-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px; }
     .brand-logo-wrap img { height: 48px; width: auto; border-radius: 8px; }
     .brand-name { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.3px; }
     .brand-name span { color: #22c55e; }
@@ -53,33 +43,20 @@
 
     .nav-list { padding: 14px 12px; display: flex; flex-direction: column; gap: 4px; }
     .nav-btn {
-      display: flex; align-items: center; gap: 11px;
-      padding: 10px 14px; border-radius: 8px;
-      background: transparent; border: none; color: #cbd5e1;
-      font-size: 0.88rem; font-weight: 500; cursor: pointer;
-      text-align: left; width: 100%; transition: all 0.2s;
+      display: flex; align-items: center; gap: 11px; padding: 10px 14px; border-radius: 8px;
+      background: transparent; border: none; color: #cbd5e1; font-size: 0.88rem; font-weight: 500;
+      cursor: pointer; text-align: left; width: 100%; transition: all 0.2s;
     }
     .nav-btn:hover { background: var(--sidebar-hover); color: #fff; }
-    .nav-btn.active {
-      background: var(--green-primary); color: #fff; font-weight: 600;
-      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
-    }
-    .badge-count {
-      margin-left: auto; background: #ef4444; color: #fff;
-      font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 12px;
-    }
+    .nav-btn.active { background: var(--green-primary); color: #fff; font-weight: 600; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35); }
+    .badge-count { margin-left: auto; background: #ef4444; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 12px; }
 
     .sidebar-bottom { padding: 14px; }
     .commitment-card {
       background: linear-gradient(135deg, rgba(22,163,74,0.28) 0%, rgba(15,23,42,0.85) 100%);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      border-radius: 12px; padding: 14px 12px; text-align: center;
-      margin-bottom: 10px;
+      border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 12px; padding: 14px 12px; text-align: center; margin-bottom: 10px;
     }
-    .commitment-card .quote {
-      font-size: 0.88rem; font-weight: 800; color: #facc15;
-      font-style: italic; line-height: 1.3; margin-bottom: 6px;
-    }
+    .commitment-card .quote { font-size: 0.88rem; font-weight: 800; color: #facc15; font-style: italic; line-height: 1.3; margin-bottom: 6px; }
     .commitment-card .sub { font-size: 0.72rem; color: #cbd5e1; }
     .version-txt { text-align: center; font-size: 0.7rem; color: #64748b; }
 
@@ -88,46 +65,33 @@
 
     /* TOPBAR */
     .topbar {
-      background: #fff; padding: 12px 26px;
-      display: flex; align-items: center; justify-content: space-between; gap: 14px;
-      border-bottom: 1px solid var(--border-light);
-      position: sticky; top: 0; z-index: 30;
+      background: #fff; padding: 12px 26px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+      border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 30;
     }
     .search-global {
-      display: flex; align-items: center; background: #f1f5f9;
-      border: 1px solid #e2e8f0; border-radius: 8px; padding: 0 12px;
-      width: 100%; max-width: 340px;
+      display: flex; align-items: center; background: #f1f5f9; border: 1px solid #e2e8f0;
+      border-radius: 8px; padding: 0 12px; width: 100%; max-width: 340px;
     }
-    .search-global input {
-      border: none; background: transparent; padding: 9px 8px;
-      font-size: 0.86rem; width: 100%; outline: none; color: var(--text-dark);
-    }
+    .search-global input { border: none; background: transparent; padding: 9px 8px; font-size: 0.86rem; width: 100%; outline: none; color: var(--text-dark); }
     .top-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .db-status {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534;
-      font-size: 0.76rem; font-weight: 700; padding: 6px 11px; border-radius: 20px;
+      display: inline-flex; align-items: center; gap: 6px; background: #fefce8; border: 1px solid #fde047;
+      color: #854d0e; font-size: 0.76rem; font-weight: 700; padding: 6px 11px; border-radius: 20px;
     }
-    .db-dot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; }
-    .filter-loc {
-      padding: 7px 11px; border: 1px solid #cbd5e1; border-radius: 8px;
-      font-size: 0.82rem; font-weight: 600; color: #334155; background: #fff;
-    }
+    .db-dot { width: 8px; height: 8px; border-radius: 50%; background: #eab308; }
+    .filter-loc { padding: 7px 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: #334155; background: #fff; }
     .bell-btn {
-      position: relative; background: #f8fafc; border: 1px solid #e2e8f0;
-      width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; font-size: 1.05rem;
+      position: relative; background: #f8fafc; border: 1px solid #e2e8f0; width: 38px; height: 38px;
+      border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.05rem;
     }
     .bell-dot {
-      position: absolute; top: -3px; right: -3px; background: #ef4444; color: #fff;
-      font-size: 0.68rem; font-weight: 700; min-width: 18px; height: 18px;
-      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      position: absolute; top: -3px; right: -3px; background: #ef4444; color: #fff; font-size: 0.68rem;
+      font-weight: 700; min-width: 18px; height: 18px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
     }
     .profile-chip { display: flex; align-items: center; gap: 10px; }
     .avatar-circle {
-      width: 36px; height: 36px; border-radius: 50%; background: #0b2239;
-      color: #fff; font-weight: 700; font-size: 0.82rem;
-      display: flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 50%; background: #0b2239; color: #fff;
+      font-weight: 700; font-size: 0.82rem; display: flex; align-items: center; justify-content: center;
     }
     .profile-info { line-height: 1.2; }
     .profile-info strong { font-size: 0.85rem; display: block; }
@@ -138,49 +102,34 @@
     /* HERO BANNER */
     .hero-banner {
       background: linear-gradient(105deg, #0b2239 0%, #103c5c 52%, #15803d 100%);
-      border-radius: 16px; padding: 26px 32px; color: #fff;
-      display: flex; align-items: center; justify-content: space-between;
-      position: relative; overflow: hidden; margin-bottom: 22px;
+      border-radius: 16px; padding: 26px 32px; color: #fff; display: flex; align-items: center;
+      justify-content: space-between; position: relative; overflow: hidden; margin-bottom: 22px;
       box-shadow: 0 8px 24px rgba(11, 34, 57, 0.14);
     }
     .hero-left { max-width: 620px; position: relative; z-index: 2; }
-    .hero-tag {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 0.78rem; color: #86efac; font-weight: 600; margin-bottom: 8px;
-    }
+    .hero-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; color: #86efac; font-weight: 600; margin-bottom: 8px; }
     .hero-left h1 { margin: 0 0 8px; font-size: 1.7rem; font-weight: 800; line-height: 1.25; }
     .hero-left p { margin: 0 0 18px; font-size: 0.92rem; color: #cbd5e1; }
     .btn-green {
-      background: #22c55e; color: #052e16; border: none;
-      padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 0.86rem;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-      transition: 0.2s;
+      background: #22c55e; color: #052e16; border: none; padding: 10px 20px; border-radius: 8px;
+      font-weight: 700; font-size: 0.86rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
     }
     .btn-green:hover { background: #4ade80; }
     .hero-right {
-      display: flex; align-items: center; gap: 14px;
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16);
-      padding: 14px 20px; border-radius: 14px; position: relative; z-index: 2;
+      display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16); padding: 14px 20px; border-radius: 14px; position: relative; z-index: 2;
     }
 
     /* 4 KPI CARDS */
-    .kpi-row {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px; margin-bottom: 20px;
-    }
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
     .kpi-box {
-      background: #fff; border-radius: 14px; padding: 18px;
-      border: 1px solid var(--border-light);
+      background: #fff; border-radius: 14px; padding: 18px; border: 1px solid var(--border-light);
       display: flex; align-items: center; justify-content: space-between;
       box-shadow: 0 2px 6px rgba(15,23,42,0.03); cursor: pointer; transition: 0.2s;
     }
     .kpi-box:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,23,42,0.06); }
     .kpi-left { display: flex; align-items: center; gap: 14px; }
-    .kpi-circle {
-      width: 46px; height: 46px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.25rem; color: #fff; flex-shrink: 0;
-    }
+    .kpi-circle { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: #fff; flex-shrink: 0; }
     .kpi-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
     .kpi-num { font-size: 1.55rem; font-weight: 800; color: var(--text-dark); margin: 2px 0; }
     .kpi-delta { font-size: 0.74rem; font-weight: 600; }
@@ -189,78 +138,37 @@
     .grid-mid { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 18px; margin-bottom: 20px; }
     .grid-bot { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 18px; }
 
-    .card {
-      background: #fff; border-radius: 14px; padding: 18px 20px;
-      border: 1px solid var(--border-light);
-      box-shadow: 0 2px 6px rgba(15,23,42,0.02);
-    }
-    .card-head {
-      display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
-    }
+    .card { background: #fff; border-radius: 14px; padding: 18px 20px; border: 1px solid var(--border-light); box-shadow: 0 2px 6px rgba(15,23,42,0.02); }
+    .card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .card-title { font-size: 0.96rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
     .btn-link { background: none; border: none; color: #2563eb; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
 
     /* DONUT */
     .donut-area { display: flex; align-items: center; justify-content: space-around; gap: 12px; margin: 8px 0; }
-    .donut-circle {
-      width: 118px; height: 118px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .donut-inner {
-      width: 80px; height: 80px; border-radius: 50%; background: #fff;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-    }
+    .donut-circle { width: 118px; height: 118px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .donut-inner { width: 80px; height: 80px; border-radius: 50%; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .legend-col { display: flex; flex-direction: column; gap: 9px; font-size: 0.82rem; }
     .dot-sm { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; }
-    .info-pill {
-      margin-top: 12px; background: #f0fdf4; border: 1px solid #bbf7d0;
-      padding: 8px 12px; border-radius: 8px; font-size: 0.78rem; color: #166534;
-    }
+    .info-pill { margin-top: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 12px; border-radius: 8px; font-size: 0.78rem; color: #166534; }
 
-    /* SAFETY ALERT BANNER */
-    .safety-alert {
-      margin-top: 12px; background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
-      color: #fff; border-radius: 10px; padding: 12px 14px;
-      border-left: 4px solid #f59e0b;
-    }
-    .safety-alert span {
-      background: #f59e0b; color: #0f172a; font-size: 0.68rem; font-weight: 800;
-      padding: 2px 7px; border-radius: 4px; text-transform: uppercase;
-    }
+    .safety-alert { margin-top: 12px; background: linear-gradient(90deg, #1e293b 0%, #334155 100%); color: #fff; border-radius: 10px; padding: 12px 14px; border-left: 4px solid #f59e0b; }
+    .safety-alert span { background: #f59e0b; color: #0f172a; font-size: 0.68rem; font-weight: 800; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; }
 
-    /* AKSES CEPAT */
     .quick-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .quick-btn {
-      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
-      padding: 14px 10px; text-align: center; cursor: pointer; transition: 0.2s;
-      font-size: 0.8rem; font-weight: 600; color: #1e293b;
-    }
+    .quick-btn { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 10px; text-align: center; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #1e293b; }
     .quick-btn:hover { background: #eff6ff; border-color: #93c5fd; color: #1d4ed8; }
     .quick-btn div { font-size: 1.4rem; margin-bottom: 5px; }
 
     /* SUB-TABS & TABLES */
     .view-pane { display: none; }
     .view-pane.active { display: block; }
-
     .sub-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-    .sub-tab {
-      padding: 8px 16px; border-radius: 8px; border: 1px solid #cbd5e1;
-      background: #fff; font-size: 0.84rem; font-weight: 600; cursor: pointer; color: #475569;
-    }
+    .sub-tab { padding: 8px 16px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; font-size: 0.84rem; font-weight: 600; cursor: pointer; color: #475569; }
     .sub-tab.active { background: #0b2239; color: #fff; border-color: #0b2239; }
 
-    .form-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
-      gap: 10px; background: #f8fafc; padding: 14px; border-radius: 10px;
-      border: 1px solid #e2e8f0; margin-bottom: 14px;
-    }
-    .form-grid input, .form-grid select {
-      padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 0.85rem; width: 100%;
-    }
-    .btn-submit {
-      background: var(--green-primary); color: #fff; border: none; padding: 9px 14px;
-      border-radius: 7px; font-weight: 700; font-size: 0.85rem; cursor: pointer;
-    }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 10px; background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 14px; }
+    .form-grid input, .form-grid select { padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 0.85rem; width: 100%; }
+    .btn-submit { background: var(--green-primary); color: #fff; border: none; padding: 9px 14px; border-radius: 7px; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
     .btn-submit:disabled { opacity: 0.6; cursor: wait; }
 
     .table-scroll { overflow-x: auto; }
@@ -277,9 +185,7 @@
     .btn-sm { padding: 5px 9px; border-radius: 5px; border: none; font-size: 0.74rem; font-weight: 600; cursor: pointer; margin-right: 4px; }
     .menu-burger { display: none; background: #0b2239; color: #fff; border: none; padding: 7px 11px; border-radius: 6px; cursor: pointer; }
 
-    @media (max-width: 1100px) {
-      .grid-mid, .grid-bot { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 1100px) { .grid-mid, .grid-bot { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
       .sidebar { position: fixed; left: -265px; transition: 0.25s; }
       .sidebar.open { left: 0; }
@@ -322,13 +228,12 @@
         <div class="quote">"Zero Accident<br>Our Commitment"</div>
         <div class="sub">Keselamatan Prioritas Utama</div>
       </div>
-      <div class="version-txt">v2.0 Cloud • PantauK3 © 2026</div>
+      <div class="version-txt">v2.1 Cloud • PantauK3 © 2026</div>
     </div>
   </aside>
 
   <!-- MAIN WRAPPER -->
   <div class="main-wrapper">
-    <!-- TOPBAR -->
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:200px;">
         <button class="menu-burger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
@@ -391,7 +296,6 @@
           </div>
         </div>
 
-        <!-- 4 KPI -->
         <div class="kpi-row">
           <div class="kpi-box" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1])">
             <div class="kpi-left">
@@ -421,4 +325,693 @@
             <div class="kpi-left">
               <div class="kpi-circle" style="background:#2563eb;">📋</div>
               <div>
-                <div class
+                <div class="kpi-title">Unit &amp; Operator Terdata</div>
+                <div class="kpi-num" id="kpi-unit-op">0</div>
+                <div class="kpi-delta" style="color:#2563eb;" id="kpi-unit-detail">0 Op • 0 Unit</div>
+              </div>
+            </div>
+            <svg width="56" height="28"><polyline fill="none" stroke="#2563eb" stroke-width="2.5" points="2,22 18,18 34,14 48,9 54,5"/></svg>
+          </div>
+
+          <div class="kpi-box" onclick="goPage('laporan', document.querySelectorAll('.nav-btn')[4])">
+            <div class="kpi-left">
+              <div class="kpi-circle" style="background:#8b5cf6;">⏱️</div>
+              <div>
+                <div class="kpi-title">Safe Manhours</div>
+                <div class="kpi-num" id="kpi-manhours">0</div>
+                <div class="kpi-delta" style="color:#7c3aed;">Jam Kerja Aman</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-mid">
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">📈 Tren Kepatuhan K3</h3>
+              <span class="pill pill-safe">Target ≥ 95%</span>
+            </div>
+            <svg viewBox="0 0 420 165" style="width:100%; height:auto;">
+              <line x1="35" y1="25" x2="405" y2="25" stroke="#22c55e" stroke-dasharray="4 4" stroke-width="1.5"/>
+              <line x1="35" y1="65" x2="405" y2="65" stroke="#f1f5f9" stroke-width="1"/>
+              <line x1="35" y1="105" x2="405" y2="105" stroke="#f1f5f9" stroke-width="1"/>
+              <line x1="35" y1="140" x2="405" y2="140" stroke="#cbd5e1" stroke-width="1"/>
+              <text x="5" y="29" font-size="10" fill="#64748b">100%</text>
+              <text x="8" y="69" font-size="10" fill="#64748b">90%</text>
+              <text x="8" y="109" font-size="10" fill="#64748b">80%</text>
+              <text x="8" y="143" font-size="10" fill="#64748b">70%</text>
+              <polygon fill="rgba(37,99,235,0.1)" points="45,88 135,72 225,52 315,38 395,28 395,140 45,140"/>
+              <polyline fill="none" stroke="#2563eb" stroke-width="3" points="45,88 135,72 225,52 315,38 395,28"/>
+              <circle cx="45" cy="88" r="4" fill="#2563eb"/>
+              <circle cx="135" cy="72" r="4" fill="#2563eb"/>
+              <circle cx="225" cy="52" r="4" fill="#2563eb"/>
+              <circle cx="315" cy="38" r="4" fill="#2563eb"/>
+              <circle cx="395" cy="28" r="5" fill="#16a34a"/>
+              <rect x="368" y="8" width="44" height="16" rx="4" fill="#16a34a"/>
+              <text x="373" y="19" font-size="10" fill="#fff" font-weight="bold">98.2%</text>
+              <text x="35" y="156" font-size="10" fill="#64748b">Jul</text>
+              <text x="125" y="156" font-size="10" fill="#64748b">Agu</text>
+              <text x="215" y="156" font-size="10" fill="#64748b">Sep</text>
+              <text x="305" y="156" font-size="10" fill="#64748b">Okt</text>
+              <text x="385" y="156" font-size="10" fill="#64748b">Nov</text>
+            </svg>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">🛡️ Status Lisensi SIO &amp; SILO</h3>
+            </div>
+            <div class="donut-area">
+              <div class="donut-circle" id="donut-ring">
+                <div class="donut-inner">
+                  <strong style="font-size:1.25rem;" id="donut-pct">100%</strong>
+                  <span style="font-size:0.7rem; color:#16a34a; font-weight:700;">Terkendali</span>
+                </div>
+              </div>
+              <div class="legend-col">
+                <div><i class="dot-sm" style="background:#16a34a;"></i>Aktif (&gt;30 hr): <strong id="cnt-ok">0</strong></div>
+                <div><i class="dot-sm" style="background:#f59e0b;"></i>Segera Habis: <strong id="cnt-warn">0</strong></div>
+                <div><i class="dot-sm" style="background:#ef4444;"></i>Kedaluwarsa: <strong id="cnt-exp">0</strong></div>
+              </div>
+            </div>
+            <div class="info-pill" id="status-summary-box">
+              ✅ Tersinkronisasi langsung dengan database Supabase.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">🔔 Notifikasi Penting</h3>
+              <button class="btn-link" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">Lihat Semua →</button>
+            </div>
+            <div id="notif-list" style="font-size:0.82rem; display:flex; flex-direction:column; gap:9px;"></div>
+            <div class="safety-alert">
+              <span>Safety Alert</span>
+              <div style="font-weight:700; font-size:0.84rem; margin-top:5px;">Cek Rem, Klakson Mundur &amp; Masa Berlaku SILO</div>
+              <div style="font-size:0.75rem; color:#cbd5e1;">Wajib P2H sebelum mengoperasikan unit forklift di area kerja.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-bot">
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">🕒 Aktivitas Terbaru</h3>
+              <button class="btn-link" onclick="muatSemuaData()">🔄 Segarkan</button>
+            </div>
+            <div id="activity-feed" style="font-size:0.82rem; display:flex; flex-direction:column; gap:10px;"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">📍 Status Area Monitoring</h3>
+              <button class="btn-link" onclick="goPage('lokasi', document.querySelectorAll('.nav-btn')[5])">Detail →</button>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:0.84rem;">
+              <div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px;">
+                <span>🏭 Area Workshop &amp; Warehouse</span>
+                <span class="pill pill-safe">Aktif</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px;">
+                <span>⚙️ Area Produksi</span>
+                <span class="pill pill-safe">Aktif</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px;">
+                <span>🚚 Area Yard &amp; Loading</span>
+                <span class="pill pill-safe">Aktif</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">⚡ Akses Cepat</h3>
+            </div>
+            <div class="quick-grid">
+              <div class="quick-btn" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1])">
+                <div>👷</div>Tambah SIO Operator
+              </div>
+              <div class="quick-btn" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1]); switchSub('unit', document.querySelectorAll('.sub-tab')[1])">
+                <div>🚜</div>Tambah SILO Unit
+              </div>
+              <div class="quick-btn" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">
+                <div>⚠️</div>Lapor Hazard
+              </div>
+              <div class="quick-btn" onclick="goPage('laporan', document.querySelectorAll('.nav-btn')[4])">
+                <div>📊</div>Input Manhours
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. INSPEKSI & MONITORING -->
+      <section id="page-inspeksi" class="view-pane">
+        <div class="sub-tabs">
+          <button class="sub-tab active" onclick="switchSub('sio', this)">👷 Operator Forklift (SIO)</button>
+          <button class="sub-tab" onclick="switchSub('unit', this)">🚜 Unit Forklift (SILO)</button>
+          <button class="sub-tab" onclick="switchSub('apd', this)">🦺 Monitoring APD</button>
+        </div>
+
+        <div id="sub-sio" class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">Daftar Lisensi Operator Forklift (SIO)</h3>
+          <div class="form-grid">
+            <input type="text" id="op-nama" placeholder="Nama Operator">
+            <input type="text" id="op-sio" placeholder="Nomor SIO">
+            <select id="op-kelas">
+              <option value="Kelas II (< 15 Ton)">Kelas II (&lt; 15 Ton)</option>
+              <option value="Kelas I (> 15 Ton)">Kelas I (&gt; 15 Ton)</option>
+            </select>
+            <select id="op-lokasi">
+              <option value="Area Workshop & Warehouse">Area Workshop &amp; Warehouse</option>
+              <option value="Area Produksi">Area Produksi</option>
+              <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
+            </select>
+            <input type="date" id="op-tgl" title="Tanggal Berlaku Sampai">
+            <button class="btn-submit" id="btn-add-op" onclick="addOp()">+ Simpan ke Database</button>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Nama Operator</th><th>No. SIO</th><th>Kelas</th><th>Lokasi</th><th>Berlaku Sampai</th><th>Status</th><th>Aksi</th></tr></thead>
+              <tbody id="tbl-op"><tr><td colspan="7">Memuat data...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sub-unit" class="card" style="display:none;">
+          <h3 class="card-title" style="margin-bottom:12px;">Daftar Riksa Uji Unit Forklift (SILO)</h3>
+          <div class="form-grid">
+            <input type="text" id="unit-kode" placeholder="Kode Unit (misal: FL-01)">
+            <input type="text" id="unit-merk" placeholder="Merek & Kapasitas">
+            <input type="text" id="unit-silo" placeholder="Nomor Pengesahan SILO">
+            <select id="unit-lokasi">
+              <option value="Area Workshop & Warehouse">Area Workshop &amp; Warehouse</option>
+              <option value="Area Produksi">Area Produksi</option>
+              <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
+            </select>
+            <input type="date" id="unit-tgl" title="Tanggal Berlaku Sampai">
+            <button class="btn-submit" id="btn-add-unit" style="background:#2563eb;" onclick="addUnit()">+ Simpan ke Database</button>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Kode Unit</th><th>Merek &amp; Kapasitas</th><th>No. SILO</th><th>Lokasi</th><th>Berlaku Sampai</th><th>Status</th><th>Aksi</th></tr></thead>
+              <tbody id="tbl-unit"><tr><td colspan="7">Memuat data...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sub-apd" class="card" style="display:none;">
+          <h3 class="card-title" style="margin-bottom:12px;">Rekap Pemeriksaan Kepatuhan APD</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Area Kerja</th><th>Jenis APD Wajib</th><th>Jumlah Personel</th><th>Patuh</th><th>Tingkat Kepatuhan</th></tr></thead>
+              <tbody>
+                <tr><td>Area Workshop &amp; Warehouse</td><td>Helm, Sepatu Safety, Rompi Reflektor</td><td>24</td><td>24</td><td><span class="pill pill-safe">100%</span></td></tr>
+                <tr><td>Area Produksi</td><td>Helm, Earplug, Sepatu Safety, Kacamata</td><td>40</td><td>39</td><td><span class="pill pill-safe">97.5%</span></td></tr>
+                <tr><td>Area Yard &amp; Loading</td><td>Helm, Rompi High-Vis, Sepatu Safety</td><td>18</td><td>18</td><td><span class="pill pill-safe">100%</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. TEMUAN / HAZARD -->
+      <section id="page-hazard" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">⚠️ Pelaporan Temuan / Kondisi Tidak Aman (Hazard)</h3>
+          <div class="form-grid">
+            <input type="text" id="hz-desc" placeholder="Deskripsi Temuan / Potensi Bahaya">
+            <select id="hz-lokasi">
+              <option value="Area Workshop & Warehouse">Area Workshop &amp; Warehouse</option>
+              <option value="Area Produksi">Area Produksi</option>
+              <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
+            </select>
+            <select id="hz-risk">
+              <option value="Tinggi">Risiko Tinggi</option>
+              <option value="Sedang" selected>Risiko Sedang</option>
+              <option value="Rendah">Risiko Rendah</option>
+            </select>
+            <input type="text" id="hz-pic" placeholder="PIC Penanggung Jawab">
+            <input type="date" id="hz-due" title="Tenggat Penyelesaian">
+            <button class="btn-submit" id="btn-add-hz" style="background:#d97706;" onclick="addHazard()">+ Kirim ke Database</button>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Deskripsi Temuan</th><th>Lokasi</th><th>Risiko</th><th>PIC</th><th>Tenggat</th><th>Status</th><th>Aksi</th></tr></thead>
+              <tbody id="tbl-hazard"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. TINDAK LANJUT -->
+      <section id="page-tindaklanjut" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:10px;">✅ Monitoring Tindak Lanjut &amp; Verifikasi (CAPA)</h3>
+          <div id="capa-list"></div>
+        </div>
+      </section>
+
+      <!-- 5. LAPORAN & MANHOURS -->
+      <section id="page-laporan" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">📊 Pencatatan Safe Manhours &amp; Ekspor Laporan</h3>
+          <div class="form-grid">
+            <input type="month" id="mh-bulan" value="2026-11">
+            <select id="mh-kat">
+              <option value="Karyawan Organik">Karyawan Organik</option>
+              <option value="Kontraktor / Vendor">Kontraktor / Vendor</option>
+            </select>
+            <input type="number" id="mh-jam" placeholder="Total Jam Kerja (misal: 4500)">
+            <button class="btn-submit" id="btn-add-mh" onclick="addManhour()">+ Simpan Manhours</button>
+            <button class="btn-submit" style="background:#0b2239;" onclick="exportCSV()">⬇️ Unduh Rekap (.CSV)</button>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Periode</th><th>Kategori Tenaga Kerja</th><th>Jam Kerja Aman</th><th>Kecelakaan Kerja (LTI)</th><th>Status</th></tr></thead>
+              <tbody id="tbl-mh"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. AREA & LOKASI -->
+      <section id="page-lokasi" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">📍 Master Area &amp; Penanggung Jawab Lokasi</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Kode Area</th><th>Nama Lokasi Kerja</th><th>PIC Area</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>AREA-01</td><td>Area Workshop &amp; Warehouse</td><td>Kepala Gudang</td><td><span class="pill pill-safe">Aktif</span></td></tr>
+                <tr><td>AREA-02</td><td>Area Produksi</td><td>Supervisor Produksi</td><td><span class="pill pill-safe">Aktif</span></td></tr>
+                <tr><td>AREA-03</td><td>Area Yard &amp; Loading</td><td>Koordinator Logistik</td><td><span class="pill pill-safe">Aktif</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. EDUKASI & DOKUMEN K3 -->
+      <section id="page-edukasi" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">📖 Pustaka Dokumen &amp; Regulasi K3</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>No. Dokumen</th><th>Judul Dokumen / Regulasi</th><th>Kategori</th><th>Revisi</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>SOP-K3-001</td><td>Prosedur Pengoperasian Forklift &amp; Pemeriksaan Harian (P2H)</td><td>SOP Operasional</td><td>Rev. 03</td><td><span class="pill pill-safe">Berlaku</span></td></tr>
+                <tr><td>JSA-WH-012</td><td>Job Safety Analysis Bongkar Muat Menggunakan Forklift</td><td>JSA / HIRADC</td><td>Rev. 02</td><td><span class="pill pill-safe">Berlaku</span></td></tr>
+                <tr><td>REG-MNK-08</td><td>Permenaker No. 8 Tahun 2020 — Pesawat Angkat &amp; Angkut</td><td>Regulasi Pemerintah</td><td>2020</td><td><span class="pill pill-info">Referensi</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. PENGATURAN -->
+      <section id="page-pengaturan" class="view-pane">
+        <div class="card" style="max-width:560px;">
+          <h3 class="card-title" style="margin-bottom:12px;">⚙️ Pengaturan Profil Petugas</h3>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+            <input type="text" id="set-nama" placeholder="Nama Petugas (contoh: Budi Santoso)" style="padding:9px; border:1px solid #cbd5e1; border-radius:7px;">
+            <input type="text" id="set-role" placeholder="Jabatan (contoh: Safety Officer)" style="padding:9px; border:1px solid #cbd5e1; border-radius:7px;">
+            <button class="btn-submit" onclick="saveProfile()">Simpan Profil</button>
+          </div>
+          <hr style="border:none; border-top:1px solid #e2e8f0; margin:14px 0;">
+          <button class="btn-submit" style="background:#2563eb;" onclick="downloadJSON()">⬇️ Unduh Salinan Data Database (.JSON)</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+<script>
+  const API_URL = "https://rgraolafumuihgzxuouj.supabase.co/rest/v1";
+  const API_KEY = "sb_publishable_V7omvrK3zdxTiz6UFWG4Fg_syzlC0vI";
+
+  async function supaReq(path, method = "GET", bodyData = null) {
+    const headers = {
+      "apikey": API_KEY,
+      "Content-Type": "application/json",
+      "Prefer": "return=representation"
+    };
+    const options = { method, headers };
+    if (bodyData) options.body = JSON.stringify(bodyData);
+    const res = await fetch(API_URL + path, options);
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText || ("HTTP " + res.status));
+    }
+    return method === "DELETE" ? true : await res.json();
+  }
+
+  let ops = [], units = [], hazards = [], manhours = [];
+  let logs = [{ text: "Aplikasi siap digunakan", time: "Baru saja", color: "#16a34a" }];
+
+  function setDbStatus(ok, msg) {
+    const box = document.getElementById('db-indicator');
+    const dot = document.getElementById('db-dot');
+    const txt = document.getElementById('db-text');
+    txt.innerText = msg;
+    if (ok) {
+      box.style.background = "#f0fdf4"; box.style.borderColor = "#bbf7d0"; box.style.color = "#166534";
+      dot.style.background = "#16a34a";
+    } else {
+      box.style.background = "#fef2f2"; box.style.borderColor = "#fecaca"; box.style.color = "#991b1b";
+      dot.style.background = "#ef4444";
+    }
+  }
+
+  function pushLog(text, color = "#16a34a") {
+    const t = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    logs.unshift({ text, time: `Hari ini, ${t}`, color });
+  }
+
+  async function muatSemuaData() {
+    setDbStatus(true, "Menyinkronkan...");
+    try {
+      const [resOp, resUnit, resHz, resMh] = await Promise.all([
+        supaReq("/operators?select=*&order=id.desc"),
+        supaReq("/units?select=*&order=id.desc"),
+        supaReq("/hazards?select=*&order=id.desc"),
+        supaReq("/manhours?select=*&order=id.desc")
+      ]);
+      ops = resOp || [];
+      units = resUnit || [];
+      hazards = resHz || [];
+      manhours = resMh || [];
+      setDbStatus(true, "Cloud Terhubung");
+      renderAll();
+    } catch (err) {
+      setDbStatus(false, "Gagal Koneksi");
+      alert("Gagal terhubung ke database: " + err.message);
+    }
+  }
+
+  function goPage(id, btn) {
+    document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
+    document.getElementById('sidebar').classList.remove('open');
+  }
+
+  function switchSub(sub, btn) {
+    ['sio', 'unit', 'apd'].forEach(s => document.getElementById('sub-' + s).style.display = 'none');
+    document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('sub-' + sub).style.display = 'block';
+    if (btn) btn.classList.add('active');
+  }
+
+  function checkExpiry(dateStr) {
+    const now = new Date(); now.setHours(0,0,0,0);
+    const exp = new Date(dateStr);
+    const diff = Math.ceil((exp - now) / 86400000);
+    if (diff < 0) return { label: `Expired (${Math.abs(diff)} hr lalu)`, cls: 'pill-danger', code: 'exp' };
+    if (diff <= 30) return { label: `Segera Habis (${diff} hr)`, cls: 'pill-warn', code: 'warn' };
+    return { label: `Aktif (${diff} hr)`, cls: 'pill-safe', code: 'ok' };
+  }
+
+  async function addOp() {
+    const nama = document.getElementById('op-nama').value.trim();
+    const sio = document.getElementById('op-sio').value.trim();
+    const kelas = document.getElementById('op-kelas').value;
+    const lokasi = document.getElementById('op-lokasi').value;
+    const tgl = document.getElementById('op-tgl').value;
+    if (!nama || !sio || !tgl) return alert("Lengkapi Nama, Nomor SIO, dan Tanggal Berlaku!");
+
+    const btn = document.getElementById('btn-add-op');
+    btn.disabled = true; btn.innerText = "Menyimpan...";
+    try {
+      await supaReq("/operators", "POST", { nama, sio, kelas, lokasi, tgl });
+      document.getElementById('op-nama').value = '';
+      document.getElementById('op-sio').value = '';
+      pushLog(`Operator tersimpan: ${nama} (${sio})`, "#16a34a");
+      await muatSemuaData();
+    } catch (e) {
+      alert("Gagal menyimpan: " + e.message);
+    }
+    btn.disabled = false; btn.innerText = "+ Simpan ke Database";
+  }
+
+  async function addUnit() {
+    const kode = document.getElementById('unit-kode').value.trim();
+    const merk = document.getElementById('unit-merk').value.trim();
+    const silo = document.getElementById('unit-silo').value.trim();
+    const lokasi = document.getElementById('unit-lokasi').value;
+    const tgl = document.getElementById('unit-tgl').value;
+    if (!kode || !merk || !silo || !tgl) return alert("Lengkapi Kode Unit, Merek, Nomor SILO, dan Tanggal Berlaku!");
+
+    const btn = document.getElementById('btn-add-unit');
+    btn.disabled = true; btn.innerText = "Menyimpan...";
+    try {
+      await supaReq("/units", "POST", { kode, merk, silo, lokasi, tgl });
+      document.getElementById('unit-kode').value = '';
+      document.getElementById('unit-merk').value = '';
+      document.getElementById('unit-silo').value = '';
+      pushLog(`Unit tersimpan: ${kode} - ${merk}`, "#2563eb");
+      await muatSemuaData();
+    } catch (e) {
+      alert("Gagal menyimpan: " + e.message);
+    }
+    btn.disabled = false; btn.innerText = "+ Simpan ke Database";
+  }
+
+  async function perpanjangTgl(tabel, id, tglLama) {
+    const tglBaru = prompt("Masukkan tanggal masa berlaku baru (Format: YYYY-MM-DD):", tglLama);
+    if (!tglBaru) return;
+    try {
+      await supaReq(`/${tabel}?id=eq.${id}`, "PATCH", { tgl: tglBaru });
+      pushLog(`Masa berlaku diperpanjang hingga ${tglBaru}`, "#16a34a");
+      await muatSemuaData();
+    } catch (e) {
+      alert("Gagal memperbarui: " + e.message);
+    }
+  }
+
+  async function delRow(tabel, id) {
+    if (!confirm("Hapus data ini secara permanen dari database?")) return;
+    try {
+      await supaReq(`/${tabel}?id=eq.${id}`, "DELETE");
+      pushLog(`Data dihapus dari sistem`, "#ef4444");
+      await muatSemuaData();
+    } catch (e) {
+      alert("Gagal menghapus: " + e.message);
+    }
+  }
+
+  async function addHazard() {
+    const deskripsi = document.getElementById('hz-desc').value.trim();
+    const lokasi = document.getElementById('hz-lokasi').value;
+    const risk = document.getElementById('hz-risk').value;
+    const pic = document.getElementById('hz-pic').value.trim();
+    const due = document.getElementById('hz-due').value;
+    if (!deskripsi || !pic || !due) return alert("Lengkapi Deskripsi Temuan, PIC, dan Tenggat!");
+
+    const btn = document.getElementById('btn-add-hz');
+    btn.disabled = true; btn.innerText = "Mengirim...";
+    try {
+      await supaReq("/hazards", "POST", { deskripsi, lokasi, risk, pic, due, status: "In Progress" });
+      document.getElementById('hz-desc').value = '';
+      document.getElementById('hz-pic').value = '';
+      pushLog(`Temuan baru dikirim: ${deskripsi}`, "#f59e0b");
+      await muatSemuaData();
+    } catch (e) {
+      alert("Gagal mengirim: " + e.message);
+    }
+    btn.disabled = false; btn.innerText = "+ Kirim ke Database";
+  }
+
+  async function closeHazard(id) {
+    try {
+      await supaReq(`/hazards?id=eq.${id}`, "PATCH", { status: "Closed" });
+      pushLog(`Temuan diverifikasi selesai`, "#16a34a");
+      await muatSemuaData();
+    } catch (e) {
+      alert("Gagal memperbarui: " + e.message);
+    }
+  }
+
+  async function addManhour() {
+    const bulan = document.getElementById('mh-bulan').value;
+    const kat = document.getElementById('mh-kat').value;
+    const jam = parseInt(document.getElementById('mh-jam').value, 10);
+    if (!bulan || !jam) return alert("Isi periode bulan dan jumlah jam kerja!");
+
+    const btn = document.getElementById('btn-add-mh');
+    btn.disabled = true;
+    try {
+      await supaReq("/manhours", "POST", { bulan, kat, jam });
+      document.getElementById('mh-jam').value = '';
+      pushLog(`Manhours dicatat (${bulan}): +${jam.toLocaleString('id-ID')} jam`, "#7c3aed");
+      await muatSemuaData();
+    } catch (e) {
+      alert("Gagal menyimpan: " + e.message);
+    }
+    btn.disabled = false;
+  }
+
+  function saveProfile() {
+    const n = document.getElementById('set-nama').value.trim();
+    const r = document.getElementById('set-role').value.trim();
+    if (n) localStorage.setItem('pk3_uname', n);
+    if (r) localStorage.setItem('pk3_urole', r);
+    loadProfile();
+    alert("Profil berhasil diperbarui!");
+  }
+
+  function loadProfile() {
+    const n = localStorage.getItem('pk3_uname') || "Budi Santoso";
+    const r = localStorage.getItem('pk3_urole') || "Safety Officer";
+    document.getElementById('user-name-lbl').innerText = n;
+    document.getElementById('user-role-lbl').innerText = r;
+    document.getElementById('set-nama').value = n;
+    document.getElementById('set-role').value = r;
+    document.getElementById('avatar-txt').innerText = n.split(' ').map(x => x[0]).join('').substring(0,2).toUpperCase();
+  }
+
+  function downloadJSON() {
+    const blob = new Blob([JSON.stringify({ ops, units, hazards, manhours }, null, 2)], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "PantauK3_Cloud_Backup.json";
+    a.click();
+  }
+
+  function exportCSV() {
+    let csv = "Tipe,Identitas,Nomor Lisensi/SILO,Lokasi,Berlaku Sampai\n";
+    ops.forEach(o => csv += `Operator,"${o.nama}","${o.sio}","${o.lokasi}",${o.tgl}\n`);
+    units.forEach(u => csv += `Unit Forklift,"${u.kode} - ${u.merk}","${u.silo}","${u.lokasi}",${u.tgl}\n`);
+    const blob = new Blob([csv], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "Laporan_SIO_SILO_PantauK3.csv";
+    a.click();
+  }
+
+  function filterGlobal() {
+    renderAll(document.getElementById('global-search').value.toLowerCase());
+  }
+
+  function renderAll(searchQuery = "") {
+    const cab = document.getElementById('filter-cabang').value;
+    let okCnt = 0, warnCnt = 0, expCnt = 0, notifs = [];
+
+    const tblOp = document.getElementById('tbl-op');
+    tblOp.innerHTML = ops.length === 0 ? '<tr><td colspan="7" style="color:#64748b;">Belum ada data operator di database. Silakan tambahkan di atas.</td></tr>' : '';
+    ops.forEach(o => {
+      if (cab !== 'ALL' && o.lokasi !== cab) return;
+      if (searchQuery && !(`${o.nama} ${o.sio} ${o.lokasi}`).toLowerCase().includes(searchQuery)) return;
+      const st = checkExpiry(o.tgl);
+      if (st.code === 'ok') okCnt++;
+      else if (st.code === 'warn') { warnCnt++; notifs.push({ msg: `SIO ${o.nama} segera habis (${o.tgl})`, cls: '#f59e0b' }); }
+      else { expCnt++; notifs.push({ msg: `SIO ${o.nama} kedaluwarsa (${o.tgl})`, cls: '#ef4444' }); }
+
+      tblOp.innerHTML += `<tr>
+        <td><strong>${o.nama}</strong></td><td>${o.sio}</td><td>${o.kelas || '-'}</td><td>${o.lokasi || '-'}</td><td>${o.tgl}</td>
+        <td><span class="pill ${st.cls}">${st.label}</span></td>
+        <td>
+          <button class="btn-sm" style="background:#dbeafe; color:#1e40af;" onclick="perpanjangTgl('operators',${o.id},'${o.tgl}')">Perpanjang</button>
+          <button class="btn-sm" style="background:#fee2e2; color:#991b1b;" onclick="delRow('operators',${o.id})">Hapus</button>
+        </td>
+      </tr>`;
+    });
+
+    const tblUnit = document.getElementById('tbl-unit');
+    tblUnit.innerHTML = units.length === 0 ? '<tr><td colspan="7" style="color:#64748b;">Belum ada data unit forklift di database. Silakan tambahkan di atas.</td></tr>' : '';
+    units.forEach(u => {
+      if (cab !== 'ALL' && u.lokasi !== cab) return;
+      if (searchQuery && !(`${u.kode} ${u.merk} ${u.silo} ${u.lokasi}`).toLowerCase().includes(searchQuery)) return;
+      const st = checkExpiry(u.tgl);
+      if (st.code === 'ok') okCnt++;
+      else if (st.code === 'warn') { warnCnt++; notifs.push({ msg: `SILO Unit ${u.kode} segera habis (${u.tgl})`, cls: '#f59e0b' }); }
+      else { expCnt++; notifs.push({ msg: `SILO Unit ${u.kode} kedaluwarsa (${u.tgl})`, cls: '#ef4444' }); }
+
+      tblUnit.innerHTML += `<tr>
+        <td><strong>${u.kode}</strong></td><td>${u.merk}</td><td>${u.silo}</td><td>${u.lokasi || '-'}</td><td>${u.tgl}</td>
+        <td><span class="pill ${st.cls}">${st.label}</span></td>
+        <td>
+          <button class="btn-sm" style="background:#dbeafe; color:#1e40af;" onclick="perpanjangTgl('units',${u.id},'${u.tgl}')">Perpanjang</button>
+          <button class="btn-sm" style="background:#fee2e2; color:#991b1b;" onclick="delRow('units',${u.id})">Hapus</button>
+        </td>
+      </tr>`;
+    });
+
+    const tblHz = document.getElementById('tbl-hazard');
+    const capaEl = document.getElementById('capa-list');
+    tblHz.innerHTML = hazards.length === 0 ? '<tr><td colspan="7" style="color:#64748b;">Belum ada laporan temuan hazard.</td></tr>' : '';
+    capaEl.innerHTML = hazards.length === 0 ? '<div style="color:#64748b; font-size:0.85rem;">Belum ada daftar tindak lanjut.</div>' : '';
+    let activeHz = 0;
+
+    hazards.forEach(h => {
+      if (cab !== 'ALL' && h.lokasi !== cab) return;
+      const isClosed = h.status === 'Closed';
+      if (!isClosed) {
+        activeHz++;
+        notifs.push({ msg: `Temuan aktif: ${h.deskripsi} (${h.lokasi})`, cls: '#ef4444' });
+      }
+      const riskCls = h.risk === 'Tinggi' ? 'pill-danger' : (h.risk === 'Sedang' ? 'pill-warn' : 'pill-info');
+      const stCls = isClosed ? 'pill-safe' : 'pill-warn';
+
+      tblHz.innerHTML += `<tr>
+        <td><strong>${h.deskripsi}</strong></td><td>${h.lokasi}</td>
+        <td><span class="pill ${riskCls}">${h.risk}</span></td>
+        <td>${h.pic}</td><td>${h.due || '-'}</td>
+        <td><span class="pill ${stCls}">${h.status}</span></td>
+        <td>${!isClosed ? `<button class="btn-sm" style="background:#16a34a; color:#fff;" onclick="closeHazard(${h.id})">Verifikasi Selesai</button>` : '✓ Terverifikasi'}</td>
+      </tr>`;
+
+      capaEl.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:8px;">
+        <div><strong>${h.deskripsi}</strong><div style="font-size:0.78rem; color:#64748b;">PIC: ${h.pic} • Lokasi: ${h.lokasi} • Tenggat: ${h.due || '-'}</div></div>
+        <span class="pill ${stCls}">${h.status}</span>
+      </div>`;
+    });
+
+    const tblMh = document.getElementById('tbl-mh');
+    tblMh.innerHTML = manhours.length === 0 ? '<tr><td colspan="5" style="color:#64748b;">Belum ada pencatatan manhours.</td></tr>' : '';
+    let totalJam = 0;
+    manhours.forEach(m => {
+      totalJam += Number(m.jam || 0);
+      tblMh.innerHTML += `<tr><td>${m.bulan}</td><td>${m.kat}</td><td><strong>${Number(m.jam).toLocaleString('id-ID')} Jam</strong></td><td>0</td><td><span class="pill pill-safe">Zero LTI</span></td></tr>`;
+    });
+
+    const totalAll = okCnt + warnCnt + expCnt;
+    const validAll = okCnt + warnCnt;
+    const pct = totalAll ? Math.round((validAll / totalAll) * 100) : 100;
+
+    document.getElementById('kpi-kepatuhan').innerText = pct + "%";
+    document.getElementById('kpi-sio-sub').innerText = `${validAll} dari ${totalAll} Lisensi Valid`;
+    document.getElementById('kpi-hazard').innerText = activeHz;
+    document.getElementById('kpi-unit-op').innerText = ops.length + units.length;
+    document.getElementById('kpi-unit-detail').innerText = `${ops.length} Operator • ${units.length} Unit`;
+    document.getElementById('kpi-manhours').innerText = totalJam.toLocaleString('id-ID');
+
+    document.getElementById('nav-hazard-cnt').innerText = activeHz;
+    document.getElementById('top-notif-cnt').innerText = notifs.length;
+
+    const p1 = totalAll ? (okCnt / totalAll) * 100 : 100;
+    const p2 = totalAll ? (warnCnt / totalAll) * 100 : 0;
+    document.getElementById('donut-ring').style.background = `conic-gradient(#16a34a 0% ${p1}%, #f59e0b ${p1}% ${p1+p2}%, #ef4444 ${p1+p2}% 100%)`;
+    document.getElementById('donut-pct').innerText = pct + "%";
+    document.getElementById('cnt-ok').innerText = okCnt;
+    document.getElementById('cnt-warn').innerText = warnCnt;
+    document.getElementById('cnt-exp').innerText = expCnt;
+
+    document.getElementById('notif-list').innerHTML = notifs.length
+      ? notifs.slice(0, 3).map(n => `<div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; border-radius:50%; background:${n.cls}; flex-shrink:0;"></span><span>${n.msg}</span></div>`).join('')
+      : `<div style="color:#16a34a;">✅ Tidak ada peringatan mendesak saat ini.</div>`;
+
+    document.getElementById('activity-feed').innerHTML = logs.slice(0, 4).map(l => `
+      <div style="display:flex; gap:10px; align-items:flex-start;">
+        <span style="width:8px; height:8px; border-radius:50%; background:${l.color}; margin-top:5px; flex-shrink:0;"></span>
+        <div><div style="font-weight:600;">${l.text}</div><div style="font-size:0.74rem; color:#64748b;">${l.time}</div></div>
+      </div>`).join('');
+  }
+
+  loadProfile();
+  muatSemuaData();
+</script>
+</body>
+</html>
+<!-- AKHIR KODE PANTAUK3 -->
