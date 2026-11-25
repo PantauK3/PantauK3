@@ -18,6 +18,17 @@
     * { box-sizing: border-box; font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; }
     body { margin: 0; background: var(--bg-main); color: var(--text-dark); display: flex; min-height: 100vh; }
 
+    /* OVERLAY GELAP SAAT MENU HP TERBUKA */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 23, 40, 0.55);
+      z-index: 35;
+      backdrop-filter: blur(1px);
+    }
+    .sidebar-overlay.active { display: block; }
+
     /* SIDEBAR */
     .sidebar {
       width: 255px;
@@ -34,9 +45,25 @@
       z-index: 40;
     }
 
-    .brand-header { padding: 22px 18px 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .brand-header { padding: 20px 18px 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; }
+    .close-sidebar-btn {
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
     .brand-logo-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px; }
-    .brand-logo-wrap img { height: 48px; width: auto; border-radius: 8px; }
+    .brand-logo-wrap img { height: 46px; width: auto; border-radius: 8px; }
     .brand-name { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.3px; }
     .brand-name span { color: #22c55e; }
     .brand-sub { font-size: 0.72rem; color: #94a3b8; letter-spacing: 0.5px; }
@@ -49,7 +76,11 @@
     }
     .nav-btn:hover { background: var(--sidebar-hover); color: #fff; }
     .nav-btn.active { background: var(--green-primary); color: #fff; font-weight: 600; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35); }
-    .badge-count { margin-left: auto; background: #ef4444; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 12px; }
+    .badge-count {
+      margin-left: auto; background: #ef4444; color: #fff;
+      font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 12px;
+      display: none;
+    }
 
     .sidebar-bottom { padding: 14px; }
     .commitment-card {
@@ -86,7 +117,7 @@
     }
     .bell-dot {
       position: absolute; top: -3px; right: -3px; background: #ef4444; color: #fff; font-size: 0.68rem;
-      font-weight: 700; min-width: 18px; height: 18px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; min-width: 18px; height: 18px; border-radius: 10px; display: none; align-items: center; justify-content: center;
     }
     .profile-chip { display: flex; align-items: center; gap: 10px; }
     .avatar-circle {
@@ -183,12 +214,13 @@
     .pill-info { background: #dbeafe; color: #1e40af; }
 
     .btn-sm { padding: 5px 9px; border-radius: 5px; border: none; font-size: 0.74rem; font-weight: 600; cursor: pointer; margin-right: 4px; }
-    .menu-burger { display: none; background: #0b2239; color: #fff; border: none; padding: 7px 11px; border-radius: 6px; cursor: pointer; }
+    .menu-burger { display: none; background: #0b2239; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 1rem; cursor: pointer; }
 
     @media (max-width: 1100px) { .grid-mid, .grid-bot { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
-      .sidebar { position: fixed; left: -265px; transition: 0.25s; }
+      .sidebar { position: fixed; left: -270px; transition: left 0.25s ease; }
       .sidebar.open { left: 0; }
+      .close-sidebar-btn { display: inline-flex; }
       .menu-burger { display: inline-block; }
       .hero-right { display: none; }
       .page-body { padding: 14px; }
@@ -197,10 +229,14 @@
 </head>
 <body>
 
+  <!-- BACKDROP GELAP UNTUK MENUTUP MENU DI HP -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="tutupSidebar()"></div>
+
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div>
       <div class="brand-header">
+        <button class="close-sidebar-btn" onclick="tutupSidebar()" title="Tutup Menu">✕</button>
         <div class="brand-logo-wrap">
           <img src="logo (2).png" alt="Logo" onerror="this.style.display='none'">
           <div class="brand-name">Pantau<span>K3</span></div>
@@ -228,7 +264,7 @@
         <div class="quote">"Zero Accident<br>Our Commitment"</div>
         <div class="sub">Keselamatan Prioritas Utama</div>
       </div>
-      <div class="version-txt">v2.1 Cloud • PantauK3 © 2026</div>
+      <div class="version-txt">v2.2 Cloud • PantauK3 © 2026</div>
     </div>
   </aside>
 
@@ -236,7 +272,7 @@
   <div class="main-wrapper">
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:200px;">
-        <button class="menu-burger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <button class="menu-burger" onclick="bukaSidebar()">☰</button>
         <div class="search-global">
           <span>🔍</span>
           <input type="text" id="global-search" onkeyup="filterGlobal()" placeholder="Cari operator, unit, nomor SIO/SILO...">
@@ -650,6 +686,16 @@
   const API_URL = "https://rgraolafumuihgzxuouj.supabase.co/rest/v1";
   const API_KEY = "sb_publishable_V7omvrK3zdxTiz6UFWG4Fg_syzlC0vI";
 
+  function bukaSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('active');
+  }
+
+  function tutupSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('active');
+  }
+
   async function supaReq(path, method = "GET", bodyData = null) {
     const headers = {
       "apikey": API_KEY,
@@ -714,7 +760,7 @@
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('page-' + id).classList.add('active');
     if (btn) btn.classList.add('active');
-    document.getElementById('sidebar').classList.remove('open');
+    tutupSidebar();
   }
 
   function switchSub(sub, btn) {
@@ -987,8 +1033,14 @@
     document.getElementById('kpi-unit-detail').innerText = `${ops.length} Operator • ${units.length} Unit`;
     document.getElementById('kpi-manhours').innerText = totalJam.toLocaleString('id-ID');
 
-    document.getElementById('nav-hazard-cnt').innerText = activeHz;
-    document.getElementById('top-notif-cnt').innerText = notifs.length;
+    // Sembunyikan angka merah jika jumlahnya 0
+    const navBadge = document.getElementById('nav-hazard-cnt');
+    navBadge.innerText = activeHz;
+    navBadge.style.display = activeHz > 0 ? 'inline-block' : 'none';
+
+    const topBadge = document.getElementById('top-notif-cnt');
+    topBadge.innerText = notifs.length;
+    topBadge.style.display = notifs.length > 0 ? 'flex' : 'none';
 
     const p1 = totalAll ? (okCnt / totalAll) * 100 : 100;
     const p2 = totalAll ? (warnCnt / totalAll) * 100 : 0;
