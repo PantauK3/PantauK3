@@ -3,661 +3,738 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pantau K3 - Dashboard Keselamatan Kerja & Forklift</title>
+  <title>PantauK3 — Enterprise Safety Monitoring System</title>
   <style>
     :root {
-      --navy-dark: #073773;
-      --navy-darker: #052957;
-      --green-main: #16a34a;
-      --green-bright: #22c55e;
-      --blue-accent: #1d4ed8;
-      --yellow-accent: #facc15;
-      --bg-page: #f4f7fb;
-      --text-main: #1e293b;
+      --sidebar-bg: #0b2239;
+      --sidebar-hover: rgba(255, 255, 255, 0.08);
+      --green-primary: #16a34a;
+      --green-dark: #15803d;
+      --bg-main: #f3f6fa;
+      --card-bg: #ffffff;
+      --text-dark: #0f172a;
       --text-muted: #64748b;
-      --border-soft: #e2e8f0;
+      --border-light: #e2e8f0;
     }
 
-    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-    body { margin: 0; background-color: var(--bg-page); color: var(--text-main); display: flex; min-height: 100vh; }
+    * { box-sizing: border-box; font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: var(--bg-main); color: var(--text-dark); display: flex; min-height: 100vh; }
 
-    /* SIDEBAR KIRI */
+    /* SIDEBAR */
     .sidebar {
-      width: 250px;
-      background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy-darker) 100%);
+      width: 255px;
+      background: linear-gradient(180deg, #0b2239 0%, #071728 100%);
       color: #fff;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      flex-shrink: 0;
       position: sticky;
       top: 0;
       height: 100vh;
       overflow-y: auto;
+      flex-shrink: 0;
+      z-index: 40;
     }
 
-    .brand-box {
-      padding: 20px 18px 16px;
+    .brand-header {
+      padding: 22px 18px 16px;
       text-align: center;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
-    .brand-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .brand-row img { height: 46px; width: auto; border-radius: 8px; background: rgba(255,255,255,0.1); padding: 2px; }
-    .brand-title { font-size: 1.25rem; font-weight: 800; letter-spacing: 0.5px; line-height: 1.1; text-align: left; }
-    .brand-title span { color: var(--yellow-accent); display: block; font-size: 1.4rem; }
-    .brand-tagline { font-size: 0.72rem; color: #cbd5e1; margin-top: 6px; letter-spacing: 0.4px; }
+    .brand-logo-wrap {
+      display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px;
+    }
+    .brand-logo-wrap img { height: 48px; width: auto; border-radius: 8px; }
+    .brand-name { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.3px; }
+    .brand-name span { color: #22c55e; }
+    .brand-sub { font-size: 0.72rem; color: #94a3b8; letter-spacing: 0.5px; }
 
-    .nav-menu { padding: 14px 12px; display: flex; flex-direction: column; gap: 6px; }
-    .nav-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 11px 14px; border-radius: 8px;
-      color: #e2e8f0; text-decoration: none; font-size: 0.92rem; font-weight: 500;
-      cursor: pointer; border: none; background: transparent; width: 100%; text-align: left;
-      transition: 0.2s;
+    .nav-list { padding: 14px 12px; display: flex; flex-direction: column; gap: 4px; }
+    .nav-btn {
+      display: flex; align-items: center; gap: 11px;
+      padding: 10px 14px; border-radius: 8px;
+      background: transparent; border: none; color: #cbd5e1;
+      font-size: 0.88rem; font-weight: 500; cursor: pointer;
+      text-align: left; width: 100%; transition: all 0.2s;
     }
-    .nav-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
-    .nav-item.active { background: var(--green-main); color: #fff; font-weight: 600; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.35); }
-    .nav-badge { margin-left: auto; background: #ef4444; color: #fff; font-size: 0.72rem; padding: 2px 7px; border-radius: 12px; font-weight: 700; }
-
-    .sidebar-footer {
-      padding: 16px;
-      text-align: center;
-      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.25) 100%);
+    .nav-btn:hover { background: var(--sidebar-hover); color: #fff; }
+    .nav-btn.active {
+      background: var(--green-primary); color: #fff; font-weight: 600;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
     }
-    .slogan-text {
-      font-style: italic; font-weight: 800; font-size: 1.05rem;
-      color: var(--yellow-accent); text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-      margin-bottom: 10px; line-height: 1.3;
-    }
-    .worker-card {
-      background: rgba(255,255,255,0.08);
-      border-radius: 12px; padding: 12px 10px;
-      border: 1px solid rgba(255,255,255,0.12);
+    .badge-count {
+      margin-left: auto; background: #ef4444; color: #fff;
+      font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 12px;
     }
 
-    /* AREA UTAMA KANAN */
-    .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .sidebar-bottom { padding: 14px; }
+    .commitment-card {
+      background: linear-gradient(135deg, rgba(22,163,74,0.28) 0%, rgba(15,23,42,0.85) 100%);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 12px; padding: 14px 12px; text-align: center;
+      margin-bottom: 10px;
+    }
+    .commitment-card .quote {
+      font-size: 0.88rem; font-weight: 800; color: #facc15;
+      font-style: italic; line-height: 1.3; margin-bottom: 6px;
+    }
+    .commitment-card .sub { font-size: 0.72rem; color: #cbd5e1; }
+    .version-txt { text-align: center; font-size: 0.7rem; color: #64748b; }
+
+    /* MAIN CONTENT */
+    .main-wrapper { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 
     /* TOPBAR */
     .topbar {
-      background: #fff;
-      padding: 14px 28px;
-      display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid var(--border-soft);
-      position: sticky; top: 0; z-index: 20;
+      background: #fff; padding: 12px 26px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      border-bottom: 1px solid var(--border-light);
+      position: sticky; top: 0; z-index: 30;
     }
-    .greeting-box { display: flex; align-items: center; gap: 12px; }
-    .sun-icon { font-size: 1.8rem; }
-    .greeting-sub { font-size: 0.82rem; color: var(--text-muted); }
-    .greeting-name { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
-
-    .topbar-right { display: flex; align-items: center; gap: 16px; }
-    .notif-btn {
-      position: relative; background: #f8fafc; border: 1px solid var(--border-soft);
-      width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+    .search-global {
+      display: flex; align-items: center; background: #f1f5f9;
+      border: 1px solid #e2e8f0; border-radius: 8px; padding: 0 12px;
+      width: 100%; max-width: 380px;
     }
-    .notif-dot {
-      position: absolute; top: -3px; right: -3px;
-      background: #ef4444; color: #fff; font-size: 0.7rem; font-weight: 700;
-      min-width: 19px; height: 19px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center; padding: 0 4px;
+    .search-global input {
+      border: none; background: transparent; padding: 9px 8px;
+      font-size: 0.86rem; width: 100%; outline: none; color: var(--text-dark);
     }
-    .user-avatar {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: var(--navy-dark); color: #fff; font-weight: 700; font-size: 0.88rem;
+    .top-actions { display: flex; align-items: center; gap: 14px; }
+    .filter-loc {
+      padding: 7px 12px; border: 1px solid #cbd5e1; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 600; color: #334155; background: #fff;
+    }
+    .bell-btn {
+      position: relative; background: #f8fafc; border: 1px solid #e2e8f0;
+      width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 1.05rem;
+    }
+    .bell-dot {
+      position: absolute; top: -3px; right: -3px; background: #ef4444; color: #fff;
+      font-size: 0.68rem; font-weight: 700; min-width: 18px; height: 18px;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    }
+    .profile-chip { display: flex; align-items: center; gap: 10px; }
+    .avatar-circle {
+      width: 36px; height: 36px; border-radius: 50%; background: #0b2239;
+      color: #fff; font-weight: 700; font-size: 0.82rem;
       display: flex; align-items: center; justify-content: center;
     }
+    .profile-info { line-height: 1.2; }
+    .profile-info strong { font-size: 0.85rem; display: block; }
+    .profile-info span { font-size: 0.72rem; color: var(--text-muted); }
 
-    .content-wrap { padding: 22px 28px; max-width: 1320px; width: 100%; margin: 0 auto; }
+    .page-body { padding: 22px 26px; max-width: 1380px; width: 100%; margin: 0 auto; }
 
-    /* HERO BANNER */
+    /* HERO BANNER ELEGAN */
     .hero-banner {
-      background: linear-gradient(110deg, #dbeafe 0%, #eff6ff 55%, #dcfce7 100%);
-      border-radius: 16px;
-      padding: 26px 32px;
+      background: linear-gradient(105deg, #0b2239 0%, #103c5c 52%, #15803d 100%);
+      border-radius: 16px; padding: 26px 32px; color: #fff;
       display: flex; align-items: center; justify-content: space-between;
-      position: relative; overflow: hidden;
-      border: 1px solid #bfdbfe;
-      margin-bottom: 22px;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+      position: relative; overflow: hidden; margin-bottom: 22px;
+      box-shadow: 0 8px 24px rgba(11, 34, 57, 0.14);
     }
-    .hero-banner::after {
-      content: ""; position: absolute; right: -40px; bottom: -40px;
-      width: 340px; height: 140px;
-      background: linear-gradient(135deg, #facc15 0%, #16a34a 60%);
-      transform: rotate(-12deg); border-radius: 40px; opacity: 0.9;
+    .hero-left { max-width: 620px; position: relative; z-index: 2; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; color: #86efac; font-weight: 600; margin-bottom: 8px;
     }
-    .hero-text { position: relative; z-index: 2; max-width: 620px; }
-    .hero-text h1 { margin: 0 0 6px; font-size: 1.75rem; color: #0f172a; font-weight: 800; }
-    .hero-text p { margin: 0 0 16px; font-size: 1.05rem; font-weight: 600; color: #1e293b; }
-    .btn-hero {
-      background: #facc15; color: #0f172a; border: none;
-      padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 0.9rem;
+    .hero-left h1 { margin: 0 0 8px; font-size: 1.7rem; font-weight: 800; line-height: 1.25; }
+    .hero-left p { margin: 0 0 18px; font-size: 0.92rem; color: #cbd5e1; }
+    .btn-green {
+      background: #22c55e; color: #052e16; border: none;
+      padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 0.86rem;
       cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1); transition: 0.2s;
+      transition: 0.2s;
     }
-    .btn-hero:hover { background: #eab308; transform: translateY(-1px); }
-    .hero-shield { position: relative; z-index: 2; flex-shrink: 0; }
+    .btn-green:hover { background: #4ade80; }
+    .hero-right {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16);
+      padding: 14px 20px; border-radius: 14px; position: relative; z-index: 2;
+    }
 
     /* 4 KPI CARDS */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
-      gap: 16px;
-      margin-bottom: 22px;
+    .kpi-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px; margin-bottom: 20px;
     }
-    .kpi-card {
-      border-radius: 14px; padding: 18px 20px;
-      display: flex; align-items: center; gap: 16px;
-      box-shadow: 0 2px 8px rgba(15,23,42,0.04);
-      cursor: pointer; transition: 0.2s; border: 1px solid transparent;
-    }
-    .kpi-card:hover { transform: translateY(-2px); }
-    .kpi-green { background: #ecfdf5; border-color: #a7f3d0; }
-    .kpi-yellow { background: #fefce8; border-color: #fde047; }
-    .kpi-blue { background: #eff6ff; border-color: #bfdbfe; }
-    .kpi-purple { background: #f5f3ff; border-color: #ddd6fe; }
-
-    .kpi-icon {
-      width: 50px; height: 50px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; color: #fff; flex-shrink: 0;
-    }
-    .kpi-green .kpi-icon { background: #16a34a; }
-    .kpi-yellow .kpi-icon { background: #f59e0b; }
-    .kpi-blue .kpi-icon { background: #2563eb; }
-    .kpi-purple .kpi-icon { background: #8b5cf6; }
-
-    .kpi-label { font-size: 0.84rem; color: #475569; font-weight: 600; }
-    .kpi-val { font-size: 1.65rem; font-weight: 800; color: #0f172a; line-height: 1.2; margin: 2px 0; }
-    .kpi-sub { font-size: 0.76rem; color: #16a34a; font-weight: 600; }
-    .kpi-yellow .kpi-sub { color: #b45309; }
-
-    /* GRID TENGAH & BAWAH */
-    .dash-grid-mid {
-      display: grid;
-      grid-template-columns: 1.15fr 1fr 1.15fr;
-      gap: 18px;
-      margin-bottom: 22px;
-    }
-    .dash-grid-bot {
-      display: grid;
-      grid-template-columns: 1.2fr 1.1fr 0.95fr;
-      gap: 18px;
-    }
-
-    .widget-card {
-      background: #fff; border-radius: 14px; padding: 20px;
-      border: 1px solid var(--border-soft);
-      box-shadow: 0 2px 8px rgba(15,23,42,0.03);
-    }
-    .widget-head {
+    .kpi-box {
+      background: #fff; border-radius: 14px; padding: 18px;
+      border: 1px solid var(--border-light);
       display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 14px;
+      box-shadow: 0 2px 6px rgba(15,23,42,0.03); cursor: pointer; transition: 0.2s;
     }
-    .widget-title { font-size: 1rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px; margin: 0; }
-    .link-more { font-size: 0.8rem; color: #2563eb; font-weight: 600; cursor: pointer; background: none; border: none; }
-
-    /* DONUT CHART */
-    .donut-wrap { display: flex; align-items: center; justify-content: space-around; gap: 14px; padding: 8px 0; }
-    .donut-ring {
-      width: 124px; height: 124px; border-radius: 50%;
+    .kpi-box:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,23,42,0.06); }
+    .kpi-left { display: flex; align-items: center; gap: 14px; }
+    .kpi-circle {
+      width: 46px; height: 46px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      position: relative;
+      font-size: 1.25rem; color: #fff; flex-shrink: 0;
     }
-    .donut-hole {
-      width: 84px; height: 84px; border-radius: 50%; background: #fff;
+    .kpi-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+    .kpi-num { font-size: 1.55rem; font-weight: 800; color: var(--text-dark); margin: 2px 0; }
+    .kpi-delta { font-size: 0.74rem; font-weight: 600; }
+
+    /* GRID DASHBOARD */
+    .grid-mid { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+    .grid-bot { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 18px; }
+
+    .card {
+      background: #fff; border-radius: 14px; padding: 18px 20px;
+      border: 1px solid var(--border-light);
+      box-shadow: 0 2px 6px rgba(15,23,42,0.02);
+    }
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+    }
+    .card-title { font-size: 0.96rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
+    .btn-link { background: none; border: none; color: #2563eb; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+
+    /* DONUT */
+    .donut-area { display: flex; align-items: center; justify-content: space-around; gap: 12px; margin: 8px 0; }
+    .donut-circle {
+      width: 118px; height: 118px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .donut-inner {
+      width: 80px; height: 80px; border-radius: 50%; background: #fff;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
-    .donut-pct { font-size: 1.35rem; font-weight: 800; color: #0f172a; line-height: 1; }
-    .donut-lbl { font-size: 0.74rem; color: #16a34a; font-weight: 600; margin-top: 2px; }
-    .legend-list { display: flex; flex-direction: column; gap: 10px; font-size: 0.86rem; }
-    .legend-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
-    .status-note {
-      margin-top: 14px; background: #f0fdf4; border: 1px solid #bbf7d0;
-      padding: 9px 12px; border-radius: 8px; font-size: 0.8rem; color: #166534;
-      display: flex; align-items: center; gap: 8px;
+    .legend-col { display: flex; flex-direction: column; gap: 9px; font-size: 0.82rem; }
+    .dot-sm { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+    .info-pill {
+      margin-top: 12px; background: #f0fdf4; border: 1px solid #bbf7d0;
+      padding: 8px 12px; border-radius: 8px; font-size: 0.78rem; color: #166534;
     }
 
-    /* LIST AKTIVITAS & PENGINGAT */
-    .list-item {
-      display: flex; align-items: flex-start; gap: 10px;
-      padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem;
+    /* SAFETY ALERT BANNER */
+    .safety-alert {
+      margin-top: 12px; background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
+      color: #fff; border-radius: 10px; padding: 12px 14px;
+      border-left: 4px solid #f59e0b;
     }
-    .list-item:last-child { border-bottom: none; }
-    .task-row {
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
-      padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem;
+    .safety-alert span {
+      background: #f59e0b; color: #0f172a; font-size: 0.68rem; font-weight: 800;
+      padding: 2px 7px; border-radius: 4px; text-transform: uppercase;
     }
-    .task-row:last-child { border-bottom: none; }
 
-    /* KARTU BUDAYA K3 (KANAN BAWAH) */
-    .culture-card {
-      background: linear-gradient(145deg, #15803d 0%, #166534 100%);
-      color: #fff; border-radius: 14px; padding: 20px;
-      display: flex; flex-direction: column; justify-content: space-between;
-      position: relative; overflow: hidden;
+    /* AKSES CEPAT */
+    .quick-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .quick-btn {
+      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 14px 10px; text-align: center; cursor: pointer; transition: 0.2s;
+      font-size: 0.8rem; font-weight: 600; color: #1e293b;
     }
-    .culture-card h3 { margin: 0 0 4px; font-size: 1.15rem; }
-    .culture-card h4 { margin: 0 0 16px; font-size: 1rem; color: #facc15; }
-    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
-    .pillar-box { background: rgba(255,255,255,0.12); padding: 10px 6px; border-radius: 10px; font-size: 0.76rem; font-weight: 600; }
-    .pillar-ico { font-size: 1.3rem; margin-bottom: 4px; display: block; }
+    .quick-btn:hover { background: #eff6ff; border-color: #93c5fd; color: #1d4ed8; }
+    .quick-btn div { font-size: 1.4rem; margin-bottom: 5px; }
 
-    /* HALAMAN TABEL & FORM */
-    .view-section { display: none; }
-    .view-section.active { display: block; }
+    /* SUB-TABS & TABLES */
+    .view-pane { display: none; }
+    .view-pane.active { display: block; }
 
-    .form-bar {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-      gap: 10px; background: #f8fafc; padding: 16px; border-radius: 10px;
-      border: 1px solid var(--border-soft); margin-bottom: 16px;
+    .sub-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .sub-tab {
+      padding: 8px 16px; border-radius: 8px; border: 1px solid #cbd5e1;
+      background: #fff; font-size: 0.84rem; font-weight: 600; cursor: pointer; color: #475569;
     }
-    .form-bar input, .form-bar select {
-      padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; width: 100%;
-    }
-    .btn-primary {
-      background: var(--green-main); color: #fff; border: none; padding: 10px 16px;
-      border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem;
-    }
-    .btn-primary:hover { background: #15803d; }
+    .sub-tab.active { background: #0b2239; color: #fff; border-color: #0b2239; }
 
-    .search-input {
-      width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1;
-      border-radius: 8px; margin-bottom: 14px; font-size: 0.9rem;
+    .form-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+      gap: 10px; background: #f8fafc; padding: 14px; border-radius: 10px;
+      border: 1px solid #e2e8f0; margin-bottom: 14px;
     }
-    .table-box { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 650px; }
-    th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.88rem; }
+    .form-grid input, .form-grid select {
+      padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 0.85rem; width: 100%;
+    }
+    .btn-submit {
+      background: var(--green-primary); color: #fff; border: none; padding: 9px 14px;
+      border-radius: 7px; font-weight: 700; font-size: 0.85rem; cursor: pointer;
+    }
+
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 680px; }
+    th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.84rem; }
     th { background: #f8fafc; color: #334155; font-weight: 700; }
 
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.76rem; font-weight: 700; display: inline-block; }
-    .badge-safe { background: #dcfce7; color: #166534; }
-    .badge-warn { background: #fef3c7; color: #92400e; }
-    .badge-danger { background: #fee2e2; color: #991b1b; }
-    .btn-del { background: #ef4444; color: #fff; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.78rem; }
+    .pill { padding: 3px 9px; border-radius: 14px; font-size: 0.74rem; font-weight: 700; display: inline-block; }
+    .pill-safe { background: #dcfce7; color: #166534; }
+    .pill-warn { background: #fef3c7; color: #92400e; }
+    .pill-danger { background: #fee2e2; color: #991b1b; }
+    .pill-info { background: #dbeafe; color: #1e40af; }
 
-    /* RESPONSIVE HP */
-    .mobile-toggle { display: none; background: var(--navy-dark); color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 1.1rem; cursor: pointer; }
-    @media (max-width: 1024px) {
-      .dash-grid-mid, .dash-grid-bot { grid-template-columns: 1fr; }
+    .btn-sm { padding: 4px 9px; border-radius: 5px; border: none; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+    .menu-burger { display: none; background: #0b2239; color: #fff; border: none; padding: 7px 11px; border-radius: 6px; cursor: pointer; }
+
+    @media (max-width: 1100px) {
+      .grid-mid, .grid-bot { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
-      .sidebar { position: fixed; left: -260px; z-index: 50; transition: 0.25s; }
+      .sidebar { position: fixed; left: -265px; transition: 0.25s; }
       .sidebar.open { left: 0; }
-      .mobile-toggle { display: inline-block; }
-      .hero-shield { display: none; }
-      .content-wrap { padding: 16px; }
+      .menu-burger { display: inline-block; }
+      .hero-right { display: none; }
+      .page-body { padding: 14px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- SIDEBAR NAVIGASI -->
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div>
-      <div class="brand-box">
-        <div class="brand-row">
-          <img src="logo (2).png" alt="Logo PantauK3" onerror="this.style.display='none'">
-          <div class="brand-title">PANTAU<span>K3</span></div>
+      <div class="brand-header">
+        <div class="brand-logo-wrap">
+          <img src="logo (2).png" alt="Logo" onerror="this.style.display='none'">
+          <div class="brand-name">Pantau<span>K3</span></div>
         </div>
-        <div class="brand-tagline">Observasi • Peduli • Selamat</div>
+        <div class="brand-sub">Observasi • Peduli • Selamat</div>
       </div>
 
-      <nav class="nav-menu">
-        <button class="nav-item active" onclick="pindahHalaman('beranda', this)">🏠 Beranda</button>
-        <button class="nav-item" onclick="pindahHalaman('operator', this)">👷 Data Operator (SIO)</button>
-        <button class="nav-item" onclick="pindahHalaman('unit', this)">🚜 Data Unit (SILO)</button>
-        <button class="nav-item" onclick="pindahHalaman('pengingat', this)">
-          🔔 Pengingat Masa Aktif
-          <span class="nav-badge" id="side-badge">0</span>
+      <nav class="nav-list">
+        <button class="nav-btn active" onclick="goPage('dashboard', this)">🏠 Dashboard</button>
+        <button class="nav-btn" onclick="goPage('inspeksi', this)">📋 Inspeksi &amp; SIO/SILO</button>
+        <button class="nav-btn" onclick="goPage('hazard', this)">
+          ⚠️ Temuan / Hazard
+          <span class="badge-count" id="nav-hazard-cnt">0</span>
         </button>
-        <button class="nav-item" onclick="pindahHalaman('edukasi', this)">📖 Edukasi & Panduan K3</button>
-        <button class="nav-item" onclick="pindahHalaman('pengaturan', this)">⚙️ Pengaturan</button>
+        <button class="nav-btn" onclick="goPage('tindaklanjut', this)">✅ Tindak Lanjut (CAPA)</button>
+        <button class="nav-btn" onclick="goPage('laporan', this)">📊 Laporan &amp; Manhours</button>
+        <button class="nav-btn" onclick="goPage('lokasi', this)">📍 Area &amp; Lokasi</button>
+        <button class="nav-btn" onclick="goPage('edukasi', this)">📖 Edukasi &amp; Dokumen K3</button>
+        <button class="nav-btn" onclick="goPage('pengaturan', this)">⚙️ Pengaturan</button>
       </nav>
     </div>
 
-    <div class="sidebar-footer">
-      <div class="slogan-text">Kerja Aman<br>Keluarga Nyaman</div>
-      <div class="worker-card">
-        <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
-          <circle cx="40" cy="40" r="36" fill="#e0f2fe"/>
-          <path d="M22 68C22 56 30 50 40 50C50 50 58 56 58 68" fill="#16a34a"/>
-          <path d="M31 51L40 62L49 51" fill="#facc15"/>
-          <circle cx="40" cy="34" r="13" fill="#fed7aa"/>
-          <path d="M25 31C25 21 32 16 40 16C48 16 55 21 55 31H25Z" fill="#ffffff"/>
-          <rect x="22" y="29" width="36" height="4" rx="2" fill="#e2e8f0"/>
-          <circle cx="40" cy="23" r="4" fill="#16a34a"/>
-          <path d="M38 23H42M40 21V25" stroke="#fff" stroke-width="1.5"/>
-          <circle cx="36" cy="34" r="1.5" fill="#1e293b"/>
-          <circle cx="44" cy="34" r="1.5" fill="#1e293b"/>
-          <path d="M36 39C38 41 42 41 44 39" stroke="#1e293b" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
-        <div style="font-size: 0.75rem; color: #cbd5e1; margin-top: 4px;">Zero Accident Target</div>
+    <div class="sidebar-bottom">
+      <div class="commitment-card">
+        <div class="quote">"Zero Accident<br>Our Commitment"</div>
+        <div class="sub">Keselamatan Prioritas Utama</div>
       </div>
+      <div class="version-txt">v1.0.0 | Blueprint PantauK3 © 2026</div>
     </div>
   </aside>
 
-  <!-- KONTEN UTAMA -->
-  <div class="main-area">
-    <!-- HEADER ATAS -->
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+    <!-- TOPBAR -->
     <header class="topbar">
-      <div class="greeting-box">
-        <button class="mobile-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
-        <span class="sun-icon">☀️</span>
-        <div>
-          <div class="greeting-sub" id="sapaan-waktu">Selamat Pagi,</div>
-          <div class="greeting-name" id="nama-pengguna-display">Tim K3 & Operasional</div>
+      <div style="display:flex; align-items:center; gap:10px; flex:1;">
+        <button class="menu-burger" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+        <div class="search-global">
+          <span>🔍</span>
+          <input type="text" id="global-search" onkeyup="filterGlobal()" placeholder="Cari laporan, operator, unit, atau lokasi...">
         </div>
       </div>
 
-      <div class="topbar-right">
-        <button class="notif-btn" title="Lihat Pengingat Masa Aktif" onclick="pindahHalaman('pengingat', document.querySelectorAll('.nav-item')[3])">
+      <div class="top-actions">
+        <select class="filter-loc" id="filter-cabang" onchange="renderAll()">
+          <option value="ALL">Semua Lokasi / Cabang</option>
+          <option value="Area Workshop & Warehouse">Area Workshop &amp; Warehouse</option>
+          <option value="Area Produksi">Area Produksi</option>
+          <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
+        </select>
+
+        <button class="bell-btn" title="Notifikasi K3" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">
           🔔
-          <span class="notif-dot" id="top-badge">0</span>
+          <span class="bell-dot" id="top-notif-cnt">0</span>
         </button>
-        <div class="user-avatar" id="user-inisial">K3</div>
+
+        <div class="profile-chip">
+          <div class="avatar-circle" id="avatar-txt">BS</div>
+          <div class="profile-info">
+            <strong id="user-name-lbl">Budi Santoso</strong>
+            <span id="user-role-lbl">Safety Officer</span>
+          </div>
+        </div>
       </div>
     </header>
 
-    <div class="content-wrap">
+    <div class="page-body">
 
-      <!-- HALAMAN 1: BERANDA (DASHBOARD UTAMA) -->
-      <section id="view-beranda" class="view-section active">
+      <!-- 1. DASHBOARD -->
+      <section id="page-dashboard" class="view-pane active">
         <!-- Hero Banner -->
         <div class="hero-banner">
-          <div class="hero-text">
-            <h1>Pantau K3</h1>
-            <p>Bersama Kita Wujudkan Tempat Kerja yang Aman dan Sehat</p>
-            <button class="btn-hero" onclick="pindahHalaman('edukasi', document.querySelectorAll('.nav-item')[4])">
-              Lihat Panduan →
+          <div class="hero-left">
+            <div class="hero-tag">— Selamat Datang di PantauK3</div>
+            <h1>Bersama Wujudkan Tempat Kerja yang Aman dan Sehat</h1>
+            <p>Budaya K3, Tanggung Jawab Kita Bersama • Monitoring Terpadu SIO, SILO, Inspeksi &amp; Hazard</p>
+            <button class="btn-green" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1])">
+              Kelola SIO &amp; SILO Forklift →
             </button>
           </div>
-          <div class="hero-shield">
-            <svg width="110" height="110" viewBox="0 0 120 120" fill="none">
-              <path d="M60 10L102 28V60C102 87 84 106 60 114C36 106 18 87 18 60V28L60 10Z" fill="#16a34a" stroke="#ffffff" stroke-width="5"/>
-              <circle cx="60" cy="60" r="20" stroke="#ffffff" stroke-width="6"/>
-              <path d="M60 51V69M51 60H69" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+          <div class="hero-right">
+            <svg width="54" height="54" viewBox="0 0 120 120" fill="none">
+              <path d="M60 10L102 28V60C102 87 84 106 60 114C36 106 18 87 18 60V28L60 10Z" fill="#22c55e" stroke="#ffffff" stroke-width="5"/>
+              <path d="M60 44V76M44 60H76" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+            <div>
+              <div style="font-size:1.4rem; font-weight:800; color:#86efac;">K3</div>
+              <div style="font-size:0.78rem; color:#e2e8f0;">Zero Accident<br>Target Kita</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 KPI -->
+        <div class="kpi-row">
+          <div class="kpi-box" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1])">
+            <div class="kpi-left">
+              <div class="kpi-circle" style="background:#16a34a;">🛡️</div>
+              <div>
+                <div class="kpi-title">Kepatuhan SIO &amp; SILO</div>
+                <div class="kpi-num" id="kpi-kepatuhan">100%</div>
+                <div class="kpi-delta" style="color:#16a34a;" id="kpi-sio-sub">0 Aktif</div>
+              </div>
+            </div>
+            <svg width="56" height="28"><polyline fill="none" stroke="#16a34a" stroke-width="2.5" points="2,24 16,18 30,20 44,10 54,6"/></svg>
+          </div>
+
+          <div class="kpi-box" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">
+            <div class="kpi-left">
+              <div class="kpi-circle" style="background:#f59e0b;">⚠️</div>
+              <div>
+                <div class="kpi-title">Temuan / Hazard Aktif</div>
+                <div class="kpi-num" id="kpi-hazard">0</div>
+                <div class="kpi-delta" style="color:#d97706;">Perlu Tindak Lanjut</div>
+              </div>
+            </div>
+            <svg width="56" height="28"><polyline fill="none" stroke="#f59e0b" stroke-width="2.5" points="2,10 18,16 32,12 46,20 54,22"/></svg>
+          </div>
+
+          <div class="kpi-box" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1])">
+            <div class="kpi-left">
+              <div class="kpi-circle" style="background:#2563eb;">📋</div>
+              <div>
+                <div class="kpi-title">Unit &amp; Operator Terdata</div>
+                <div class="kpi-num" id="kpi-unit-op">0</div>
+                <div class="kpi-delta" style="color:#2563eb;" id="kpi-unit-detail">0 Op • 0 Unit</div>
+              </div>
+            </div>
+            <svg width="56" height="28"><polyline fill="none" stroke="#2563eb" stroke-width="2.5" points="2,22 18,18 34,14 48,9 54,5"/></svg>
+          </div>
+
+          <div class="kpi-box" onclick="goPage('laporan', document.querySelectorAll('.nav-btn')[4])">
+            <div class="kpi-left">
+              <div class="kpi-circle" style="background:#8b5cf6;">⏱️</div>
+              <div>
+                <div class="kpi-title">Safe Manhours</div>
+                <div class="kpi-num" id="kpi-manhours">12.450</div>
+                <div class="kpi-delta" style="color:#7c3aed;">Jam Kerja Aman</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Baris Tengah -->
+        <div class="grid-mid">
+          <!-- Grafik Tren -->
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">📈 Tren Kepatuhan K3</h3>
+              <span class="pill pill-safe">Target ≥ 95%</span>
+            </div>
+            <svg viewBox="0 0 420 165" style="width:100%; height:auto;">
+              <line x1="35" y1="25" x2="405" y2="25" stroke="#22c55e" stroke-dasharray="4 4" stroke-width="1.5"/>
+              <line x1="35" y1="65" x2="405" y2="65" stroke="#f1f5f9" stroke-width="1"/>
+              <line x1="35" y1="105" x2="405" y2="105" stroke="#f1f5f9" stroke-width="1"/>
+              <line x1="35" y1="140" x2="405" y2="140" stroke="#cbd5e1" stroke-width="1"/>
+              <text x="5" y="29" font-size="10" fill="#64748b">100%</text>
+              <text x="8" y="69" font-size="10" fill="#64748b">90%</text>
+              <text x="8" y="109" font-size="10" fill="#64748b">80%</text>
+              <text x="8" y="143" font-size="10" fill="#64748b">70%</text>
+              <polygon fill="rgba(37,99,235,0.1)" points="45,88 135,72 225,52 315,38 395,28 395,140 45,140"/>
+              <polyline fill="none" stroke="#2563eb" stroke-width="3" points="45,88 135,72 225,52 315,38 395,28"/>
+              <circle cx="45" cy="88" r="4" fill="#2563eb"/>
+              <circle cx="135" cy="72" r="4" fill="#2563eb"/>
+              <circle cx="225" cy="52" r="4" fill="#2563eb"/>
+              <circle cx="315" cy="38" r="4" fill="#2563eb"/>
+              <circle cx="395" cy="28" r="5" fill="#16a34a"/>
+              <rect x="368" y="8" width="44" height="16" rx="4" fill="#16a34a"/>
+              <text x="373" y="19" font-size="10" fill="#fff" font-weight="bold">98.2%</text>
+              <text x="35" y="156" font-size="10" fill="#64748b">Jul</text>
+              <text x="125" y="156" font-size="10" fill="#64748b">Agu</text>
+              <text x="215" y="156" font-size="10" fill="#64748b">Sep</text>
+              <text x="305" y="156" font-size="10" fill="#64748b">Okt</text>
+              <text x="385" y="156" font-size="10" fill="#64748b">Nov</text>
             </svg>
           </div>
-        </div>
 
-        <!-- 4 Kartu Ringkasan -->
-        <div class="kpi-grid">
-          <div class="kpi-card kpi-green" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">
-            <div class="kpi-icon">✓</div>
-            <div>
-              <div class="kpi-label">SIO & SILO Aktif</div>
-              <div class="kpi-val" id="kpi-aktif">0</div>
-              <div class="kpi-sub">✓ Siap Operasional</div>
+          <!-- Donut Status -->
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">🛡️ Status Lisensi &amp; Tindak Lanjut</h3>
             </div>
-          </div>
-
-          <div class="kpi-card kpi-yellow" onclick="pindahHalaman('pengingat', document.querySelectorAll('.nav-item')[3])">
-            <div class="kpi-icon">⚠</div>
-            <div>
-              <div class="kpi-label">Segera Habis (&lt;30 Hari)</div>
-              <div class="kpi-val" id="kpi-warn">0</div>
-              <div class="kpi-sub">Perlu Jadwal Perpanjangan</div>
-            </div>
-          </div>
-
-          <div class="kpi-card kpi-blue" onclick="pindahHalaman('unit', document.querySelectorAll('.nav-item')[2])">
-            <div class="kpi-icon">🚜</div>
-            <div>
-              <div class="kpi-label">Kepatuhan Lisensi</div>
-              <div class="kpi-val" id="kpi-persen">100%</div>
-              <div class="kpi-sub">↑ Target K3 ≥ 95%</div>
-            </div>
-          </div>
-
-          <div class="kpi-card kpi-purple" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">
-            <div class="kpi-icon">📋</div>
-            <div>
-              <div class="kpi-label">Total Terdaftar</div>
-              <div class="kpi-val" id="kpi-total">0</div>
-              <div class="kpi-sub" id="kpi-rincian">0 Operator • 0 Unit</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Baris Tengah: Ringkasan Data, Status Kepatuhan Donut, Aktivitas Terbaru -->
-        <div class="dash-grid-mid">
-          <!-- Widget 1: Rekap SIO & SILO -->
-          <div class="widget-card">
-            <div class="widget-head">
-              <h3 class="widget-title">📊 Rekapitulasi SIO & SILO</h3>
-              <button class="link-more" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">Kelola →</button>
-            </div>
-            <div style="display:flex; flex-direction:column; gap:14px; margin-top:10px;">
-              <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-                <div style="display:flex; justify-content:space-between; font-size:0.86rem; font-weight:700; margin-bottom:6px;">
-                  <span>👷 Operator Forklift (SIO)</span>
-                  <span id="bar-op-txt">0 / 0 Aktif</span>
-                </div>
-                <div style="background:#e2e8f0; height:10px; border-radius:6px; overflow:hidden;">
-                  <div id="bar-op-fill" style="background:#16a34a; height:100%; width:0%; transition:0.3s;"></div>
+            <div class="donut-area">
+              <div class="donut-circle" id="donut-ring">
+                <div class="donut-inner">
+                  <strong style="font-size:1.25rem;" id="donut-pct">100%</strong>
+                  <span style="font-size:0.7rem; color:#16a34a; font-weight:700;">Terkendali</span>
                 </div>
               </div>
-
-              <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-                <div style="display:flex; justify-content:space-between; font-size:0.86rem; font-weight:700; margin-bottom:6px;">
-                  <span>🚜 Unit Forklift (SILO)</span>
-                  <span id="bar-unit-txt">0 / 0 Aktif</span>
-                </div>
-                <div style="background:#e2e8f0; height:10px; border-radius:6px; overflow:hidden;">
-                  <div id="bar-unit-fill" style="background:#2563eb; height:100%; width:0%; transition:0.3s;"></div>
-                </div>
+              <div class="legend-col">
+                <div><i class="dot-sm" style="background:#16a34a;"></i>Aktif / Selesai: <strong id="cnt-ok">0</strong></div>
+                <div><i class="dot-sm" style="background:#f59e0b;"></i>Segera Habis / Proses: <strong id="cnt-warn">0</strong></div>
+                <div><i class="dot-sm" style="background:#ef4444;"></i>Expired / Overdue: <strong id="cnt-exp">0</strong></div>
               </div>
-
-              <div style="display:flex; gap:8px; margin-top:4px;">
-                <button class="btn-primary" style="flex:1; font-size:0.82rem;" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">+ Tambah Operator</button>
-                <button class="btn-primary" style="flex:1; font-size:0.82rem; background:#2563eb;" onclick="pindahHalaman('unit', document.querySelectorAll('.nav-item')[2])">+ Tambah Unit</button>
-              </div>
+            </div>
+            <div class="info-pill" id="status-summary-box">
+              ✅ Monitoring aktif untuk seluruh SIO Operator &amp; SILO Forklift.
             </div>
           </div>
 
-          <!-- Widget 2: Status Kepatuhan Donut -->
-          <div class="widget-card">
-            <div class="widget-head">
-              <h3 class="widget-title">🛡️ Status Kepatuhan K3</h3>
+          <!-- Notifikasi Penting & Safety Alert -->
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">🔔 Notifikasi Penting</h3>
+              <button class="btn-link" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">Lihat Semua →</button>
             </div>
-            <div class="donut-wrap">
-              <div class="donut-ring" id="donut-chart">
-                <div class="donut-hole">
-                  <div class="donut-pct" id="donut-pct">100%</div>
-                  <div class="donut-lbl" id="donut-status-lbl">Aman</div>
-                </div>
-              </div>
-              <div class="legend-list">
-                <div class="legend-row"><span><i class="dot" style="background:#16a34a;"></i>Aman</span><strong id="leg-safe">0</strong></div>
-                <div class="legend-row"><span><i class="dot" style="background:#facc15;"></i>Perlu Perhatian</span><strong id="leg-warn">0</strong></div>
-                <div class="legend-row"><span><i class="dot" style="background:#ef4444;"></i>Kedaluwarsa</span><strong id="leg-exp">0</strong></div>
-              </div>
+            <div id="notif-list" style="font-size:0.82rem; display:flex; flex-direction:column; gap:9px;"></div>
+            <div class="safety-alert">
+              <span>Safety Alert</span>
+              <div style="font-weight:700; font-size:0.84rem; margin-top:5px;">Cek Rem, Klakson Mundur &amp; Masa Berlaku SILO</div>
+              <div style="font-size:0.75rem; color:#cbd5e1;">Wajib P2H sebelum mengoperasikan unit forklift di area kerja.</div>
             </div>
-            <div class="status-note" id="donut-note">
-              <span>✅</span> <span>Seluruh lisensi SIO & SILO dalam kondisi aman.</span>
-            </div>
-          </div>
-
-          <!-- Widget 3: Aktivitas Terbaru -->
-          <div class="widget-card">
-            <div class="widget-head">
-              <h3 class="widget-title">🕒 Aktivitas Terbaru</h3>
-              <button class="link-more" onclick="pindahHalaman('operator', document.querySelectorAll('.nav-item')[1])">Lihat Semua</button>
-            </div>
-            <div id="aktivitas-list"></div>
           </div>
         </div>
 
-        <!-- Baris Bawah: Pengingat & Tugas, Berita & Edukasi K3, Kartu Budaya K3 -->
-        <div class="dash-grid-bot">
-          <div class="widget-card">
-            <div class="widget-head">
-              <h3 class="widget-title">🔔 Pengingat Masa Aktif SIO & SILO</h3>
-              <button class="link-more" onclick="pindahHalaman('pengingat', document.querySelectorAll('.nav-item')[3])">Lihat Semua →</button>
+        <!-- Baris Bawah -->
+        <div class="grid-bot">
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">🕒 Aktivitas Terbaru</h3>
             </div>
-            <div id="pengingat-mini"></div>
+            <div id="activity-feed" style="font-size:0.82rem; display:flex; flex-direction:column; gap:10px;"></div>
           </div>
 
-          <div class="widget-card">
-            <div class="widget-head">
-              <h3 class="widget-title">📖 Edukasi & Standar K3</h3>
-              <button class="link-more" onclick="pindahHalaman('edukasi', document.querySelectorAll('.nav-item')[4])">Lihat Semua →</button>
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">📍 Status Area Monitoring</h3>
+              <button class="btn-link" onclick="goPage('lokasi', document.querySelectorAll('.nav-btn')[5])">Detail →</button>
             </div>
-            <div style="display:flex; gap:14px; align-items:center;">
-              <div style="width:90px; height:90px; background:#fef9c3; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:2.6rem; flex-shrink:0;">
-                ⛑️
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:0.84rem;">
+              <div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px;">
+                <span>🏭 Area Workshop &amp; Warehouse</span>
+                <span class="pill pill-safe">Aman</span>
               </div>
-              <div>
-                <div style="font-weight:700; font-size:0.95rem; margin-bottom:4px;">Wajib SIO & SILO Sebelum Operasi</div>
-                <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:10px;">
-                  Pastikan operator memiliki SIO sesuai kelas beban dan unit forklift lulus riksa uji berkala (SILO).
-                </div>
-                <button class="btn-primary" style="background:#2563eb; padding:7px 14px; font-size:0.8rem;" onclick="pindahHalaman('edukasi', document.querySelectorAll('.nav-item')[4])">
-                  Baca Selengkapnya →
-                </button>
+              <div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px;">
+                <span>⚙️ Area Produksi</span>
+                <span class="pill pill-warn">1 Perhatian</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px;">
+                <span>🚚 Area Yard &amp; Loading</span>
+                <span class="pill pill-safe">Aman</span>
               </div>
             </div>
           </div>
 
-          <div class="culture-card">
-            <div>
-              <h3>K3 Budaya Kita</h3>
-              <h4>Keselamatan Prioritas Kita</h4>
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">⚡ Akses Cepat</h3>
             </div>
-            <div class="pillars">
-              <div class="pillar-box"><span class="pillar-ico">🛡️</span>Patuhi Prosedur</div>
-              <div class="pillar-box"><span class="pillar-ico">🤝</span>Peduli Sesama</div>
-              <div class="pillar-box"><span class="pillar-ico">👍</span>Kerja Selamat</div>
+            <div class="quick-grid">
+              <div class="quick-btn" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1])">
+                <div>👷</div>Data SIO Operator
+              </div>
+              <div class="quick-btn" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1]); switchSub('unit', document.querySelectorAll('.sub-tab')[1])">
+                <div>🚜</div>Data SILO Unit
+              </div>
+              <div class="quick-btn" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">
+                <div>⚠️</div>Lapor Hazard
+              </div>
+              <div class="quick-btn" onclick="goPage('laporan', document.querySelectorAll('.nav-btn')[4])">
+                <div>📊</div>Input Manhours
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- HALAMAN 2: DATA OPERATOR (SIO) -->
-      <section id="view-operator" class="view-section">
-        <div class="widget-card">
-          <div class="widget-head">
-            <h3 class="widget-title">👷 Manajemen Data Operator Forklift (SIO)</h3>
-          </div>
-          <div class="form-bar">
-            <input type="text" id="op-nama" placeholder="Nama Lengkap Operator">
-            <input type="text" id="op-sio" placeholder="Nomor Lisensi SIO">
+      <!-- 2. INSPEKSI & MONITORING (SIO, SILO, P2H & APD) -->
+      <section id="page-inspeksi" class="view-pane">
+        <div class="sub-tabs">
+          <button class="sub-tab active" onclick="switchSub('sio', this)">👷 Operator Forklift (SIO)</button>
+          <button class="sub-tab" onclick="switchSub('unit', this)">🚜 Unit Forklift (SILO)</button>
+          <button class="sub-tab" onclick="switchSub('apd', this)">🦺 Monitoring APD</button>
+        </div>
+
+        <!-- Sub 1: SIO -->
+        <div id="sub-sio" class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">Daftar Lisensi Operator Forklift (SIO)</h3>
+          <div class="form-grid">
+            <input type="text" id="op-nama" placeholder="Nama Operator">
+            <input type="text" id="op-sio" placeholder="Nomor SIO">
             <select id="op-kelas">
               <option value="Kelas II (< 15 Ton)">Kelas II (&lt; 15 Ton)</option>
               <option value="Kelas I (> 15 Ton)">Kelas I (&gt; 15 Ton)</option>
             </select>
-            <input type="date" id="op-tgl" title="Tanggal Berakhir SIO">
-            <button class="btn-primary" onclick="tambahOperator()">+ Simpan Operator</button>
+            <select id="op-lokasi">
+              <option value="Area Workshop & Warehouse">Area Workshop &amp; Warehouse</option>
+              <option value="Area Produksi">Area Produksi</option>
+              <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
+            </select>
+            <input type="date" id="op-tgl">
+            <button class="btn-submit" onclick="addOp()">+ Simpan Operator</button>
           </div>
-          <input type="text" class="search-input" id="cari-op" onkeyup="renderSemua()" placeholder="🔍 Cari nama operator atau nomor lisensi SIO...">
-          <div class="table-box">
+          <div class="table-scroll">
             <table>
-              <thead>
-                <tr>
-                  <th>Nama Operator</th>
-                  <th>No. Lisensi SIO</th>
-                  <th>Kelas</th>
-                  <th>Berlaku Sampai</th>
-                  <th>Status Masa Aktif</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="tabel-operator"></tbody>
+              <thead><tr><th>Nama Operator</th><th>No. SIO</th><th>Kelas</th><th>Lokasi</th><th>Berlaku Sampai</th><th>Status</th><th>Aksi</th></tr></thead>
+              <tbody id="tbl-op"></tbody>
             </table>
           </div>
         </div>
-      </section>
 
-      <!-- HALAMAN 3: DATA UNIT FORKLIFT (SILO) -->
-      <section id="view-unit" class="view-section">
-        <div class="widget-card">
-          <div class="widget-head">
-            <h3 class="widget-title">🚜 Manajemen Data Unit Forklift (SILO)</h3>
-          </div>
-          <div class="form-bar">
+        <!-- Sub 2: SILO -->
+        <div id="sub-unit" class="card" style="display:none;">
+          <h3 class="card-title" style="margin-bottom:12px;">Daftar Riksa Uji Unit Forklift (SILO)</h3>
+          <div class="form-grid">
             <input type="text" id="unit-kode" placeholder="Kode Unit (misal: FL-01)">
-            <input type="text" id="unit-merk" placeholder="Merek & Kapasitas (misal: Toyota 3 Ton)">
+            <input type="text" id="unit-merk" placeholder="Merek & Kapasitas">
             <input type="text" id="unit-silo" placeholder="Nomor Pengesahan SILO">
-            <input type="date" id="unit-tgl" title="Tanggal Berakhir SILO">
-            <button class="btn-primary" style="background:#2563eb;" onclick="tambahUnit()">+ Simpan Unit</button>
+            <select id="unit-lokasi">
+              <option value="Area Workshop & Warehouse">Area Workshop &amp; Warehouse</option>
+              <option value="Area Produksi">Area Produksi</option>
+              <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
+            </select>
+            <input type="date" id="unit-tgl">
+            <button class="btn-submit" style="background:#2563eb;" onclick="addUnit()">+ Simpan Unit</button>
           </div>
-          <input type="text" class="search-input" id="cari-unit" onkeyup="renderSemua()" placeholder="🔍 Cari kode unit, merek, atau nomor SILO...">
-          <div class="table-box">
+          <div class="table-scroll">
             <table>
-              <thead>
-                <tr>
-                  <th>Kode Unit</th>
-                  <th>Merek & Kapasitas</th>
-                  <th>No. Pengesahan SILO</th>
-                  <th>Berlaku Sampai</th>
-                  <th>Status SILO</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody id="tabel-unit"></tbody>
+              <thead><tr><th>Kode Unit</th><th>Merek &amp; Kapasitas</th><th>No. SILO</th><th>Lokasi</th><th>Berlaku Sampai</th><th>Status</th><th>Aksi</th></tr></thead>
+              <tbody id="tbl-unit"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sub 3: Monitoring APD -->
+        <div id="sub-apd" class="card" style="display:none;">
+          <h3 class="card-title" style="margin-bottom:12px;">Rekap Pemeriksaan Kepatuhan APD</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Area Kerja</th><th>Jenis APD Wajib</th><th>Jumlah Personel</th><th>Patuh</th><th>Tingkat Kepatuhan</th></tr></thead>
+              <tbody>
+                <tr><td>Area Workshop &amp; Warehouse</td><td>Helm, Sepatu Safety, Rompi Reflektor</td><td>24</td><td>24</td><td><span class="pill pill-safe">100%</span></td></tr>
+                <tr><td>Area Produksi</td><td>Helm, Earplug, Sepatu Safety, Kacamata</td><td>40</td><td>39</td><td><span class="pill pill-safe">97.5%</span></td></tr>
+                <tr><td>Area Yard &amp; Loading</td><td>Helm, Rompi High-Vis, Sepatu Safety</td><td>18</td><td>18</td><td><span class="pill pill-safe">100%</span></td></tr>
+              </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- HALAMAN 4: PENGINGAT MASA AKTIF -->
-      <section id="view-pengingat" class="view-section">
-        <div class="widget-card">
-          <div class="widget-head">
-            <h3 class="widget-title">🔔 Daftar Pengingat Perpanjangan SIO & SILO</h3>
+      <!-- 3. TEMUAN / HAZARD -->
+      <section id="page-hazard" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">⚠️ Pelaporan Temuan / Kondisi Tidak Aman (Hazard)</h3>
+          <div class="form-grid">
+            <input type="text" id="hz-desc" placeholder="Deskripsi Temuan / Potensi Bahaya">
+            <select id="hz-lokasi">
+              <option value="Area Workshop & Warehouse">Area Workshop &amp; Warehouse</option>
+              <option value="Area Produksi">Area Produksi</option>
+              <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
+            </select>
+            <select id="hz-risk">
+              <option value="Tinggi">Risiko Tinggi</option>
+              <option value="Sedang" selected>Risiko Sedang</option>
+              <option value="Rendah">Risiko Rendah</option>
+            </select>
+            <input type="text" id="hz-pic" placeholder="PIC Penanggung Jawab">
+            <input type="date" id="hz-due">
+            <button class="btn-submit" style="background:#d97706;" onclick="addHazard()">+ Kirim Laporan</button>
           </div>
-          <p style="font-size:0.88rem; color:var(--text-muted); margin-top:0;">
-            Menampilkan seluruh operator dan unit forklift yang masa berlaku lisensinya sudah habis atau tersisa kurang dari 30 hari.
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Deskripsi Temuan</th><th>Lokasi</th><th>Risiko</th><th>PIC</th><th>Tenggat</th><th>Status</th><th>Aksi</th></tr></thead>
+              <tbody id="tbl-hazard"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. TINDAK LANJUT -->
+      <section id="page-tindaklanjut" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:10px;">✅ Monitoring Tindak Lanjut &amp; Verifikasi (CAPA)</h3>
+          <p style="font-size:0.84rem; color:var(--text-muted); margin-top:0;">
+            Sesuai aturan workflow Blueprint PantauK3, setiap temuan wajib memiliki PIC, tenggat penyelesaian, dan verifikasi penutupan[cite: 18].
           </p>
-          <div id="pengingat-lengkap"></div>
+          <div id="capa-list"></div>
         </div>
       </section>
 
-      <!-- HALAMAN 5: EDUKASI & PANDUAN K3 -->
-      <section id="view-edukasi" class="view-section">
-        <div class="widget-card">
-          <h3 class="widget-title" style="margin-bottom:14px;">📖 Panduan Keselamatan Pengoperasian Forklift (Permenaker No. 8 Tahun 2020)</h3>
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
-            <div style="background:#f8fafc; padding:16px; border-radius:10px; border-left:4px solid #16a34a;">
-              <strong>1. Kewenangan Operator (SIO)</strong>
-              <p style="font-size:0.86rem; color:#475569; margin:6px 0 0;">
-                Forklift hanya boleh dioperasikan oleh operator yang memiliki Lisensi K3 (SIO) aktif sesuai kelas kapasitas angkutnya (Kelas II untuk &le; 15 ton, Kelas I untuk &gt; 15 ton).
-              </p>
-            </div>
-            <div style="background:#f8fafc; padding:16px; border-radius:10px; border-left:4px solid #2563eb;">
-              <strong>2. Kelayakan Unit (SILO / Suket K3)</strong>
-              <p style="font-size:0.86rem; color:#475569; margin:6px 0 0;">
-                Setiap unit pesawat angkat dan angkut wajib menjalani riksa uji berkala minimal 1 tahun sekali oleh pengawas ketenagakerjaan atau PJK3 resmi.
-              </p>
-            </div>
-            <div style="background:#f8fafc; padding:16px; border-radius:10px; border-left:4px solid #f59e0b;">
-              <strong>3. Pemeriksaan Harian (P2H)</strong>
-              <p style="font-size:0.86rem; color:#475569; margin:6px 0 0;">
-                Sebelum menyalakan unit, periksa kondisi rem, rantai mast, garpu, kebocoran oli hidrolik, lampu rotari, klakson mundur, serta sabuk pengaman.
-              </p>
-            </div>
+      <!-- 5. LAPORAN & MANHOURS -->
+      <section id="page-laporan" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">📊 Pencatatan Safe Manhours &amp; Ekspor Laporan</h3>
+          <div class="form-grid">
+            <input type="month" id="mh-bulan" value="2026-11">
+            <select id="mh-kat">
+              <option value="Karyawan Organik">Karyawan Organik</option>
+              <option value="Kontraktor / Vendor">Kontraktor / Vendor</option>
+            </select>
+            <input type="number" id="mh-jam" placeholder="Total Jam Kerja (misal: 4500)">
+            <button class="btn-submit" onclick="addManhour()">+ Catat Manhours</button>
+            <button class="btn-submit" style="background:#0b2239;" onclick="exportCSV()">⬇️ Unduh Rekap (.CSV)</button>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Periode</th><th>Kategori Tenaga Kerja</th><th>Jam Kerja Aman</th><th>Kecelakaan Kerja (LTI)</th><th>Status</th></tr></thead>
+              <tbody id="tbl-mh"></tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      <!-- HALAMAN 6: PENGATURAN -->
-      <section id="view-pengaturan" class="view-section">
-        <div class="widget-card" style="max-width:560px;">
-          <h3 class="widget-title" style="margin-bottom:14px;">⚙️ Pengaturan Dashboard & Cadangan Data</h3>
-          <label style="font-size:0.86rem; font-weight:600; display:block; margin-bottom:6px;">Nama Petugas / Tim K3 di Header:</label>
-          <div style="display:flex; gap:8px; margin-bottom:20px;">
-            <input type="text" id="input-nama-user" placeholder="Contoh: Budi Santoso - K3" style="flex:1; padding:10px; border:1px solid #cbd5e1; border-radius:8px;">
-            <button class="btn-primary" onclick="simpanNamaUser()">Simpan Nama</button>
+      <!-- 6. AREA & LOKASI -->
+      <section id="page-lokasi" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">📍 Master Area &amp; Penanggung Jawab Lokasi</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Kode Area</th><th>Nama Lokasi Kerja</th><th>PIC Area</th><th>Jumlah Unit Forklift</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>AREA-01</td><td>Area Workshop &amp; Warehouse</td><td>Kepala Gudang</td><td>3 Unit</td><td><span class="pill pill-safe">Aktif</span></td></tr>
+                <tr><td>AREA-02</td><td>Area Produksi</td><td>Supervisor Produksi</td><td>2 Unit</td><td><span class="pill pill-safe">Aktif</span></td></tr>
+                <tr><td>AREA-03</td><td>Area Yard &amp; Loading</td><td>Koordinator Logistik</td><td>2 Unit</td><td><span class="pill pill-safe">Aktif</span></td></tr>
+              </tbody>
+            </table>
           </div>
-          <hr style="border:none; border-top:1px solid #e2e8f0; margin:16px 0;">
-          <div style="font-size:0.86rem; font-weight:600; margin-bottom:8px;">Cadangkan atau Pulihkan Data:</div>
+        </div>
+      </section>
+
+      <!-- 7. EDUKASI & DOKUMEN K3 -->
+      <section id="page-edukasi" class="view-pane">
+        <div class="card">
+          <h3 class="card-title" style="margin-bottom:12px;">📖 Pustaka Dokumen &amp; Regulasi K3</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>No. Dokumen</th><th>Judul Dokumen / Regulasi</th><th>Kategori</th><th>Revisi</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>SOP-K3-001</td><td>Prosedur Pengoperasian Forklift &amp; Pemeriksaan Harian (P2H)</td><td>SOP Operasional</td><td>Rev. 03</td><td><span class="pill pill-safe">Berlaku</span></td></tr>
+                <tr><td>JSA-WH-012</td><td>Job Safety Analysis Bongkar Muat Menggunakan Forklift</td><td>JSA / HIRADC</td><td>Rev. 02</td><td><span class="pill pill-safe">Berlaku</span></td></tr>
+                <tr><td>REG-MNK-08</td><td>Permenaker No. 8 Tahun 2020 — Pesawat Angkat &amp; Angkut</td><td>Regulasi Pemerintah</td><td>2020</td><td><span class="pill pill-info">Referensi</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. PENGATURAN -->
+      <section id="page-pengaturan" class="view-pane">
+        <div class="card" style="max-width:560px;">
+          <h3 class="card-title" style="margin-bottom:12px;">⚙️ Pengaturan Profil &amp; Cadangan Data</h3>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+            <input type="text" id="set-nama" placeholder="Nama Petugas (contoh: Budi Santoso)" style="padding:9px; border:1px solid #cbd5e1; border-radius:7px;">
+            <input type="text" id="set-role" placeholder="Jabatan (contoh: Safety Officer)" style="padding:9px; border:1px solid #cbd5e1; border-radius:7px;">
+            <button class="btn-submit" onclick="saveProfile()">Simpan Profil</button>
+          </div>
+          <hr style="border:none; border-top:1px solid #e2e8f0; margin:14px 0;">
           <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn-primary" style="background:#2563eb;" onclick="unduhBackup()">⬇️ Unduh Backup (.json)</button>
-            <button class="btn-primary" style="background:#64748b;" onclick="resetContoh()">🔄 Reset ke Data Contoh</button>
+            <button class="btn-submit" style="background:#2563eb;" onclick="downloadJSON()">⬇️ Backup Data (.JSON)</button>
+            <button class="btn-submit" style="background:#64748b;" onclick="resetDemo()">🔄 Reset Data Simulasi</button>
           </div>
         </div>
       </section>
@@ -666,267 +743,309 @@
   </div>
 
 <script>
-  let dataOperator = JSON.parse(localStorage.getItem('pantauk3_op')) || [
-    { nama: "Budi Santoso", sio: "SIO-12345/K3/2024", kelas: "Kelas II (< 15 Ton)", tgl: "2027-05-20" },
-    { nama: "Ahmad Fauzi", sio: "SIO-98765/K3/2023", kelas: "Kelas I (> 15 Ton)", tgl: "2026-12-10" }
+  let ops = JSON.parse(localStorage.getItem('pk3_ops')) || [
+    { nama: "Budi Santoso", sio: "SIO-12345/K3/2024", kelas: "Kelas II (< 15 Ton)", lokasi: "Area Workshop & Warehouse", tgl: "2027-06-15" },
+    { nama: "Andi Pratama", sio: "SIO-88412/K3/2023", kelas: "Kelas I (> 15 Ton)", lokasi: "Area Produksi", tgl: "2026-12-12" }
   ];
 
-  let dataUnit = JSON.parse(localStorage.getItem('pantauk3_unit')) || [
-    { kode: "FL-01", merk: "Komatsu 3.5 Ton", silo: "SILO-001/PAA/2025", tgl: "2027-08-15" },
-    { kode: "FL-02", merk: "Toyota 5 Ton", silo: "SILO-002/PAA/2024", tgl: "2026-10-01" }
+  let units = JSON.parse(localStorage.getItem('pk3_units')) || [
+    { kode: "FL-01", merk: "Komatsu 3.5 Ton", silo: "SILO-001/PAA/2025", lokasi: "Area Workshop & Warehouse", tgl: "2027-08-20" },
+    { kode: "FL-02", merk: "Toyota 5 Ton", silo: "SILO-002/PAA/2024", lokasi: "Area Produksi", tgl: "2026-10-15" }
   ];
 
-  let logAktivitas = JSON.parse(localStorage.getItem('pantauk3_log')) || [
-    { judul: "Sistem PantauK3 siap digunakan", ket: "Monitoring SIO & SILO aktif", ikon: "✓", warna: "#16a34a" }
+  let hazards = JSON.parse(localStorage.getItem('pk3_hazards')) || [
+    { desc: "Lampu rotari unit FL-02 redup", lokasi: "Area Produksi", risk: "Sedang", pic: "Tim Maintenance", due: "2026-11-30", status: "In Progress" },
+    { desc: "Garis marka jalur forklift area loading pudar", lokasi: "Area Yard & Loading", risk: "Rendah", pic: "Koordinator Logistik", due: "2026-12-05", status: "Closed" }
   ];
 
-  function aturSapaan() {
-    const jam = new Date().getHours();
-    let sapa = "Selamat Malam,";
-    if (jam >= 4 && jam < 11) sapa = "Selamat Pagi,";
-    else if (jam >= 11 && jam < 15) sapa = "Selamat Siang,";
-    else if (jam >= 15 && jam < 18) sapa = "Selamat Sore,";
-    document.getElementById('sapaan-waktu').innerText = sapa;
+  let manhours = JSON.parse(localStorage.getItem('pk3_mh')) || [
+    { bulan: "2026-10", kat: "Karyawan Organik", jam: 8200 },
+    { bulan: "2026-11", kat: "Karyawan Organik", jam: 4250 }
+  ];
 
-    const namaTersimpan = localStorage.getItem('pantauk3_user') || "Tim K3 & Operasional";
-    document.getElementById('nama-pengguna-display').innerText = namaTersimpan;
-    document.getElementById('input-nama-user').value = namaTersimpan;
-    const inisial = namaTersimpan.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
-    document.getElementById('user-inisial').innerText = inisial || "K3";
+  let logs = JSON.parse(localStorage.getItem('pk3_logs')) || [
+    { text: "Inspeksi Area Produksi selesai oleh Andi Pratama", time: "Hari ini, 09:15", color: "#16a34a" },
+    { text: "Pembaruan data SILO unit FL-01 tercatat", time: "Kemarin, 16:20", color: "#2563eb" }
+  ];
+
+  function saveStorage() {
+    localStorage.setItem('pk3_ops', JSON.stringify(ops));
+    localStorage.setItem('pk3_units', JSON.stringify(units));
+    localStorage.setItem('pk3_hazards', JSON.stringify(hazards));
+    localStorage.setItem('pk3_mh', JSON.stringify(manhours));
+    localStorage.setItem('pk3_logs', JSON.stringify(logs.slice(0, 6)));
   }
 
-  function simpanNamaUser() {
-    const val = document.getElementById('input-nama-user').value.trim();
-    if (!val) return;
-    localStorage.setItem('pantauk3_user', val);
-    aturSapaan();
-    alert("Nama pengguna berhasil diperbarui!");
+  function pushLog(text, color = "#16a34a") {
+    const t = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    logs.unshift({ text, time: `Hari ini, ${t}`, color });
   }
 
-  function simpanSemua() {
-    localStorage.setItem('pantauk3_op', JSON.stringify(dataOperator));
-    localStorage.setItem('pantauk3_unit', JSON.stringify(dataUnit));
-    localStorage.setItem('pantauk3_log', JSON.stringify(logAktivitas.slice(0, 5)));
-  }
-
-  function tambahLog(judul, ket, ikon = "✓", warna = "#16a34a") {
-    const waktu = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-    logAktivitas.unshift({ judul, ket: `Hari ini, ${waktu} • ${ket}`, ikon, warna });
-  }
-
-  function pindahHalaman(nama, tombol) {
-    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById('view-' + nama).classList.add('active');
-    if (tombol) tombol.classList.add('active');
+  function goPage(id, btn) {
+    document.querySelectorAll('.view-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
     document.getElementById('sidebar').classList.remove('open');
   }
 
-  function hitungStatus(tanggalStr) {
-    const hariIni = new Date();
-    hariIni.setHours(0, 0, 0, 0);
-    const target = new Date(tanggalStr);
-    const selisihHari = Math.ceil((target - hariIni) / (1000 * 60 * 60 * 24));
-
-    if (selisihHari < 0) {
-      return { teks: `Kedaluwarsa (${Math.abs(selisihHari)} hari lalu)`, kelas: "badge-danger", kategori: "exp", sisa: selisihHari };
-    } else if (selisihHari <= 30) {
-      return { teks: `Segera Habis (${selisihHari} hari lagi)`, kelas: "badge-warn", kategori: "warn", sisa: selisihHari };
-    } else {
-      return { teks: `Aktif (${selisihHari} hari lagi)`, kelas: "badge-safe", kategori: "safe", sisa: selisihHari };
-    }
+  function switchSub(sub, btn) {
+    ['sio', 'unit', 'apd'].forEach(s => document.getElementById('sub-' + s).style.display = 'none');
+    document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById('sub-' + sub).style.display = 'block';
+    if (btn) btn.classList.add('active');
   }
 
-  function tambahOperator() {
+  function checkExpiry(dateStr) {
+    const now = new Date(); now.setHours(0,0,0,0);
+    const exp = new Date(dateStr);
+    const diff = Math.ceil((exp - now) / 86400000);
+    if (diff < 0) return { label: `Expired (${Math.abs(diff)} hr lalu)`, cls: 'pill-danger', code: 'exp' };
+    if (diff <= 30) return { label: `Segera Habis (${diff} hr)`, cls: 'pill-warn', code: 'warn' };
+    return { label: `Aktif (${diff} hr)`, cls: 'pill-safe', code: 'ok' };
+  }
+
+  function addOp() {
     const nama = document.getElementById('op-nama').value.trim();
     const sio = document.getElementById('op-sio').value.trim();
     const kelas = document.getElementById('op-kelas').value;
+    const lokasi = document.getElementById('op-lokasi').value;
     const tgl = document.getElementById('op-tgl').value;
-    if (!nama || !sio || !tgl) return alert("Mohon lengkapi Nama, Nomor SIO, dan Tanggal Berlaku!");
-    dataOperator.push({ nama, sio, kelas, tgl });
-    tambahLog(`Operator baru: ${nama}`, `SIO ${sio}`, "👷", "#16a34a");
-    simpanSemua();
+    if (!nama || !sio || !tgl) return alert("Lengkapi Nama, Nomor SIO, dan Tanggal Berlaku!");
+    ops.push({ nama, sio, kelas, lokasi, tgl });
+    pushLog(`Operator baru ditambahkan: ${nama} (${sio})`, "#16a34a");
+    saveStorage();
     document.getElementById('op-nama').value = '';
     document.getElementById('op-sio').value = '';
-    document.getElementById('op-tgl').value = '';
-    renderSemua();
+    renderAll();
   }
 
-  function tambahUnit() {
+  function addUnit() {
     const kode = document.getElementById('unit-kode').value.trim();
     const merk = document.getElementById('unit-merk').value.trim();
     const silo = document.getElementById('unit-silo').value.trim();
+    const lokasi = document.getElementById('unit-lokasi').value;
     const tgl = document.getElementById('unit-tgl').value;
-    if (!kode || !merk || !silo || !tgl) return alert("Mohon lengkapi Kode Unit, Merek, Nomor SILO, dan Tanggal Berlaku!");
-    dataUnit.push({ kode, merk, silo, tgl });
-    tambahLog(`Unit baru: ${kode} (${merk})`, `SILO ${silo}`, "🚜", "#2563eb");
-    simpanSemua();
+    if (!kode || !merk || !silo || !tgl) return alert("Lengkapi Kode Unit, Merek, Nomor SILO, dan Tanggal Berlaku!");
+    units.push({ kode, merk, silo, lokasi, tgl });
+    pushLog(`Unit forklift baru: ${kode} - ${merk}`, "#2563eb");
+    saveStorage();
     document.getElementById('unit-kode').value = '';
     document.getElementById('unit-merk').value = '';
     document.getElementById('unit-silo').value = '';
-    document.getElementById('unit-tgl').value = '';
-    renderSemua();
+    renderAll();
   }
 
-  function hapusOperator(i) {
-    if (confirm("Hapus data operator ini?")) {
-      tambahLog(`Hapus operator: ${dataOperator[i].nama}`, "Data diperbarui", "🗑️", "#ef4444");
-      dataOperator.splice(i, 1);
-      simpanSemua();
-      renderSemua();
-    }
+  function addHazard() {
+    const desc = document.getElementById('hz-desc').value.trim();
+    const lokasi = document.getElementById('hz-lokasi').value;
+    const risk = document.getElementById('hz-risk').value;
+    const pic = document.getElementById('hz-pic').value.trim();
+    const due = document.getElementById('hz-due').value;
+    if (!desc || !pic || !due) return alert("Lengkapi Deskripsi Temuan, PIC, dan Tenggat!");
+    hazards.unshift({ desc, lokasi, risk, pic, due, status: "In Progress" });
+    pushLog(`Temuan baru: ${desc} (${lokasi})`, "#f59e0b");
+    saveStorage();
+    document.getElementById('hz-desc').value = '';
+    document.getElementById('hz-pic').value = '';
+    renderAll();
   }
 
-  function hapusUnit(i) {
-    if (confirm("Hapus data unit forklift ini?")) {
-      tambahLog(`Hapus unit: ${dataUnit[i].kode}`, "Data diperbarui", "🗑️", "#ef4444");
-      dataUnit.splice(i, 1);
-      simpanSemua();
-      renderSemua();
-    }
+  function closeHazard(i) {
+    hazards[i].status = "Closed";
+    pushLog(`Temuan diverifikasi selesai: ${hazards[i].desc}`, "#16a34a");
+    saveStorage();
+    renderAll();
   }
 
-  function unduhBackup() {
-    const isi = JSON.stringify({ dataOperator, dataUnit }, null, 2);
-    const blob = new Blob([isi], { type: "application/json" });
+  function addManhour() {
+    const bulan = document.getElementById('mh-bulan').value;
+    const kat = document.getElementById('mh-kat').value;
+    const jam = parseInt(document.getElementById('mh-jam').value, 10);
+    if (!bulan || !jam) return alert("Isi periode bulan dan jumlah jam kerja!");
+    manhours.unshift({ bulan, kat, jam });
+    pushLog(`Pencatatan Manhours (${bulan}): +${jam.toLocaleString('id-ID')} jam`, "#7c3aed");
+    saveStorage();
+    document.getElementById('mh-jam').value = '';
+    renderAll();
+  }
+
+  function delItem(type, i) {
+    if (!confirm("Hapus data ini?")) return;
+    if (type === 'op') ops.splice(i, 1);
+    if (type === 'unit') units.splice(i, 1);
+    saveStorage();
+    renderAll();
+  }
+
+  function saveProfile() {
+    const n = document.getElementById('set-nama').value.trim();
+    const r = document.getElementById('set-role').value.trim();
+    if (n) localStorage.setItem('pk3_uname', n);
+    if (r) localStorage.setItem('pk3_urole', r);
+    loadProfile();
+    alert("Profil berhasil diperbarui!");
+  }
+
+  function loadProfile() {
+    const n = localStorage.getItem('pk3_uname') || "Budi Santoso";
+    const r = localStorage.getItem('pk3_urole') || "Safety Officer";
+    document.getElementById('user-name-lbl').innerText = n;
+    document.getElementById('user-role-lbl').innerText = r;
+    document.getElementById('set-nama').value = n;
+    document.getElementById('set-role').value = r;
+    document.getElementById('avatar-txt').innerText = n.split(' ').map(x => x[0]).join('').substring(0,2).toUpperCase();
+  }
+
+  function downloadJSON() {
+    const blob = new Blob([JSON.stringify({ ops, units, hazards, manhours }, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "backup-pantauk3.json";
+    a.download = "PantauK3_Backup_2026.json";
     a.click();
   }
 
-  function resetContoh() {
-    if (confirm("Kembalikan ke data contoh awal?")) {
-      localStorage.removeItem('pantauk3_op');
-      localStorage.removeItem('pantauk3_unit');
+  function exportCSV() {
+    let csv = "Tipe,Identitas,Nomor Lisensi/SILO,Lokasi,Berlaku Sampai\n";
+    ops.forEach(o => csv += `Operator,"${o.nama}","${o.sio}","${o.lokasi}",${o.tgl}\n`);
+    units.forEach(u => csv += `Unit Forklift,"${u.kode} - ${u.merk}","${u.silo}","${u.lokasi}",${u.tgl}\n`);
+    const blob = new Blob([csv], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "Laporan_SIO_SILO_PantauK3.csv";
+    a.click();
+  }
+
+  function resetDemo() {
+    if (confirm("Kembalikan ke data simulasi awal?")) {
+      ['pk3_ops','pk3_units','pk3_hazards','pk3_mh','pk3_logs'].forEach(k => localStorage.removeItem(k));
       location.reload();
     }
   }
 
-  function renderSemua() {
-    const filterOp = document.getElementById('cari-op').value.toLowerCase();
-    const filterUnit = document.getElementById('cari-unit').value.toLowerCase();
-    let safeCount = 0, warnCount = 0, expCount = 0;
-    let opAktif = 0, unitAktif = 0;
-    let daftarPengingat = [];
-
-    // Tabel Operator
-    const tbodyOp = document.getElementById('tabel-operator');
-    tbodyOp.innerHTML = '';
-    dataOperator.forEach((item, i) => {
-      const st = hitungStatus(item.tgl);
-      if (st.kategori === 'safe') { safeCount++; opAktif++; }
-      else if (st.kategori === 'warn') { warnCount++; opAktif++; daftarPengingat.push({ tipe: 'SIO Operator', nama: `${item.nama} (${item.sio})`, tgl: item.tgl, st }); }
-      else { expCount++; daftarPengingat.push({ tipe: 'SIO Operator', nama: `${item.nama} (${item.sio})`, tgl: item.tgl, st }); }
-
-      if (item.nama.toLowerCase().includes(filterOp) || item.sio.toLowerCase().includes(filterOp)) {
-        tbodyOp.innerHTML += `
-          <tr>
-            <td><strong>${item.nama}</strong></td>
-            <td>${item.sio}</td>
-            <td>${item.kelas}</td>
-            <td>${item.tgl}</td>
-            <td><span class="badge ${st.kelas}">${st.teks}</span></td>
-            <td><button class="btn-del" onclick="hapusOperator(${i})">Hapus</button></td>
-          </tr>`;
-      }
-    });
-
-    // Tabel Unit
-    const tbodyUnit = document.getElementById('tabel-unit');
-    tbodyUnit.innerHTML = '';
-    dataUnit.forEach((item, i) => {
-      const st = hitungStatus(item.tgl);
-      if (st.kategori === 'safe') { safeCount++; unitAktif++; }
-      else if (st.kategori === 'warn') { warnCount++; unitAktif++; daftarPengingat.push({ tipe: 'SILO Unit', nama: `${item.kode} - ${item.merk} (${item.silo})`, tgl: item.tgl, st }); }
-      else { expCount++; daftarPengingat.push({ tipe: 'SILO Unit', nama: `${item.kode} - ${item.merk} (${item.silo})`, tgl: item.tgl, st }); }
-
-      if (item.kode.toLowerCase().includes(filterUnit) || item.merk.toLowerCase().includes(filterUnit) || item.silo.toLowerCase().includes(filterUnit)) {
-        tbodyUnit.innerHTML += `
-          <tr>
-            <td><strong>${item.kode}</strong></td>
-            <td>${item.merk}</td>
-            <td>${item.silo}</td>
-            <td>${item.tgl}</td>
-            <td><span class="badge ${st.kelas}">${st.teks}</span></td>
-            <td><button class="btn-del" onclick="hapusUnit(${i})">Hapus</button></td>
-          </tr>`;
-      }
-    });
-
-    const totalItem = dataOperator.length + dataUnit.length;
-    const totalValid = safeCount + warnCount;
-    const persenPatuh = totalItem === 0 ? 100 : Math.round((totalValid / totalItem) * 100);
-    const totalAlert = warnCount + expCount;
-
-    // Update KPI & Badges
-    document.getElementById('kpi-aktif').innerText = totalValid;
-    document.getElementById('kpi-warn').innerText = warnCount;
-    document.getElementById('kpi-persen').innerText = persenPatuh + "%";
-    document.getElementById('kpi-total').innerText = totalItem;
-    document.getElementById('kpi-rincian').innerText = `${dataOperator.length} Operator • ${dataUnit.length} Unit`;
-    document.getElementById('side-badge').innerText = totalAlert;
-    document.getElementById('top-badge').innerText = totalAlert;
-
-    // Progress Bar Rekap
-    document.getElementById('bar-op-txt').innerText = `${opAktif} / ${dataOperator.length} Aktif`;
-    document.getElementById('bar-op-fill').style.width = (dataOperator.length ? (opAktif / dataOperator.length) * 100 : 0) + "%";
-    document.getElementById('bar-unit-txt').innerText = `${unitAktif} / ${dataUnit.length} Aktif`;
-    document.getElementById('bar-unit-fill').style.width = (dataUnit.length ? (unitAktif / dataUnit.length) * 100 : 0) + "%";
-
-    // Donut Chart
-    const pSafe = totalItem ? (safeCount / totalItem) * 100 : 100;
-    const pWarn = totalItem ? (warnCount / totalItem) * 100 : 0;
-    document.getElementById('donut-chart').style.background = `conic-gradient(#16a34a 0% ${pSafe}%, #facc15 ${pSafe}% ${pSafe + pWarn}%, #ef4444 ${pSafe + pWarn}% 100%)`;
-    document.getElementById('donut-pct').innerText = persenPatuh + "%";
-    document.getElementById('donut-status-lbl').innerText = expCount > 0 ? "Perlu Tindak Lanjut" : "Aman";
-    document.getElementById('donut-status-lbl').style.color = expCount > 0 ? "#dc2626" : "#16a34a";
-    document.getElementById('leg-safe').innerText = safeCount;
-    document.getElementById('leg-warn').innerText = warnCount;
-    document.getElementById('leg-exp').innerText = expCount;
-    document.getElementById('donut-note').innerHTML = expCount > 0
-      ? `<span>⚠️</span> <span>Terdapat <strong>${expCount} lisensi kedaluwarsa</strong> yang wajib segera diperpanjang.</span>`
-      : `<span>✅</span> <span>Seluruh lisensi SIO & SILO dalam kondisi aktif dan memenuhi syarat.</span>`;
-
-    // Aktivitas Terbaru
-    const aktEl = document.getElementById('aktivitas-list');
-    aktEl.innerHTML = logAktivitas.slice(0, 3).map(l => `
-      <div class="list-item">
-        <span style="background:${l.warna}; color:#fff; width:24px; height:24px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:0.75rem; flex-shrink:0;">${l.ikon}</span>
-        <div>
-          <div style="font-weight:600; color:#0f172a;">${l.judul}</div>
-          <div style="font-size:0.76rem; color:#64748b;">${l.ket}</div>
-        </div>
-      </div>`).join('');
-
-    // Pengingat Mini & Lengkap
-    const miniEl = document.getElementById('pengingat-mini');
-    const fullEl = document.getElementById('pengingat-lengkap');
-    if (daftarPengingat.length === 0) {
-      const kosongHtml = `<div style="padding:14px; background:#f0fdf4; border-radius:8px; color:#166534; font-size:0.86rem;">🎉 Tidak ada SIO maupun SILO yang kedaluwarsa atau mendekati habis.</div>`;
-      miniEl.innerHTML = kosongHtml;
-      fullEl.innerHTML = kosongHtml;
-    } else {
-      const renderItem = (p) => {
-        const dotColor = p.st.kategori === 'exp' ? '#ef4444' : '#f59e0b';
-        const label = p.st.kategori === 'exp' ? 'Segera' : `Sisa ${p.st.sisa} hr`;
-        return `
-          <div class="task-row">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span class="dot" style="background:${dotColor};"></span>
-              <span style="color:${dotColor}; font-weight:700; min-width:68px;">${label}</span>
-              <span><strong>${p.tipe}:</strong> ${p.nama}</span>
-            </div>
-            <span style="color:#64748b; font-size:0.8rem;">${p.tgl}</span>
-          </div>`;
-      };
-      miniEl.innerHTML = daftarPengingat.slice(0, 3).map(renderItem).join('');
-      fullEl.innerHTML = daftarPengingat.map(renderItem).join('');
-    }
+  function filterGlobal() {
+    const q = document.getElementById('global-search').value.toLowerCase();
+    renderAll(q);
   }
 
-  aturSapaan();
-  renderSemua();
+  function renderAll(searchQuery = "") {
+    const cab = document.getElementById('filter-cabang').value;
+    let okCnt = 0, warnCnt = 0, expCnt = 0;
+    let notifs = [];
+
+    // Render SIO
+    const tblOp = document.getElementById('tbl-op');
+    tblOp.innerHTML = '';
+    ops.forEach((o, i) => {
+      if (cab !== 'ALL' && o.lokasi !== cab) return;
+      if (searchQuery && !(`${o.nama} ${o.sio} ${o.lokasi}`).toLowerCase().includes(searchQuery)) return;
+      const st = checkExpiry(o.tgl);
+      if (st.code === 'ok') okCnt++;
+      else if (st.code === 'warn') { warnCnt++; notifs.push({ msg: `SIO ${o.nama} segera habis (${o.tgl})`, cls: '#f59e0b' }); }
+      else { expCnt++; notifs.push({ msg: `SIO ${o.nama} kedaluwarsa (${o.tgl})`, cls: '#ef4444' }); }
+
+      tblOp.innerHTML += `<tr>
+        <td><strong>${o.nama}</strong></td><td>${o.sio}</td><td>${o.kelas}</td><td>${o.lokasi}</td><td>${o.tgl}</td>
+        <td><span class="pill ${st.cls}">${st.label}</span></td>
+        <td><button class="btn-sm" style="background:#fee2e2; color:#991b1b;" onclick="delItem('op',${i})">Hapus</button></td>
+      </tr>`;
+    });
+
+    // Render SILO
+    const tblUnit = document.getElementById('tbl-unit');
+    tblUnit.innerHTML = '';
+    units.forEach((u, i) => {
+      if (cab !== 'ALL' && u.lokasi !== cab) return;
+      if (searchQuery && !(`${u.kode} ${u.merk} ${u.silo} ${u.lokasi}`).toLowerCase().includes(searchQuery)) return;
+      const st = checkExpiry(u.tgl);
+      if (st.code === 'ok') okCnt++;
+      else if (st.code === 'warn') { warnCnt++; notifs.push({ msg: `SILO Unit ${u.kode} segera habis (${u.tgl})`, cls: '#f59e0b' }); }
+      else { expCnt++; notifs.push({ msg: `SILO Unit ${u.kode} kedaluwarsa (${u.tgl})`, cls: '#ef4444' }); }
+
+      tblUnit.innerHTML += `<tr>
+        <td><strong>${u.kode}</strong></td><td>${u.merk}</td><td>${u.silo}</td><td>${u.lokasi}</td><td>${u.tgl}</td>
+        <td><span class="pill ${st.cls}">${st.label}</span></td>
+        <td><button class="btn-sm" style="background:#fee2e2; color:#991b1b;" onclick="delItem('unit',${i})">Hapus</button></td>
+      </tr>`;
+    });
+
+    // Render Hazard & CAPA
+    const tblHz = document.getElementById('tbl-hazard');
+    const capaEl = document.getElementById('capa-list');
+    tblHz.innerHTML = '';
+    capaEl.innerHTML = '';
+    let activeHz = 0;
+
+    hazards.forEach((h, i) => {
+      if (cab !== 'ALL' && h.lokasi !== cab) return;
+      const isClosed = h.status === 'Closed';
+      if (!isClosed) {
+        activeHz++;
+        notifs.push({ msg: `Temuan aktif: ${h.desc} (${h.lokasi})`, cls: '#ef4444' });
+      }
+      const riskCls = h.risk === 'Tinggi' ? 'pill-danger' : (h.risk === 'Sedang' ? 'pill-warn' : 'pill-info');
+      const stCls = isClosed ? 'pill-safe' : 'pill-warn';
+
+      tblHz.innerHTML += `<tr>
+        <td><strong>${h.desc}</strong></td><td>${h.lokasi}</td>
+        <td><span class="pill ${riskCls}">${h.risk}</span></td>
+        <td>${h.pic}</td><td>${h.due}</td>
+        <td><span class="pill ${stCls}">${h.status}</span></td>
+        <td>${!isClosed ? `<button class="btn-sm" style="background:#16a34a; color:#fff;" onclick="closeHazard(${i})">Verifikasi Selesai</button>` : '✓ Terverifikasi'}</td>
+      </tr>`;
+
+      capaEl.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:8px;">
+        <div><strong>${h.desc}</strong><div style="font-size:0.78rem; color:#64748b;">PIC: ${h.pic} • Lokasi: ${h.lokasi} • Tenggat: ${h.due}</div></div>
+        <span class="pill ${stCls}">${h.status}</span>
+      </div>`;
+    });
+
+    // Render Manhours
+    const tblMh = document.getElementById('tbl-mh');
+    tblMh.innerHTML = '';
+    let totalJam = 0;
+    manhours.forEach(m => {
+      totalJam += m.jam;
+      tblMh.innerHTML += `<tr><td>${m.bulan}</td><td>${m.kat}</td><td><strong>${m.jam.toLocaleString('id-ID')} Jam</strong></td><td>0</td><td><span class="pill pill-safe">Zero LTI</span></td></tr>`;
+    });
+
+    // Update KPI & Charts
+    const totalAll = okCnt + warnCnt + expCnt;
+    const validAll = okCnt + warnCnt;
+    const pct = totalAll ? Math.round((validAll / totalAll) * 100) : 100;
+
+    document.getElementById('kpi-kepatuhan').innerText = pct + "%";
+    document.getElementById('kpi-sio-sub').innerText = `${validAll} dari ${totalAll} Lisensi Valid`;
+    document.getElementById('kpi-hazard').innerText = activeHz;
+    document.getElementById('kpi-unit-op').innerText = ops.length + units.length;
+    document.getElementById('kpi-unit-detail').innerText = `${ops.length} Operator • ${units.length} Unit`;
+    document.getElementById('kpi-manhours').innerText = totalJam.toLocaleString('id-ID');
+
+    document.getElementById('nav-hazard-cnt').innerText = activeHz;
+    document.getElementById('top-notif-cnt').innerText = notifs.length;
+
+    const p1 = totalAll ? (okCnt / totalAll) * 100 : 100;
+    const p2 = totalAll ? (warnCnt / totalAll) * 100 : 0;
+    document.getElementById('donut-ring').style.background = `conic-gradient(#16a34a 0% ${p1}%, #f59e0b ${p1}% ${p1+p2}%, #ef4444 ${p1+p2}% 100%)`;
+    document.getElementById('donut-pct').innerText = pct + "%";
+    document.getElementById('cnt-ok').innerText = okCnt;
+    document.getElementById('cnt-warn').innerText = warnCnt;
+    document.getElementById('cnt-exp').innerText = expCnt;
+
+    // Notif & Activity
+    document.getElementById('notif-list').innerHTML = notifs.length
+      ? notifs.slice(0, 3).map(n => `<div style="display:flex; align-items:center; gap:8px;"><span style="width:8px; height:8px; border-radius:50%; background:${n.cls}; flex-shrink:0;"></span><span>${n.msg}</span></div>`).join('')
+      : `<div style="color:#16a34a;">✅ Tidak ada peringatan mendesak saat ini.</div>`;
+
+    document.getElementById('activity-feed').innerHTML = logs.slice(0, 4).map(l => `
+      <div style="display:flex; gap:10px; align-items:flex-start;">
+        <span style="width:8px; height:8px; border-radius:50%; background:${l.color}; margin-top:5px; flex-shrink:0;"></span>
+        <div><div style="font-weight:600;">${l.text}</div><div style="font-size:0.74rem; color:#64748b;">${l.time}</div></div>
+      </div>`).join('');
+  }
+
+  loadProfile();
+  renderAll();
 </script>
 </body>
 </html>
