@@ -18,49 +18,61 @@
     * { box-sizing: border-box; font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; }
     body { margin: 0; background: var(--bg-main); color: var(--text-dark); display: flex; min-height: 100vh; }
 
+    /* LAYAR LOGIN */
+    .login-screen {
+      position: fixed; inset: 0; z-index: 100;
+      background: linear-gradient(135deg, #071728 0%, #0b2239 55%, #14532d 100%);
+      display: flex; align-items: center; justify-content: center; padding: 18px;
+    }
+    .login-card {
+      background: #fff; width: 100%; max-width: 410px; border-radius: 18px;
+      padding: 30px 28px; box-shadow: 0 20px 45px rgba(0,0,0,0.35);
+    }
+    .login-brand { text-align: center; margin-bottom: 22px; }
+    .login-brand img { height: 56px; width: auto; border-radius: 10px; margin-bottom: 8px; }
+    .login-brand h2 { margin: 0; font-size: 1.5rem; font-weight: 800; color: #0b2239; }
+    .login-brand h2 span { color: #16a34a; }
+    .login-brand p { margin: 4px 0 0; font-size: 0.8rem; color: var(--text-muted); }
+    .login-field { margin-bottom: 14px; }
+    .login-field label { display: block; font-size: 0.82rem; font-weight: 600; margin-bottom: 5px; color: #334155; }
+    .login-field input {
+      width: 100%; padding: 11px 13px; border: 1px solid #cbd5e1; border-radius: 9px; font-size: 0.92rem;
+    }
+    .btn-login {
+      width: 100%; background: #16a34a; color: #fff; border: none; padding: 12px;
+      border-radius: 9px; font-weight: 700; font-size: 0.95rem; cursor: pointer; margin-top: 4px;
+    }
+    .btn-login:hover { background: #15803d; }
+    .demo-hints {
+      margin-top: 18px; padding-top: 14px; border-top: 1px dashed #e2e8f0;
+      font-size: 0.76rem; color: #475569;
+    }
+    .demo-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .demo-chip {
+      background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 6px;
+      padding: 5px 9px; font-size: 0.74rem; font-weight: 600; cursor: pointer; color: #0f172a;
+    }
+    .demo-chip:hover { background: #dcfce7; border-color: #86efac; }
+
     /* OVERLAY GELAP SAAT MENU HP TERBUKA */
     .sidebar-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(7, 23, 40, 0.55);
-      z-index: 35;
-      backdrop-filter: blur(1px);
+      display: none; position: fixed; inset: 0;
+      background: rgba(7, 23, 40, 0.55); z-index: 35;
     }
     .sidebar-overlay.active { display: block; }
 
     /* SIDEBAR */
     .sidebar {
-      width: 255px;
-      background: linear-gradient(180deg, #0b2239 0%, #071728 100%);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-      flex-shrink: 0;
-      z-index: 40;
+      width: 255px; background: linear-gradient(180deg, #0b2239 0%, #071728 100%);
+      color: #fff; display: flex; flex-direction: column; justify-content: space-between;
+      position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; z-index: 40;
     }
-
     .brand-header { padding: 20px 18px 16px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative; }
     .close-sidebar-btn {
-      display: none;
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(255,255,255,0.12);
-      color: #fff;
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
+      display: none; position: absolute; top: 12px; right: 12px;
+      background: rgba(255,255,255,0.12); color: #fff; border: none;
+      width: 30px; height: 30px; border-radius: 6px; font-size: 1rem; cursor: pointer;
+      align-items: center; justify-content: center;
     }
     .brand-logo-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px; }
     .brand-logo-wrap img { height: 46px; width: auto; border-radius: 8px; }
@@ -78,8 +90,7 @@
     .nav-btn.active { background: var(--green-primary); color: #fff; font-weight: 600; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35); }
     .badge-count {
       margin-left: auto; background: #ef4444; color: #fff;
-      font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 12px;
-      display: none;
+      font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 12px; display: none;
     }
 
     .sidebar-bottom { padding: 14px; }
@@ -93,62 +104,59 @@
 
     /* MAIN CONTENT */
     .main-wrapper { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-
-    /* TOPBAR */
     .topbar {
       background: #fff; padding: 12px 26px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
       border-bottom: 1px solid var(--border-light); position: sticky; top: 0; z-index: 30;
     }
     .search-global {
       display: flex; align-items: center; background: #f1f5f9; border: 1px solid #e2e8f0;
-      border-radius: 8px; padding: 0 12px; width: 100%; max-width: 340px;
+      border-radius: 8px; padding: 0 12px; width: 100%; max-width: 320px;
     }
     .search-global input { border: none; background: transparent; padding: 9px 8px; font-size: 0.86rem; width: 100%; outline: none; color: var(--text-dark); }
-    .top-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .db-status {
-      display: inline-flex; align-items: center; gap: 6px; background: #fefce8; border: 1px solid #fde047;
-      color: #854d0e; font-size: 0.76rem; font-weight: 700; padding: 6px 11px; border-radius: 20px;
+      display: inline-flex; align-items: center; gap: 6px; background: #f0fdf4; border: 1px solid #bbf7d0;
+      color: #166534; font-size: 0.75rem; font-weight: 700; padding: 5px 10px; border-radius: 20px;
     }
-    .db-dot { width: 8px; height: 8px; border-radius: 50%; background: #eab308; }
-    .filter-loc { padding: 7px 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: #334155; background: #fff; }
+    .db-dot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; }
+    .filter-loc { padding: 7px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: #334155; background: #fff; }
     .bell-btn {
-      position: relative; background: #f8fafc; border: 1px solid #e2e8f0; width: 38px; height: 38px;
-      border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.05rem;
+      position: relative; background: #f8fafc; border: 1px solid #e2e8f0; width: 36px; height: 36px;
+      border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem;
     }
     .bell-dot {
       position: absolute; top: -3px; right: -3px; background: #ef4444; color: #fff; font-size: 0.68rem;
       font-weight: 700; min-width: 18px; height: 18px; border-radius: 10px; display: none; align-items: center; justify-content: center;
     }
-    .profile-chip { display: flex; align-items: center; gap: 10px; }
+    .profile-chip { display: flex; align-items: center; gap: 8px; }
     .avatar-circle {
-      width: 36px; height: 36px; border-radius: 50%; background: #0b2239; color: #fff;
-      font-weight: 700; font-size: 0.82rem; display: flex; align-items: center; justify-content: center;
+      width: 35px; height: 35px; border-radius: 50%; background: #0b2239; color: #fff;
+      font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center;
     }
     .profile-info { line-height: 1.2; }
-    .profile-info strong { font-size: 0.85rem; display: block; }
-    .profile-info span { font-size: 0.72rem; color: var(--text-muted); }
+    .profile-info strong { font-size: 0.84rem; display: block; }
+    .profile-info span { font-size: 0.7rem; color: #16a34a; font-weight: 700; }
+    .btn-logout {
+      background: #fee2e2; color: #991b1b; border: none; padding: 6px 10px;
+      border-radius: 7px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+    }
 
     .page-body { padding: 22px 26px; max-width: 1380px; width: 100%; margin: 0 auto; }
 
     /* HERO BANNER */
     .hero-banner {
       background: linear-gradient(105deg, #0b2239 0%, #103c5c 52%, #15803d 100%);
-      border-radius: 16px; padding: 26px 32px; color: #fff; display: flex; align-items: center;
+      border-radius: 16px; padding: 24px 30px; color: #fff; display: flex; align-items: center;
       justify-content: space-between; position: relative; overflow: hidden; margin-bottom: 22px;
       box-shadow: 0 8px 24px rgba(11, 34, 57, 0.14);
     }
     .hero-left { max-width: 620px; position: relative; z-index: 2; }
     .hero-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; color: #86efac; font-weight: 600; margin-bottom: 8px; }
-    .hero-left h1 { margin: 0 0 8px; font-size: 1.7rem; font-weight: 800; line-height: 1.25; }
-    .hero-left p { margin: 0 0 18px; font-size: 0.92rem; color: #cbd5e1; }
+    .hero-left h1 { margin: 0 0 8px; font-size: 1.65rem; font-weight: 800; line-height: 1.25; }
+    .hero-left p { margin: 0 0 16px; font-size: 0.9rem; color: #cbd5e1; }
     .btn-green {
-      background: #22c55e; color: #052e16; border: none; padding: 10px 20px; border-radius: 8px;
-      font-weight: 700; font-size: 0.86rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-    }
-    .btn-green:hover { background: #4ade80; }
-    .hero-right {
-      display: flex; align-items: center; gap: 14px; background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.16); padding: 14px 20px; border-radius: 14px; position: relative; z-index: 2;
+      background: #22c55e; color: #052e16; border: none; padding: 10px 18px; border-radius: 8px;
+      font-weight: 700; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
     }
 
     /* 4 KPI CARDS */
@@ -158,7 +166,7 @@
       display: flex; align-items: center; justify-content: space-between;
       box-shadow: 0 2px 6px rgba(15,23,42,0.03); cursor: pointer; transition: 0.2s;
     }
-    .kpi-box:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(15,23,42,0.06); }
+    .kpi-box:hover { transform: translateY(-2px); }
     .kpi-left { display: flex; align-items: center; gap: 14px; }
     .kpi-circle { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; color: #fff; flex-shrink: 0; }
     .kpi-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
@@ -174,7 +182,6 @@
     .card-title { font-size: 0.96rem; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
     .btn-link { background: none; border: none; color: #2563eb; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
 
-    /* DONUT */
     .donut-area { display: flex; align-items: center; justify-content: space-around; gap: 12px; margin: 8px 0; }
     .donut-circle { width: 118px; height: 118px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
     .donut-inner { width: 80px; height: 80px; border-radius: 50%; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
@@ -198,14 +205,20 @@
     .sub-tab.active { background: #0b2239; color: #fff; border-color: #0b2239; }
 
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 10px; background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 14px; }
-    .form-grid input, .form-grid select { padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 0.85rem; width: 100%; }
+    .form-grid input, .form-grid select { padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 0.85rem; width: 100%; background: #fff; }
     .btn-submit { background: var(--green-primary); color: #fff; border: none; padding: 9px 14px; border-radius: 7px; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
     .btn-submit:disabled { opacity: 0.6; cursor: wait; }
 
     .table-scroll { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 720px; }
-    th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.84rem; }
+    table { width: 100%; border-collapse: collapse; min-width: 740px; }
+    th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 0.84rem; vertical-align: middle; }
     th { background: #f8fafc; color: #334155; font-weight: 700; }
+
+    .thumb-img {
+      width: 48px; height: 48px; object-fit: cover; border-radius: 8px;
+      border: 1px solid #cbd5e1; cursor: pointer; transition: 0.2s;
+    }
+    .thumb-img:hover { transform: scale(1.08); }
 
     .pill { padding: 3px 9px; border-radius: 14px; font-size: 0.74rem; font-weight: 700; display: inline-block; }
     .pill-safe { background: #dcfce7; color: #166534; }
@@ -216,20 +229,83 @@
     .btn-sm { padding: 5px 9px; border-radius: 5px; border: none; font-size: 0.74rem; font-weight: 600; cursor: pointer; margin-right: 4px; }
     .menu-burger { display: none; background: #0b2239; color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-size: 1rem; cursor: pointer; }
 
+    /* MODAL PREVIEW FOTO & VERIFIKASI */
+    .modal-bg {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75);
+      z-index: 90; align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal-bg.active { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 14px; padding: 20px; max-width: 460px; width: 100%;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+
     @media (max-width: 1100px) { .grid-mid, .grid-bot { grid-template-columns: 1fr; } }
     @media (max-width: 768px) {
       .sidebar { position: fixed; left: -270px; transition: left 0.25s ease; }
       .sidebar.open { left: 0; }
       .close-sidebar-btn { display: inline-flex; }
       .menu-burger { display: inline-block; }
-      .hero-right { display: none; }
       .page-body { padding: 14px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- BACKDROP GELAP UNTUK MENUTUP MENU DI HP -->
+  <!-- LAYAR LOGIN -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="logo (2).png" alt="Logo PantauK3" onerror="this.style.display='none'">
+        <h2>Pantau<span>K3</span></h2>
+        <p>Enterprise Safety Monitoring System</p>
+      </div>
+      <div class="login-field">
+        <label>Username</label>
+        <input type="text" id="login-user" placeholder="Masukkan username">
+      </div>
+      <div class="login-field">
+        <label>Kata Sandi (Password)</label>
+        <input type="password" id="login-pass" placeholder="Masukkan kata sandi" onkeyup="if(event.key==='Enter') prosesLogin()">
+      </div>
+      <button class="btn-login" id="btn-login-submit" onclick="prosesLogin()">Masuk ke Sistem →</button>
+
+      <div class="demo-hints">
+        <strong>Klik cepat untuk uji coba hak akses (Password: 12345):</strong>
+        <div class="demo-chips">
+          <button class="demo-chip" onclick="isiDemo('admin','12345')">🛡️ Safety Officer (admin)</button>
+          <button class="demo-chip" onclick="isiDemo('pic','12345')">🔧 PIC Area (pic)</button>
+          <button class="demo-chip" onclick="isiDemo('karyawan','12345')">👷 Karyawan (karyawan)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PREVIEW FOTO -->
+  <div class="modal-bg" id="photo-modal" onclick="this.classList.remove('active')">
+    <div class="modal-box" style="text-align:center;" onclick="event.stopPropagation()">
+      <img id="modal-img-view" src="" style="max-width:100%; max-height:70vh; border-radius:10px; margin-bottom:12px;">
+      <br>
+      <button class="btn-submit" style="background:#0b2239;" onclick="document.getElementById('photo-modal').classList.remove('active')">Tutup Foto</button>
+    </div>
+  </div>
+
+  <!-- MODAL VERIFIKASI SELESAI + UPLOAD FOTO PERBAIKAN -->
+  <div class="modal-bg" id="verify-modal">
+    <div class="modal-box">
+      <h3 style="margin:0 0 8px;">✅ Verifikasi Perbaikan Temuan</h3>
+      <p style="font-size:0.84rem; color:#64748b; margin:0 0 14px;">Unggah foto bukti hasil perbaikan di lapangan sebelum menutup temuan ini.</p>
+      <input type="hidden" id="verify-hz-id">
+      <label style="font-size:0.82rem; font-weight:600; display:block; margin-bottom:6px;">Foto Bukti Perbaikan (Opsional / Kamera HP):</label>
+      <input type="file" id="verify-file" accept="image/*" capture="environment" style="margin-bottom:16px; width:100%;">
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button class="btn-sm" style="background:#e2e8f0; color:#334155; padding:8px 14px;" onclick="document.getElementById('verify-modal').classList.remove('active')">Batal</button>
+        <button class="btn-submit" id="btn-confirm-verify" onclick="konfirmasiVerifikasi()">Simpan &amp; Tutup Temuan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKDROP GELAP MENU HP -->
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="tutupSidebar()"></div>
 
   <!-- SIDEBAR -->
@@ -255,7 +331,7 @@
         <button class="nav-btn" onclick="goPage('laporan', this)">📊 Laporan &amp; Manhours</button>
         <button class="nav-btn" onclick="goPage('lokasi', this)">📍 Area &amp; Lokasi</button>
         <button class="nav-btn" onclick="goPage('edukasi', this)">📖 Edukasi &amp; Dokumen K3</button>
-        <button class="nav-btn" onclick="goPage('pengaturan', this)">⚙️ Pengaturan</button>
+        <button class="nav-btn" id="nav-pengaturan" onclick="goPage('pengaturan', this)">⚙️ Pengaturan &amp; Akun</button>
       </nav>
     </div>
 
@@ -264,32 +340,32 @@
         <div class="quote">"Zero Accident<br>Our Commitment"</div>
         <div class="sub">Keselamatan Prioritas Utama</div>
       </div>
-      <div class="version-txt">v2.2 Cloud • PantauK3 © 2026</div>
+      <div class="version-txt">v3.0 Auth &amp; Photo • PantauK3</div>
     </div>
   </aside>
 
   <!-- MAIN WRAPPER -->
   <div class="main-wrapper">
     <header class="topbar">
-      <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:200px;">
+      <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:180px;">
         <button class="menu-burger" onclick="bukaSidebar()">☰</button>
         <div class="search-global">
           <span>🔍</span>
-          <input type="text" id="global-search" onkeyup="filterGlobal()" placeholder="Cari operator, unit, nomor SIO/SILO...">
+          <input type="text" id="global-search" onkeyup="filterGlobal()" placeholder="Cari operator, unit, SIO/SILO...">
         </div>
       </div>
 
       <div class="top-actions">
         <div class="db-status" id="db-indicator">
           <span class="db-dot" id="db-dot"></span>
-          <span id="db-text">Menyambungkan...</span>
+          <span id="db-text">Cloud Terhubung</span>
         </div>
 
         <select class="filter-loc" id="filter-cabang" onchange="renderAll()">
-          <option value="ALL">Semua Lokasi / Cabang</option>
-          <option value="Area Workshop & Warehouse">Area Workshop &amp; Warehouse</option>
+          <option value="ALL">Semua Lokasi</option>
+          <option value="Area Workshop & Warehouse">Workshop &amp; Warehouse</option>
           <option value="Area Produksi">Area Produksi</option>
-          <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
+          <option value="Area Yard & Loading">Yard &amp; Loading</option>
         </select>
 
         <button class="bell-btn" title="Notifikasi K3" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">
@@ -303,6 +379,7 @@
             <strong id="user-name-lbl">Budi Santoso</strong>
             <span id="user-role-lbl">Safety Officer</span>
           </div>
+          <button class="btn-logout" onclick="logoutUser()">Keluar</button>
         </div>
       </div>
     </header>
@@ -313,22 +390,12 @@
       <section id="page-dashboard" class="view-pane active">
         <div class="hero-banner">
           <div class="hero-left">
-            <div class="hero-tag">— Terhubung ke Database Pusat (Real-Time)</div>
+            <div class="hero-tag" id="hero-welcome">— Selamat Datang di PantauK3</div>
             <h1>Bersama Wujudkan Tempat Kerja yang Aman dan Sehat</h1>
             <p>Budaya K3, Tanggung Jawab Kita Bersama • Monitoring Terpadu SIO, SILO, Inspeksi &amp; Hazard</p>
-            <button class="btn-green" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1])">
-              Kelola SIO &amp; SILO Forklift →
+            <button class="btn-green" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">
+              + Lapor Temuan / Hazard Sekarang →
             </button>
-          </div>
-          <div class="hero-right">
-            <svg width="54" height="54" viewBox="0 0 120 120" fill="none">
-              <path d="M60 10L102 28V60C102 87 84 106 60 114C36 106 18 87 18 60V28L60 10Z" fill="#22c55e" stroke="#ffffff" stroke-width="5"/>
-              <path d="M60 44V76M44 60H76" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
-            </svg>
-            <div>
-              <div style="font-size:1.4rem; font-weight:800; color:#86efac;">K3</div>
-              <div style="font-size:0.78rem; color:#e2e8f0;">Zero Accident<br>Target Kita</div>
-            </div>
           </div>
         </div>
 
@@ -342,7 +409,6 @@
                 <div class="kpi-delta" style="color:#16a34a;" id="kpi-sio-sub">0 Valid</div>
               </div>
             </div>
-            <svg width="56" height="28"><polyline fill="none" stroke="#16a34a" stroke-width="2.5" points="2,24 16,18 30,20 44,10 54,6"/></svg>
           </div>
 
           <div class="kpi-box" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">
@@ -354,7 +420,6 @@
                 <div class="kpi-delta" style="color:#d97706;">Perlu Tindak Lanjut</div>
               </div>
             </div>
-            <svg width="56" height="28"><polyline fill="none" stroke="#f59e0b" stroke-width="2.5" points="2,10 18,16 32,12 46,20 54,22"/></svg>
           </div>
 
           <div class="kpi-box" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1])">
@@ -366,7 +431,6 @@
                 <div class="kpi-delta" style="color:#2563eb;" id="kpi-unit-detail">0 Op • 0 Unit</div>
               </div>
             </div>
-            <svg width="56" height="28"><polyline fill="none" stroke="#2563eb" stroke-width="2.5" points="2,22 18,18 34,14 48,9 54,5"/></svg>
           </div>
 
           <div class="kpi-box" onclick="goPage('laporan', document.querySelectorAll('.nav-btn')[4])">
@@ -389,27 +453,14 @@
             </div>
             <svg viewBox="0 0 420 165" style="width:100%; height:auto;">
               <line x1="35" y1="25" x2="405" y2="25" stroke="#22c55e" stroke-dasharray="4 4" stroke-width="1.5"/>
-              <line x1="35" y1="65" x2="405" y2="65" stroke="#f1f5f9" stroke-width="1"/>
-              <line x1="35" y1="105" x2="405" y2="105" stroke="#f1f5f9" stroke-width="1"/>
               <line x1="35" y1="140" x2="405" y2="140" stroke="#cbd5e1" stroke-width="1"/>
               <text x="5" y="29" font-size="10" fill="#64748b">100%</text>
-              <text x="8" y="69" font-size="10" fill="#64748b">90%</text>
-              <text x="8" y="109" font-size="10" fill="#64748b">80%</text>
               <text x="8" y="143" font-size="10" fill="#64748b">70%</text>
               <polygon fill="rgba(37,99,235,0.1)" points="45,88 135,72 225,52 315,38 395,28 395,140 45,140"/>
               <polyline fill="none" stroke="#2563eb" stroke-width="3" points="45,88 135,72 225,52 315,38 395,28"/>
-              <circle cx="45" cy="88" r="4" fill="#2563eb"/>
-              <circle cx="135" cy="72" r="4" fill="#2563eb"/>
-              <circle cx="225" cy="52" r="4" fill="#2563eb"/>
-              <circle cx="315" cy="38" r="4" fill="#2563eb"/>
               <circle cx="395" cy="28" r="5" fill="#16a34a"/>
               <rect x="368" y="8" width="44" height="16" rx="4" fill="#16a34a"/>
               <text x="373" y="19" font-size="10" fill="#fff" font-weight="bold">98.2%</text>
-              <text x="35" y="156" font-size="10" fill="#64748b">Jul</text>
-              <text x="125" y="156" font-size="10" fill="#64748b">Agu</text>
-              <text x="215" y="156" font-size="10" fill="#64748b">Sep</text>
-              <text x="305" y="156" font-size="10" fill="#64748b">Okt</text>
-              <text x="385" y="156" font-size="10" fill="#64748b">Nov</text>
             </svg>
           </div>
 
@@ -430,9 +481,7 @@
                 <div><i class="dot-sm" style="background:#ef4444;"></i>Kedaluwarsa: <strong id="cnt-exp">0</strong></div>
               </div>
             </div>
-            <div class="info-pill" id="status-summary-box">
-              ✅ Tersinkronisasi langsung dengan database Supabase.
-            </div>
+            <div class="info-pill">✅ Tersinkronisasi langsung dengan database Supabase.</div>
           </div>
 
           <div class="card">
@@ -444,7 +493,7 @@
             <div class="safety-alert">
               <span>Safety Alert</span>
               <div style="font-weight:700; font-size:0.84rem; margin-top:5px;">Cek Rem, Klakson Mundur &amp; Masa Berlaku SILO</div>
-              <div style="font-size:0.75rem; color:#cbd5e1;">Wajib P2H sebelum mengoperasikan unit forklift di area kerja.</div>
+              <div style="font-size:0.75rem; color:#cbd5e1;">Wajib P2H sebelum mengoperasikan unit forklift.</div>
             </div>
           </div>
         </div>
@@ -461,20 +510,16 @@
           <div class="card">
             <div class="card-head">
               <h3 class="card-title">📍 Status Area Monitoring</h3>
-              <button class="btn-link" onclick="goPage('lokasi', document.querySelectorAll('.nav-btn')[5])">Detail →</button>
             </div>
             <div style="display:flex; flex-direction:column; gap:10px; font-size:0.84rem;">
               <div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px;">
-                <span>🏭 Area Workshop &amp; Warehouse</span>
-                <span class="pill pill-safe">Aktif</span>
+                <span>🏭 Area Workshop &amp; Warehouse</span><span class="pill pill-safe">Aktif</span>
               </div>
               <div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px;">
-                <span>⚙️ Area Produksi</span>
-                <span class="pill pill-safe">Aktif</span>
+                <span>⚙️ Area Produksi</span><span class="pill pill-safe">Aktif</span>
               </div>
               <div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px;">
-                <span>🚚 Area Yard &amp; Loading</span>
-                <span class="pill pill-safe">Aktif</span>
+                <span>🚚 Area Yard &amp; Loading</span><span class="pill pill-safe">Aktif</span>
               </div>
             </div>
           </div>
@@ -484,17 +529,17 @@
               <h3 class="card-title">⚡ Akses Cepat</h3>
             </div>
             <div class="quick-grid">
+              <div class="quick-btn" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">
+                <div>📸</div>Lapor Hazard + Foto
+              </div>
               <div class="quick-btn" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1])">
-                <div>👷</div>Tambah SIO Operator
+                <div>👷</div>Cek SIO Operator
               </div>
               <div class="quick-btn" onclick="goPage('inspeksi', document.querySelectorAll('.nav-btn')[1]); switchSub('unit', document.querySelectorAll('.sub-tab')[1])">
-                <div>🚜</div>Tambah SILO Unit
-              </div>
-              <div class="quick-btn" onclick="goPage('hazard', document.querySelectorAll('.nav-btn')[2])">
-                <div>⚠️</div>Lapor Hazard
+                <div>🚜</div>Cek SILO Unit
               </div>
               <div class="quick-btn" onclick="goPage('laporan', document.querySelectorAll('.nav-btn')[4])">
-                <div>📊</div>Input Manhours
+                <div>📊</div>Rekap Manhours
               </div>
             </div>
           </div>
@@ -511,7 +556,7 @@
 
         <div id="sub-sio" class="card">
           <h3 class="card-title" style="margin-bottom:12px;">Daftar Lisensi Operator Forklift (SIO)</h3>
-          <div class="form-grid">
+          <div class="form-grid admin-only">
             <input type="text" id="op-nama" placeholder="Nama Operator">
             <input type="text" id="op-sio" placeholder="Nomor SIO">
             <select id="op-kelas">
@@ -523,20 +568,20 @@
               <option value="Area Produksi">Area Produksi</option>
               <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
             </select>
-            <input type="date" id="op-tgl" title="Tanggal Berlaku Sampai">
+            <input type="date" id="op-tgl">
             <button class="btn-submit" id="btn-add-op" onclick="addOp()">+ Simpan ke Database</button>
           </div>
           <div class="table-scroll">
             <table>
-              <thead><tr><th>Nama Operator</th><th>No. SIO</th><th>Kelas</th><th>Lokasi</th><th>Berlaku Sampai</th><th>Status</th><th>Aksi</th></tr></thead>
-              <tbody id="tbl-op"><tr><td colspan="7">Memuat data...</td></tr></tbody>
+              <thead><tr><th>Nama Operator</th><th>No. SIO</th><th>Kelas</th><th>Lokasi</th><th>Berlaku Sampai</th><th>Status</th><th class="admin-only">Aksi</th></tr></thead>
+              <tbody id="tbl-op"></tbody>
             </table>
           </div>
         </div>
 
         <div id="sub-unit" class="card" style="display:none;">
           <h3 class="card-title" style="margin-bottom:12px;">Daftar Riksa Uji Unit Forklift (SILO)</h3>
-          <div class="form-grid">
+          <div class="form-grid admin-only">
             <input type="text" id="unit-kode" placeholder="Kode Unit (misal: FL-01)">
             <input type="text" id="unit-merk" placeholder="Merek & Kapasitas">
             <input type="text" id="unit-silo" placeholder="Nomor Pengesahan SILO">
@@ -545,13 +590,13 @@
               <option value="Area Produksi">Area Produksi</option>
               <option value="Area Yard & Loading">Area Yard &amp; Loading</option>
             </select>
-            <input type="date" id="unit-tgl" title="Tanggal Berlaku Sampai">
+            <input type="date" id="unit-tgl">
             <button class="btn-submit" id="btn-add-unit" style="background:#2563eb;" onclick="addUnit()">+ Simpan ke Database</button>
           </div>
           <div class="table-scroll">
             <table>
-              <thead><tr><th>Kode Unit</th><th>Merek &amp; Kapasitas</th><th>No. SILO</th><th>Lokasi</th><th>Berlaku Sampai</th><th>Status</th><th>Aksi</th></tr></thead>
-              <tbody id="tbl-unit"><tr><td colspan="7">Memuat data...</td></tr></tbody>
+              <thead><tr><th>Kode Unit</th><th>Merek &amp; Kapasitas</th><th>No. SILO</th><th>Lokasi</th><th>Berlaku Sampai</th><th>Status</th><th class="admin-only">Aksi</th></tr></thead>
+              <tbody id="tbl-unit"></tbody>
             </table>
           </div>
         </div>
@@ -571,7 +616,7 @@
         </div>
       </section>
 
-      <!-- 3. TEMUAN / HAZARD -->
+      <!-- 3. TEMUAN / HAZARD (DENGAN UPLOAD FOTO) -->
       <section id="page-hazard" class="view-pane">
         <div class="card">
           <h3 class="card-title" style="margin-bottom:12px;">⚠️ Pelaporan Temuan / Kondisi Tidak Aman (Hazard)</h3>
@@ -589,11 +634,12 @@
             </select>
             <input type="text" id="hz-pic" placeholder="PIC Penanggung Jawab">
             <input type="date" id="hz-due" title="Tenggat Penyelesaian">
-            <button class="btn-submit" id="btn-add-hz" style="background:#d97706;" onclick="addHazard()">+ Kirim ke Database</button>
+            <input type="file" id="hz-foto" accept="image/*" capture="environment" title="Ambil Foto Temuan">
+            <button class="btn-submit" id="btn-add-hz" style="background:#d97706;" onclick="addHazard()">📸 Kirim Laporan</button>
           </div>
           <div class="table-scroll">
             <table>
-              <thead><tr><th>Deskripsi Temuan</th><th>Lokasi</th><th>Risiko</th><th>PIC</th><th>Tenggat</th><th>Status</th><th>Aksi</th></tr></thead>
+              <thead><tr><th>Foto Temuan</th><th>Deskripsi</th><th>Lokasi</th><th>Risiko</th><th>PIC &amp; Tenggat</th><th>Status</th><th>Bukti &amp; Aksi</th></tr></thead>
               <tbody id="tbl-hazard"></tbody>
             </table>
           </div>
@@ -612,7 +658,7 @@
       <section id="page-laporan" class="view-pane">
         <div class="card">
           <h3 class="card-title" style="margin-bottom:12px;">📊 Pencatatan Safe Manhours &amp; Ekspor Laporan</h3>
-          <div class="form-grid">
+          <div class="form-grid admin-only">
             <input type="month" id="mh-bulan" value="2026-11">
             <select id="mh-kat">
               <option value="Karyawan Organik">Karyawan Organik</option>
@@ -620,7 +666,9 @@
             </select>
             <input type="number" id="mh-jam" placeholder="Total Jam Kerja (misal: 4500)">
             <button class="btn-submit" id="btn-add-mh" onclick="addManhour()">+ Simpan Manhours</button>
-            <button class="btn-submit" style="background:#0b2239;" onclick="exportCSV()">⬇️ Unduh Rekap (.CSV)</button>
+          </div>
+          <div style="margin-bottom:12px;">
+            <button class="btn-submit" style="background:#0b2239;" onclick="exportCSV()">⬇️ Unduh Rekap SIO &amp; SILO (.CSV)</button>
           </div>
           <div class="table-scroll">
             <table>
@@ -665,17 +713,27 @@
         </div>
       </section>
 
-      <!-- 8. PENGATURAN -->
+      <!-- 8. PENGATURAN & MANAJEMEN AKUN -->
       <section id="page-pengaturan" class="view-pane">
-        <div class="card" style="max-width:560px;">
-          <h3 class="card-title" style="margin-bottom:12px;">⚙️ Pengaturan Profil Petugas</h3>
-          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
-            <input type="text" id="set-nama" placeholder="Nama Petugas (contoh: Budi Santoso)" style="padding:9px; border:1px solid #cbd5e1; border-radius:7px;">
-            <input type="text" id="set-role" placeholder="Jabatan (contoh: Safety Officer)" style="padding:9px; border:1px solid #cbd5e1; border-radius:7px;">
-            <button class="btn-submit" onclick="saveProfile()">Simpan Profil</button>
+        <div class="card" style="max-width:720px;">
+          <h3 class="card-title" style="margin-bottom:12px;">⚙️ Manajemen Akun Pengguna &amp; Hak Akses</h3>
+          <div class="form-grid">
+            <input type="text" id="new-u-nama" placeholder="Nama Lengkap">
+            <input type="text" id="new-u-user" placeholder="Username Login">
+            <input type="text" id="new-u-pass" placeholder="Password">
+            <select id="new-u-role">
+              <option value="Safety Officer">Safety Officer (Akses Penuh)</option>
+              <option value="PIC Area">PIC Area (Tindak Lanjut Temuan)</option>
+              <option value="Employee">Employee (Pelapor Hazard)</option>
+            </select>
+            <button class="btn-submit" onclick="tambahUserBaru()">+ Tambah Akun</button>
           </div>
-          <hr style="border:none; border-top:1px solid #e2e8f0; margin:14px 0;">
-          <button class="btn-submit" style="background:#2563eb;" onclick="downloadJSON()">⬇️ Unduh Salinan Data Database (.JSON)</button>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Nama</th><th>Username</th><th>Peran (Role)</th><th>Aksi</th></tr></thead>
+              <tbody id="tbl-users"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -683,50 +741,126 @@
   </div>
 
 <script>
-  const API_URL = "https://rgraolafumuihgzxuouj.supabase.co/rest/v1";
+  const BASE_URL = "https://rgraolafumuihgzxuouj.supabase.co";
+  const API_URL = BASE_URL + "/rest/v1";
+  const STORAGE_URL = BASE_URL + "/storage/v1";
   const API_KEY = "sb_publishable_V7omvrK3zdxTiz6UFWG4Fg_syzlC0vI";
+
+  let currentUser = JSON.parse(localStorage.getItem('pk3_session')) || null;
+  let ops = [], units = [], hazards = [], manhours = [], usersList = [];
+  let logs = [{ text: "Sistem keamanan & penyimpanan foto aktif", time: "Baru saja", color: "#16a34a" }];
 
   function bukaSidebar() {
     document.getElementById('sidebar').classList.add('open');
     document.getElementById('sidebar-overlay').classList.add('active');
   }
-
   function tutupSidebar() {
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sidebar-overlay').classList.remove('active');
   }
 
   async function supaReq(path, method = "GET", bodyData = null) {
-    const headers = {
-      "apikey": API_KEY,
-      "Content-Type": "application/json",
-      "Prefer": "return=representation"
-    };
+    const headers = { "apikey": API_KEY, "Content-Type": "application/json", "Prefer": "return=representation" };
     const options = { method, headers };
     if (bodyData) options.body = JSON.stringify(bodyData);
     const res = await fetch(API_URL + path, options);
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(errText || ("HTTP " + res.status));
-    }
+    if (!res.ok) throw new Error(await res.text() || ("HTTP " + res.status));
     return method === "DELETE" ? true : await res.json();
   }
 
-  let ops = [], units = [], hazards = [], manhours = [];
-  let logs = [{ text: "Aplikasi siap digunakan", time: "Baru saja", color: "#16a34a" }];
+  // KOMPRES FOTO OTOMATIS SEBELUM DIUNGGAH
+  function kompresFoto(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxW = 800;
+          const scale = img.width > maxW ? maxW / img.width : 1;
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.72);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
-  function setDbStatus(ok, msg) {
-    const box = document.getElementById('db-indicator');
-    const dot = document.getElementById('db-dot');
-    const txt = document.getElementById('db-text');
-    txt.innerText = msg;
-    if (ok) {
-      box.style.background = "#f0fdf4"; box.style.borderColor = "#bbf7d0"; box.style.color = "#166534";
-      dot.style.background = "#16a34a";
-    } else {
-      box.style.background = "#fef2f2"; box.style.borderColor = "#fecaca"; box.style.color = "#991b1b";
-      dot.style.background = "#ef4444";
+  async function uploadFotoKeSupabase(fileInputId) {
+    const input = document.getElementById(fileInputId);
+    if (!input || !input.files || !input.files[0]) return null;
+    const blob = await kompresFoto(input.files[0]);
+    const fileName = `k3_${Date.now()}_${Math.floor(Math.random()*1000)}.jpg`;
+    const res = await fetch(`${STORAGE_URL}/object/bukti-k3/${fileName}`, {
+      method: "POST",
+      headers: { "apikey": API_KEY, "Content-Type": "image/jpeg" },
+      body: blob
+    });
+    if (!res.ok) throw new Error("Gagal unggah foto: " + await res.text());
+    return `${STORAGE_URL}/object/public/bukti-k3/${fileName}`;
+  }
+
+  function lihatFoto(url) {
+    document.getElementById('modal-img-view').src = url;
+    document.getElementById('photo-modal').classList.add('active');
+  }
+
+  // LOGIN & HAK AKSES
+  function isiDemo(u, p) {
+    document.getElementById('login-user').value = u;
+    document.getElementById('login-pass').value = p;
+  }
+
+  async function prosesLogin() {
+    const u = document.getElementById('login-user').value.trim().toLowerCase();
+    const p = document.getElementById('login-pass').value.trim();
+    if (!u || !p) return alert("Masukkan username dan kata sandi!");
+
+    const btn = document.getElementById('btn-login-submit');
+    btn.disabled = true; btn.innerText = "Memeriksa akun...";
+    try {
+      const data = await supaReq(`/app_users?username=eq.${encodeURIComponent(u)}&password=eq.${encodeURIComponent(p)}`);
+      if (data && data.length > 0) {
+        currentUser = data[0];
+        localStorage.setItem('pk3_session', JSON.stringify(currentUser));
+        terapkanSesi();
+      } else {
+        alert("Username atau kata sandi salah!");
+      }
+    } catch (e) {
+      alert("Gagal login: " + e.message);
     }
+    btn.disabled = false; btn.innerText = "Masuk ke Sistem →";
+  }
+
+  function logoutUser() {
+    localStorage.removeItem('pk3_session');
+    currentUser = null;
+    document.getElementById('login-screen').style.display = 'flex';
+  }
+
+  function terapkanSesi() {
+    if (!currentUser) {
+      document.getElementById('login-screen').style.display = 'flex';
+      return;
+    }
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('user-name-lbl').innerText = currentUser.nama;
+    document.getElementById('user-role-lbl').innerText = currentUser.role;
+    document.getElementById('hero-welcome').innerText = `— Halo, ${currentUser.nama} (${currentUser.role})`;
+    document.getElementById('avatar-txt').innerText = currentUser.nama.split(' ').map(x => x[0]).join('').substring(0,2).toUpperCase();
+
+    const isOfficer = currentUser.role === 'Safety Officer';
+    document.getElementById('nav-pengaturan').style.display = isOfficer ? 'flex' : 'none';
+    document.querySelectorAll('.admin-only').forEach(el => {
+      el.style.display = isOfficer ? '' : 'none';
+    });
+
+    muatSemuaData();
   }
 
   function pushLog(text, color = "#16a34a") {
@@ -735,23 +869,22 @@
   }
 
   async function muatSemuaData() {
-    setDbStatus(true, "Menyinkronkan...");
     try {
-      const [resOp, resUnit, resHz, resMh] = await Promise.all([
+      const [resOp, resUnit, resHz, resMh, resUsers] = await Promise.all([
         supaReq("/operators?select=*&order=id.desc"),
         supaReq("/units?select=*&order=id.desc"),
         supaReq("/hazards?select=*&order=id.desc"),
-        supaReq("/manhours?select=*&order=id.desc")
+        supaReq("/manhours?select=*&order=id.desc"),
+        supaReq("/app_users?select=id,nama,username,role&order=id.asc")
       ]);
       ops = resOp || [];
       units = resUnit || [];
       hazards = resHz || [];
       manhours = resMh || [];
-      setDbStatus(true, "Cloud Terhubung");
+      usersList = resUsers || [];
       renderAll();
     } catch (err) {
-      setDbStatus(false, "Gagal Koneksi");
-      alert("Gagal terhubung ke database: " + err.message);
+      console.error(err);
     }
   }
 
@@ -786,19 +919,11 @@
     const lokasi = document.getElementById('op-lokasi').value;
     const tgl = document.getElementById('op-tgl').value;
     if (!nama || !sio || !tgl) return alert("Lengkapi Nama, Nomor SIO, dan Tanggal Berlaku!");
-
-    const btn = document.getElementById('btn-add-op');
-    btn.disabled = true; btn.innerText = "Menyimpan...";
-    try {
-      await supaReq("/operators", "POST", { nama, sio, kelas, lokasi, tgl });
-      document.getElementById('op-nama').value = '';
-      document.getElementById('op-sio').value = '';
-      pushLog(`Operator tersimpan: ${nama} (${sio})`, "#16a34a");
-      await muatSemuaData();
-    } catch (e) {
-      alert("Gagal menyimpan: " + e.message);
-    }
-    btn.disabled = false; btn.innerText = "+ Simpan ke Database";
+    await supaReq("/operators", "POST", { nama, sio, kelas, lokasi, tgl });
+    document.getElementById('op-nama').value = '';
+    document.getElementById('op-sio').value = '';
+    pushLog(`${currentUser.nama} menambah SIO: ${nama}`, "#16a34a");
+    muatSemuaData();
   }
 
   async function addUnit() {
@@ -808,43 +933,27 @@
     const lokasi = document.getElementById('unit-lokasi').value;
     const tgl = document.getElementById('unit-tgl').value;
     if (!kode || !merk || !silo || !tgl) return alert("Lengkapi Kode Unit, Merek, Nomor SILO, dan Tanggal Berlaku!");
-
-    const btn = document.getElementById('btn-add-unit');
-    btn.disabled = true; btn.innerText = "Menyimpan...";
-    try {
-      await supaReq("/units", "POST", { kode, merk, silo, lokasi, tgl });
-      document.getElementById('unit-kode').value = '';
-      document.getElementById('unit-merk').value = '';
-      document.getElementById('unit-silo').value = '';
-      pushLog(`Unit tersimpan: ${kode} - ${merk}`, "#2563eb");
-      await muatSemuaData();
-    } catch (e) {
-      alert("Gagal menyimpan: " + e.message);
-    }
-    btn.disabled = false; btn.innerText = "+ Simpan ke Database";
+    await supaReq("/units", "POST", { kode, merk, silo, lokasi, tgl });
+    document.getElementById('unit-kode').value = '';
+    document.getElementById('unit-merk').value = '';
+    document.getElementById('unit-silo').value = '';
+    pushLog(`${currentUser.nama} menambah unit: ${kode}`, "#2563eb");
+    muatSemuaData();
   }
 
   async function perpanjangTgl(tabel, id, tglLama) {
-    const tglBaru = prompt("Masukkan tanggal masa berlaku baru (Format: YYYY-MM-DD):", tglLama);
+    const tglBaru = prompt("Masukkan tanggal masa berlaku baru (YYYY-MM-DD):", tglLama);
     if (!tglBaru) return;
-    try {
-      await supaReq(`/${tabel}?id=eq.${id}`, "PATCH", { tgl: tglBaru });
-      pushLog(`Masa berlaku diperpanjang hingga ${tglBaru}`, "#16a34a");
-      await muatSemuaData();
-    } catch (e) {
-      alert("Gagal memperbarui: " + e.message);
-    }
+    await supaReq(`/${tabel}?id=eq.${id}`, "PATCH", { tgl: tglBaru });
+    pushLog(`Masa berlaku diperpanjang hingga ${tglBaru}`, "#16a34a");
+    muatSemuaData();
   }
 
   async function delRow(tabel, id) {
-    if (!confirm("Hapus data ini secara permanen dari database?")) return;
-    try {
-      await supaReq(`/${tabel}?id=eq.${id}`, "DELETE");
-      pushLog(`Data dihapus dari sistem`, "#ef4444");
-      await muatSemuaData();
-    } catch (e) {
-      alert("Gagal menghapus: " + e.message);
-    }
+    if (!confirm("Hapus data ini secara permanen?")) return;
+    await supaReq(`/${tabel}?id=eq.${id}`, "DELETE");
+    pushLog(`Data dihapus oleh ${currentUser.nama}`, "#ef4444");
+    muatSemuaData();
   }
 
   async function addHazard() {
@@ -856,27 +965,43 @@
     if (!deskripsi || !pic || !due) return alert("Lengkapi Deskripsi Temuan, PIC, dan Tenggat!");
 
     const btn = document.getElementById('btn-add-hz');
-    btn.disabled = true; btn.innerText = "Mengirim...";
+    btn.disabled = true; btn.innerText = "Mengunggah...";
     try {
-      await supaReq("/hazards", "POST", { deskripsi, lokasi, risk, pic, due, status: "In Progress" });
+      const foto_url = await uploadFotoKeSupabase('hz-foto');
+      await supaReq("/hazards", "POST", { deskripsi, lokasi, risk, pic, due, status: "In Progress", foto_url });
       document.getElementById('hz-desc').value = '';
       document.getElementById('hz-pic').value = '';
-      pushLog(`Temuan baru dikirim: ${deskripsi}`, "#f59e0b");
+      document.getElementById('hz-foto').value = '';
+      pushLog(`Laporan hazard oleh ${currentUser.nama}: ${deskripsi}`, "#f59e0b");
       await muatSemuaData();
     } catch (e) {
-      alert("Gagal mengirim: " + e.message);
+      alert("Gagal mengirim laporan: " + e.message);
     }
-    btn.disabled = false; btn.innerText = "+ Kirim ke Database";
+    btn.disabled = false; btn.innerText = "📸 Kirim Laporan";
   }
 
-  async function closeHazard(id) {
+  function bukaModalVerifikasi(id) {
+    document.getElementById('verify-hz-id').value = id;
+    document.getElementById('verify-file').value = '';
+    document.getElementById('verify-modal').classList.add('active');
+  }
+
+  async function konfirmasiVerifikasi() {
+    const id = document.getElementById('verify-hz-id').value;
+    const btn = document.getElementById('btn-confirm-verify');
+    btn.disabled = true; btn.innerText = "Menyimpan...";
     try {
-      await supaReq(`/hazards?id=eq.${id}`, "PATCH", { status: "Closed" });
-      pushLog(`Temuan diverifikasi selesai`, "#16a34a");
+      const bukti_url = await uploadFotoKeSupabase('verify-file');
+      const payload = { status: "Closed" };
+      if (bukti_url) payload.bukti_url = bukti_url;
+      await supaReq(`/hazards?id=eq.${id}`, "PATCH", payload);
+      document.getElementById('verify-modal').classList.remove('active');
+      pushLog(`Temuan ditutup & diverifikasi oleh ${currentUser.nama}`, "#16a34a");
       await muatSemuaData();
     } catch (e) {
-      alert("Gagal memperbarui: " + e.message);
+      alert("Gagal verifikasi: " + e.message);
     }
+    btn.disabled = false; btn.innerText = "Simpan & Tutup Temuan";
   }
 
   async function addManhour() {
@@ -884,45 +1009,28 @@
     const kat = document.getElementById('mh-kat').value;
     const jam = parseInt(document.getElementById('mh-jam').value, 10);
     if (!bulan || !jam) return alert("Isi periode bulan dan jumlah jam kerja!");
+    await supaReq("/manhours", "POST", { bulan, kat, jam });
+    document.getElementById('mh-jam').value = '';
+    pushLog(`Manhours dicatat: +${jam.toLocaleString('id-ID')} jam`, "#7c3aed");
+    muatSemuaData();
+  }
 
-    const btn = document.getElementById('btn-add-mh');
-    btn.disabled = true;
+  async function tambahUserBaru() {
+    const nama = document.getElementById('new-u-nama').value.trim();
+    const username = document.getElementById('new-u-user').value.trim().toLowerCase();
+    const password = document.getElementById('new-u-pass').value.trim();
+    const role = document.getElementById('new-u-role').value;
+    if (!nama || !username || !password) return alert("Lengkapi Nama, Username, dan Password!");
     try {
-      await supaReq("/manhours", "POST", { bulan, kat, jam });
-      document.getElementById('mh-jam').value = '';
-      pushLog(`Manhours dicatat (${bulan}): +${jam.toLocaleString('id-ID')} jam`, "#7c3aed");
-      await muatSemuaData();
+      await supaReq("/app_users", "POST", { nama, username, password, role });
+      document.getElementById('new-u-nama').value = '';
+      document.getElementById('new-u-user').value = '';
+      document.getElementById('new-u-pass').value = '';
+      alert("Akun pengguna baru berhasil dibuat!");
+      muatSemuaData();
     } catch (e) {
-      alert("Gagal menyimpan: " + e.message);
+      alert("Gagal membuat akun (username mungkin sudah dipakai): " + e.message);
     }
-    btn.disabled = false;
-  }
-
-  function saveProfile() {
-    const n = document.getElementById('set-nama').value.trim();
-    const r = document.getElementById('set-role').value.trim();
-    if (n) localStorage.setItem('pk3_uname', n);
-    if (r) localStorage.setItem('pk3_urole', r);
-    loadProfile();
-    alert("Profil berhasil diperbarui!");
-  }
-
-  function loadProfile() {
-    const n = localStorage.getItem('pk3_uname') || "Budi Santoso";
-    const r = localStorage.getItem('pk3_urole') || "Safety Officer";
-    document.getElementById('user-name-lbl').innerText = n;
-    document.getElementById('user-role-lbl').innerText = r;
-    document.getElementById('set-nama').value = n;
-    document.getElementById('set-role').value = r;
-    document.getElementById('avatar-txt').innerText = n.split(' ').map(x => x[0]).join('').substring(0,2).toUpperCase();
-  }
-
-  function downloadJSON() {
-    const blob = new Blob([JSON.stringify({ ops, units, hazards, manhours }, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "PantauK3_Cloud_Backup.json";
-    a.click();
   }
 
   function exportCSV() {
@@ -942,10 +1050,13 @@
 
   function renderAll(searchQuery = "") {
     const cab = document.getElementById('filter-cabang').value;
+    const isOfficer = currentUser && currentUser.role === 'Safety Officer';
+    const canCloseHazard = currentUser && (currentUser.role === 'Safety Officer' || currentUser.role === 'PIC Area');
     let okCnt = 0, warnCnt = 0, expCnt = 0, notifs = [];
 
+    // Render SIO
     const tblOp = document.getElementById('tbl-op');
-    tblOp.innerHTML = ops.length === 0 ? '<tr><td colspan="7" style="color:#64748b;">Belum ada data operator di database. Silakan tambahkan di atas.</td></tr>' : '';
+    tblOp.innerHTML = ops.length === 0 ? '<tr><td colspan="7" style="color:#64748b;">Belum ada data operator.</td></tr>' : '';
     ops.forEach(o => {
       if (cab !== 'ALL' && o.lokasi !== cab) return;
       if (searchQuery && !(`${o.nama} ${o.sio} ${o.lokasi}`).toLowerCase().includes(searchQuery)) return;
@@ -957,15 +1068,16 @@
       tblOp.innerHTML += `<tr>
         <td><strong>${o.nama}</strong></td><td>${o.sio}</td><td>${o.kelas || '-'}</td><td>${o.lokasi || '-'}</td><td>${o.tgl}</td>
         <td><span class="pill ${st.cls}">${st.label}</span></td>
-        <td>
+        ${isOfficer ? `<td>
           <button class="btn-sm" style="background:#dbeafe; color:#1e40af;" onclick="perpanjangTgl('operators',${o.id},'${o.tgl}')">Perpanjang</button>
           <button class="btn-sm" style="background:#fee2e2; color:#991b1b;" onclick="delRow('operators',${o.id})">Hapus</button>
-        </td>
+        </td>` : ''}
       </tr>`;
     });
 
+    // Render SILO
     const tblUnit = document.getElementById('tbl-unit');
-    tblUnit.innerHTML = units.length === 0 ? '<tr><td colspan="7" style="color:#64748b;">Belum ada data unit forklift di database. Silakan tambahkan di atas.</td></tr>' : '';
+    tblUnit.innerHTML = units.length === 0 ? '<tr><td colspan="7" style="color:#64748b;">Belum ada data unit forklift.</td></tr>' : '';
     units.forEach(u => {
       if (cab !== 'ALL' && u.lokasi !== cab) return;
       if (searchQuery && !(`${u.kode} ${u.merk} ${u.silo} ${u.lokasi}`).toLowerCase().includes(searchQuery)) return;
@@ -977,13 +1089,14 @@
       tblUnit.innerHTML += `<tr>
         <td><strong>${u.kode}</strong></td><td>${u.merk}</td><td>${u.silo}</td><td>${u.lokasi || '-'}</td><td>${u.tgl}</td>
         <td><span class="pill ${st.cls}">${st.label}</span></td>
-        <td>
+        ${isOfficer ? `<td>
           <button class="btn-sm" style="background:#dbeafe; color:#1e40af;" onclick="perpanjangTgl('units',${u.id},'${u.tgl}')">Perpanjang</button>
           <button class="btn-sm" style="background:#fee2e2; color:#991b1b;" onclick="delRow('units',${u.id})">Hapus</button>
-        </td>
+        </td>` : ''}
       </tr>`;
     });
 
+    // Render Hazard & Foto
     const tblHz = document.getElementById('tbl-hazard');
     const capaEl = document.getElementById('capa-list');
     tblHz.innerHTML = hazards.length === 0 ? '<tr><td colspan="7" style="color:#64748b;">Belum ada laporan temuan hazard.</td></tr>' : '';
@@ -995,25 +1108,40 @@
       const isClosed = h.status === 'Closed';
       if (!isClosed) {
         activeHz++;
-        notifs.push({ msg: `Temuan aktif: ${h.deskripsi} (${h.lokasi})`, cls: '#ef4444' });
+        notifs.push({ msg: `Temuan aktif: ${h.deskripsi}`, cls: '#ef4444' });
       }
       const riskCls = h.risk === 'Tinggi' ? 'pill-danger' : (h.risk === 'Sedang' ? 'pill-warn' : 'pill-info');
       const stCls = isClosed ? 'pill-safe' : 'pill-warn';
+      const fotoHtml = h.foto_url ? `<img src="${h.foto_url}" class="thumb-img" onclick="lihatFoto('${h.foto_url}')" title="Klik untuk perbesar">` : '<span style="font-size:0.75rem; color:#94a3b8;">Tanpa foto</span>';
+      const buktiHtml = h.bukti_url ? `<img src="${h.bukti_url}" class="thumb-img" onclick="lihatFoto('${h.bukti_url}')" title="Foto Perbaikan">` : '';
+
+      let aksiHtml = '✓ Selesai';
+      if (!isClosed) {
+        aksiHtml = canCloseHazard
+          ? `<button class="btn-sm" style="background:#16a34a; color:#fff;" onclick="bukaModalVerifikasi(${h.id})">Verifikasi Selesai</button>`
+          : '<span style="font-size:0.75rem; color:#64748b;">Menunggu PIC</span>';
+      }
 
       tblHz.innerHTML += `<tr>
-        <td><strong>${h.deskripsi}</strong></td><td>${h.lokasi}</td>
+        <td>${fotoHtml}</td>
+        <td><strong>${h.deskripsi}</strong></td>
+        <td>${h.lokasi}</td>
         <td><span class="pill ${riskCls}">${h.risk}</span></td>
-        <td>${h.pic}</td><td>${h.due || '-'}</td>
+        <td>${h.pic}<br><span style="font-size:0.74rem; color:#64748b;">Tenggat: ${h.due || '-'}</span></td>
         <td><span class="pill ${stCls}">${h.status}</span></td>
-        <td>${!isClosed ? `<button class="btn-sm" style="background:#16a34a; color:#fff;" onclick="closeHazard(${h.id})">Verifikasi Selesai</button>` : '✓ Terverifikasi'}</td>
+        <td><div style="display:flex; align-items:center; gap:6px;">${buktiHtml} ${aksiHtml}</div></td>
       </tr>`;
 
       capaEl.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid #e2e8f0; border-radius:8px; margin-bottom:8px;">
-        <div><strong>${h.deskripsi}</strong><div style="font-size:0.78rem; color:#64748b;">PIC: ${h.pic} • Lokasi: ${h.lokasi} • Tenggat: ${h.due || '-'}</div></div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          ${fotoHtml}
+          <div><strong>${h.deskripsi}</strong><div style="font-size:0.78rem; color:#64748b;">PIC: ${h.pic} • Lokasi: ${h.lokasi}</div></div>
+        </div>
         <span class="pill ${stCls}">${h.status}</span>
       </div>`;
     });
 
+    // Render Manhours
     const tblMh = document.getElementById('tbl-mh');
     tblMh.innerHTML = manhours.length === 0 ? '<tr><td colspan="5" style="color:#64748b;">Belum ada pencatatan manhours.</td></tr>' : '';
     let totalJam = 0;
@@ -1022,6 +1150,16 @@
       tblMh.innerHTML += `<tr><td>${m.bulan}</td><td>${m.kat}</td><td><strong>${Number(m.jam).toLocaleString('id-ID')} Jam</strong></td><td>0</td><td><span class="pill pill-safe">Zero LTI</span></td></tr>`;
     });
 
+    // Render Users (Pengaturan)
+    const tblUsers = document.getElementById('tbl-users');
+    if (tblUsers) {
+      tblUsers.innerHTML = usersList.map(u => `<tr>
+        <td><strong>${u.nama}</strong></td><td>${u.username}</td><td><span class="pill pill-info">${u.role}</span></td>
+        <td>${u.username !== 'admin' ? `<button class="btn-sm" style="background:#fee2e2; color:#991b1b;" onclick="delRow('app_users',${u.id})">Hapus</button>` : 'Akun Utama'}</td>
+      </tr>`).join('');
+    }
+
+    // Update KPI & Badge
     const totalAll = okCnt + warnCnt + expCnt;
     const validAll = okCnt + warnCnt;
     const pct = totalAll ? Math.round((validAll / totalAll) * 100) : 100;
@@ -1033,7 +1171,6 @@
     document.getElementById('kpi-unit-detail').innerText = `${ops.length} Operator • ${units.length} Unit`;
     document.getElementById('kpi-manhours').innerText = totalJam.toLocaleString('id-ID');
 
-    // Sembunyikan angka merah jika jumlahnya 0
     const navBadge = document.getElementById('nav-hazard-cnt');
     navBadge.innerText = activeHz;
     navBadge.style.display = activeHz > 0 ? 'inline-block' : 'none';
@@ -1061,8 +1198,7 @@
       </div>`).join('');
   }
 
-  loadProfile();
-  muatSemuaData();
+  terapkanSesi();
 </script>
 </body>
 </html>
